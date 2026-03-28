@@ -1,0 +1,72 @@
+@keyframes stars {
+  from { transform: translateY(0); }
+  to { transform: translateY(-1000px); }
+}
+
+.space-background {
+  background-color: #0B0E14;
+  background-image: 
+    radial-gradient(2px 2px at 20px 30px, #eee, rgba(0,0,0,0)),
+    radial-gradient(2px 2px at 40px 70px, #fff, rgba(0,0,0,0)),
+    radial-gradient(2px 2px at 50px 160px, #ddd, rgba(0,0,0,0)),
+    radial-gradient(2px 2px at 90px 40px, #fff, rgba(0,0,0,0)),
+    radial-gradient(2px 2px at 130px 80px, #fff, rgba(0,0,0,0)),
+    radial-gradient(2px 2px at 160px 120px, #ddd, rgba(0,0,0,0));
+  background-repeat: repeat;
+  background-size: 200px 200px;
+  animation: stars 100s linear infinite;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: -1;
+}
+
+.command-center-header {
+  background: linear-gradient(180deg, rgba(0, 209, 255, 0.1) 0%, rgba(11, 14, 20, 0) 100%);
+  border-bottom: 1px solid rgba(0, 209, 255, 0.2);
+}
+
+.neon-table {
+  background: rgba(15, 20, 28, 0.8);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(0, 209, 255, 0.1);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+.neon-text-blue {
+  color: #00D1FF;
+  text-shadow: 0 0 10px rgba(0, 209, 255, 0.5);
+}
+
+.neon-text-green {
+  color: #00E096;
+  text-shadow: 0 0 10px rgba(0, 224, 150, 0.5);
+}
+
+.neon-text-yellow {
+  color: #FFC700;
+  text-shadow: 0 0 10px rgba(255, 199, 0, 0.5);
+}
+
+.status-badge-active {
+  background: rgba(0, 224, 150, 0.1);
+  border: 1px solid #00E096;
+  color: #00E096;
+  box-shadow: 0 0 12px rgba(0, 224, 150, 0.2);
+}
+
+.expiry-badge-expired {
+  background: rgba(255, 68, 68, 0.1);
+  border: 1px solid #FF4444;
+  color: #FF4444;
+  box-shadow: 0 0 12px rgba(255, 68, 68, 0.2);
+}
+
+.expiry-badge-warning {
+  background: rgba(0, 209, 255, 0.1);
+  border: 1px solid #00D1FF;
+  color: #00D1FF;
+  box-shadow: 0 0 12px rgba(0, 209, 255, 0.2);
+}
