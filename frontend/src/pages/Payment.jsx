@@ -6,6 +6,8 @@ import {
     ArrowLeft, ShieldCheck, Zap, Copy, Info
 } from 'lucide-react';
 import '../styles/CyberBackground.css';
+import esewa_qr from '../assets/esewa_qr.png';
+import bank_qr from '../assets/bank_qr.png';
 
 const Payment = () => {
     const navigate = useNavigate();
@@ -105,17 +107,19 @@ const Payment = () => {
                             </div>
                         </div>
 
-                        <div className="aspect-square bg-white p-6 rounded-[32px] relative overflow-hidden group">
-                            <div className="absolute inset-0 bg-indigo-500/5 group-hover:bg-transparent transition-colors"></div>
-                            <div className="w-full h-full border-2 border-dashed border-slate-200 rounded-2xl flex items-center justify-center flex-col gap-4">
-                                {/* Stylized QR Placeholder */}
-                                <div className="grid grid-cols-4 gap-2 opacity-80">
-                                    {[...Array(16)].map((_, i) => (
-                                        <div key={i} className={`w-10 h-10 rounded-lg ${Math.random() > 0.5 ? 'bg-slate-900' : 'bg-slate-100'}`}></div>
-                                    ))}
-                                </div>
-                                <span className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em]">Official Smart विद्यालय QR</span>
-                            </div>
+                        <div className="aspect-square bg-white p-4 rounded-[32px] relative overflow-hidden group border border-slate-100 shadow-inner flex items-center justify-center">
+                            <img 
+                                src={selectedMethod === 'esewa' ? esewa_qr : bank_qr} 
+                                alt="Payment QR" 
+                                className="w-full h-full object-contain rounded-2xl animate-in zoom-in-95 duration-500"
+                            />
+                        </div>
+
+                        <div className="p-4 bg-indigo-500/10 rounded-2xl border border-indigo-500/20 flex gap-4">
+                            <Info size={20} className="text-indigo-400 shrink-0" />
+                            <p className="text-[10px] font-bold text-slate-400 leading-relaxed uppercase tracking-tight">
+                                Scan the QR code above with your {selectedMethod === 'esewa' ? 'eSewa' : 'Mobile Banking'} app to complete the payment.
+                            </p>
                         </div>
 
                         <div className="space-y-4">
