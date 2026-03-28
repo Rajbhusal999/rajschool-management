@@ -15,6 +15,7 @@ import GradeSheetPrint from "./pages/GradeSheetPrint";
 import Register from "./pages/Register";
 import AdminDashboard from "./pages/AdminDashboard";
 import Login from "./pages/Login";
+import AdminLogin from "./pages/AdminLogin";
 import About from "./pages/About";
 
 import { GraduationCap } from "lucide-react";
@@ -29,7 +30,7 @@ function App() {
 
 const Layout = () => {
   const location = useLocation();
-  const publicRoutes = ["/", "/register", "/login", "/features"];
+  const publicRoutes = ["/", "/register", "/login", "/admin-login", "/features"];
   const isPublicPage = publicRoutes.includes(location.pathname);
 
   if (isPublicPage) {
@@ -39,6 +40,7 @@ const Layout = () => {
         <Route path="/register" element={<Register />} />
         <Route path="/features" element={<About />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/admin-login" element={<AdminLogin />} />
       </Routes>
     );
   }
@@ -51,6 +53,7 @@ const Layout = () => {
           <Routes>
             <Route path="/dashboard" element={<AdminDashboard />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/admin-login" element={<AdminLogin />} />
             <Route path="/students" element={<StudentList />} />
 
             <Route path="/teachers" element={<TeacherList />} />

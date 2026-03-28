@@ -121,14 +121,13 @@ const Login = () => {
                         Unlock Portal
                     </button>
 
-                    {/* Secondary Administrative Entry */}
-                    <button 
-                        type="button"
-                        className="w-full h-[72px] bg-transparent border-[2.5px] border-dashed border-slate-200 rounded-[28px] text-slate-500 font-black flex items-center justify-center gap-3 hover:border-indigo-400 hover:text-indigo-600 hover:bg-indigo-50/10 transition-all"
+                    <Link 
+                        to="/admin-login"
+                        className="w-full h-[72px] bg-transparent border-[2.5px] border-dashed border-slate-200 rounded-[28px] text-slate-500 font-black flex items-center justify-center gap-3 hover:border-indigo-400 hover:text-indigo-600 hover:bg-indigo-50/10 transition-all cursor-pointer group"
                     >
-                        <ShieldCheck size={20} />
+                        <ShieldCheck size={20} className="group-hover:scale-110 transition-transform" />
                         System Administrator Access
-                    </button>
+                    </Link>
                 </form>
 
                 {/* Footer Orchestration */}
