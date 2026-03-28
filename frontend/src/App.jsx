@@ -14,6 +14,7 @@ import ResultSheets from "./pages/ResultSheets";
 import GradeSheetPrint from "./pages/GradeSheetPrint";
 import Register from "./pages/Register";
 import AdminDashboard from "./pages/AdminDashboard";
+import SchoolDashboard from "./pages/SchoolDashboard";
 import Login from "./pages/Login";
 import AdminLogin from "./pages/AdminLogin";
 import Subscription from "./pages/Subscription";
@@ -32,7 +33,7 @@ function App() {
 
 const Layout = () => {
   const location = useLocation();
-  const publicRoutes = ["/", "/register", "/login", "/admin-login", "/features", "/dashboard", "/subscription", "/payment"];
+  const publicRoutes = ["/", "/register", "/login", "/admin-login", "/features", "/admin/nexus", "/subscription", "/payment"];
   const isPublicPage = publicRoutes.includes(location.pathname);
 
   if (isPublicPage) {
@@ -43,7 +44,7 @@ const Layout = () => {
         <Route path="/features" element={<About />} />
         <Route path="/login" element={<Login />} />
         <Route path="/admin-login" element={<AdminLogin />} />
-        <Route path="/dashboard" element={<AdminDashboard />} />
+        <Route path="/admin/nexus" element={<AdminDashboard />} />
         <Route path="/subscription" element={<Subscription />} />
         <Route path="/payment" element={<Payment />} />
       </Routes>
@@ -56,6 +57,7 @@ const Layout = () => {
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
         <main className="flex-1 overflow-y-auto p-4 md:p-8">
           <Routes>
+            <Route path="/dashboard" element={<SchoolDashboard />} />
             <Route path="/login" element={<Login />} />
             <Route path="/admin-login" element={<AdminLogin />} />
             <Route path="/students" element={<StudentList />} />
