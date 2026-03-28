@@ -83,7 +83,7 @@ const Register = () => {
                 if (error) throw error;
 
                 console.log('Institutional Portal Deployed:', data);
-                navigate('/dashboard');
+                navigate('/login');
             } catch (err) {
                 console.error('Deployment Error:', err);
                 // Extract more descriptive error message (handling both Supabase and Generic errors)

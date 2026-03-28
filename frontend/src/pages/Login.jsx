@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import { supabase } from '../supabaseClient';
 import { 
     GraduationCap, Key, Lock, Eye, EyeOff, Check, UserPlus, ShieldAlert,
     ChevronRight, Globe, ShieldCheck
@@ -13,12 +14,36 @@ const Login = () => {
         password: '',
         remember: false
     });
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState('');
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        // Simulate login
-        console.log('Authenticating Institutional Identity:', formData.emisCode);
-        navigate('/dashboard');
+        setLoading(true);
+        setError('');
+
+        try {
+            const { data, error } = await supabase
+                .from('institutions')
+                .select('id, school_name')
+                .eq('emis_code', formData.emisCode)
+                .eq('password', formData.password)
+                .single();
+
+            if (error || !data) {
+                throw new Error('Invalid EMIS code or password. Please verify your credentials.');
+            }
+
+            // Store session info
+            sessionStorage.setItem('institutionId', data.id);
+            sessionStorage.setItem('schoolName', data.school_name);
+            
+            navigate('/subscription');
+        } catch (err) {
+            setError(err.message);
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (
@@ -44,6 +69,15 @@ const Login = () => {
                         Secure gateway to institutional intelligence.
                     </p>
                 </div>
+
+                {error && (
+                    <div className="w-full mb-8 p-5 bg-rose-50/50 border-[2px] border-rose-100 rounded-[28px] flex items-center gap-4 animate-in slide-in-from-top-4 duration-500">
+                        <div className="w-10 h-10 bg-rose-500 rounded-2xl flex items-center justify-center text-white shrink-0 shadow-lg shadow-rose-200">
+                            <ShieldAlert size={20} />
+                        </div>
+                        <p className="text-sm font-black text-rose-600 leading-snug tracking-tight">{error}</p>
+                    </div>
+                )}
 
                 <form onSubmit={handleSubmit} className="w-full space-y-8">
                     {/* EMIS Code Interface */}
