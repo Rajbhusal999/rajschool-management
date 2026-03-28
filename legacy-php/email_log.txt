@@ -1,0 +1,11 @@
+2026-02-07 18:02:21 | Failed to: bhusalraaz2@gmail.com
+--------------------------------------------------
+DATE    : 2026-02-07 18:03:34
+TO      : bhusalraaz2@gmail.com
+SUBJECT : Attendance Notification - 2082-10-24
+STATUS  : Simulated (PHPMailer not found / Localhost mail not configured)
+--------------------------------------------------
+DATE    : 2026-02-07 18:03:46
+TO      : bhusalraaz2@gmail.com
+SUBJECT : Attendance Notification - 2082-10-24
+STATUS  : Simulated (PHPMailer not found / Localhost mail not configured)

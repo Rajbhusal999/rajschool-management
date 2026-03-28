@@ -1,0 +1,87 @@
+2026-02-07 17:10:01 | To: 84738473874 | Msg: Gita is at school
+2026-02-07 17:10:01 | To: 9800007655 | Msg: Raj Bhusal is leave on today
+2026-02-07 17:10:01 | To: 9861079061 | Msg: shyam is at school
+--------------------------------------------------
+DATE    : 2026-02-07 17:12:52
+TO      : 84738473874
+MESSAGE : Gita is at school
+STATUS  : SIMULATED (Configure API in includes/sms.php to send real SMS)
+--------------------------------------------------
+
+--------------------------------------------------
+DATE    : 2026-02-07 17:12:52
+TO      : 9800007655
+MESSAGE : Raj Bhusal is leave on today
+STATUS  : SIMULATED (Configure API in includes/sms.php to send real SMS)
+--------------------------------------------------
+
+--------------------------------------------------
+DATE    : 2026-02-07 17:12:52
+TO      : 9861079061
+MESSAGE : shyam is at school
+STATUS  : SIMULATED (Configure API in includes/sms.php to send real SMS)
+--------------------------------------------------
+
+--------------------------------------------------
+DATE    : 2026-02-07 17:14:23
+TO      : 84738473874
+MESSAGE : Gita is at school
+STATUS  : SIMULATED (Check includes/sms.php to configure Real SMS)
+--------------------------------------------------
+
+--------------------------------------------------
+DATE    : 2026-02-07 17:14:23
+TO      : 9800007655
+MESSAGE : Raj Bhusal is leave on today
+STATUS  : SIMULATED (Check includes/sms.php to configure Real SMS)
+--------------------------------------------------
+
+--------------------------------------------------
+DATE    : 2026-02-07 17:14:23
+TO      : 9861079061
+MESSAGE : shyam is at school
+STATUS  : SIMULATED (Check includes/sms.php to configure Real SMS)
+--------------------------------------------------
+
+--------------------------------------------------
+DATE    : 2026-02-07 17:25:19
+TO      : 84738473874
+MESSAGE : Gita is at school
+STATUS  : SIMULATED (Check includes/sms.php to configure Real SMS)
+--------------------------------------------------
+
+--------------------------------------------------
+DATE    : 2026-02-07 17:25:19
+TO      : 9800007655
+MESSAGE : Raj Bhusal is leave on today
+STATUS  : SIMULATED (Check includes/sms.php to configure Real SMS)
+--------------------------------------------------
+
+--------------------------------------------------
+DATE    : 2026-02-07 17:25:19
+TO      : 9861079061
+MESSAGE : shyam is at school
+STATUS  : SIMULATED (Check includes/sms.php to configure Real SMS)
+--------------------------------------------------
+
+--------------------------------------------------
+DATE    : 2026-02-07 17:44:08
+TO      : 84738473874
+MESSAGE : Gita is at school
+STATUS  : SIMULATED (Check includes/sms.php to configure Real SMS)
+--------------------------------------------------
+
+--------------------------------------------------
+DATE    : 2026-02-07 17:44:08
+TO      : 9800007655
+MESSAGE : Raj Bhusal is leave on today
+STATUS  : SIMULATED (Check includes/sms.php to configure Real SMS)
+--------------------------------------------------
+
+--------------------------------------------------
+DATE    : 2026-02-07 17:44:08
+TO      : 9861079061
+MESSAGE : shyam is at school
+STATUS  : SIMULATED (Check includes/sms.php to configure Real SMS)
+--------------------------------------------------
+
