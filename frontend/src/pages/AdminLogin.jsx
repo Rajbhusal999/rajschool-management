@@ -13,12 +13,20 @@ const AdminLogin = () => {
         secureKey: '',
         rememberSession: false
     });
+    const [error, setError] = useState('');
 
     const handleSubmit = (e) => {
         e.preventDefault();
+        setError('');
+        
         // Simulation of high-security authentication
         console.log('Initiating System Level Authentication:', formData.adminEmail);
-        navigate('/dashboard');
+        
+        if (formData.adminEmail === 'smartscchool2082@gmail.com' && formData.secureKey === 'qWERTYUIOP@1234') {
+            navigate('/dashboard');
+        } else {
+            setError('ACCESS DENIED: Invalid Administrator Credentials. Security logs recorded.');
+        }
     };
 
     return (
@@ -50,6 +58,18 @@ const AdminLogin = () => {
                         Authorized personnel only. Encrypted session required.
                     </p>
                 </div>
+
+                {error && (
+                    <div className="mb-8 p-5 bg-rose-500/10 border border-rose-500/30 rounded-[28px] flex items-center gap-4 animate-in fade-in slide-in-from-top-4 backdrop-blur-md">
+                        <ShieldAlert className="text-rose-500 shrink-0" size={24} />
+                        <div>
+                            <p className="text-[10px] font-black text-rose-500 uppercase tracking-widest mb-1">Security Alert</p>
+                            <p className="text-xs font-bold text-slate-300 leading-relaxed uppercase tracking-tight">
+                                {error}
+                            </p>
+                        </div>
+                    </div>
+                )}
 
                 <form onSubmit={handleSubmit} className="space-y-8 bg-slate-900/50 p-8 rounded-[40px] border border-slate-800 backdrop-blur-2xl shadow-2xl">
                     {/* Admin Email Interface */}
