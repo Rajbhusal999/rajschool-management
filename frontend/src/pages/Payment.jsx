@@ -6,8 +6,8 @@ import {
     ArrowLeft, ShieldCheck, Zap, Copy, Info
 } from 'lucide-react';
 import '../styles/CyberBackground.css';
-import esewa_qr from '../assets/esewa_qr.png';
-import bank_qr from '../assets/bank_qr.png';
+import esewa_qr from '../assets/esewa_qr.jpg';
+import bank_qr from '../assets/bank_qr.jpg';
 
 const Payment = () => {
     const navigate = useNavigate();
