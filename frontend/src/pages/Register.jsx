@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
+import { supabase } from '../supabaseClient';
 import { 
   Library, Fingerprint, Phone, MapPin, Calendar, 
   Image as ImageIcon, Upload, Mail, Lock, CheckCircle2, Eye, EyeOff, AlertCircle
@@ -60,12 +61,35 @@ const Register = () => {
             setLoading(true);
             setApiError('');
             try {
-                const response = await axios.post('http://localhost:8080/api/institutions/register', formData);
-                console.log('Institutional Portal Deployed:', response.data);
+                // Configuration Guard
+                if (!import.meta.env.VITE_SUPABASE_URL || !import.meta.env.VITE_SUPABASE_ANON_KEY) {
+                    throw new Error('Supabase configuration missing. Have you added the Environment Variables to Vercel?');
+                }
+
+                // Supabase Insertion Logic
+                const { data, error } = await supabase
+                    .from('institutions')
+                    .insert([{
+                        school_name: formData.schoolName,
+                        emis_code: formData.emisCode,
+                        phone: formData.phone,
+                        address: formData.address,
+                        establishment: formData.establishment,
+                        email: formData.email,
+                        password: formData.password
+                    }])
+                    .select();
+
+                if (error) throw error;
+
+                console.log('Institutional Portal Deployed:', data);
                 navigate('/dashboard');
             } catch (err) {
                 console.error('Deployment Error:', err);
-                setApiError(err.response?.data || 'Connection to regional orchestration network failed. Please check backend status.');
+                // Extract more descriptive error message (handling both Supabase and Generic errors)
+                const errorDetail = err.details || err.hint || '';
+                const baseMessage = err.message || 'Connection to regional orchestration network failed.';
+                setApiError(`${baseMessage}${errorDetail ? ` (${errorDetail})` : ''}`);
             } finally {
                 setLoading(false);
             }
@@ -105,7 +129,7 @@ const Register = () => {
                     <div className="grid md:grid-cols-2 gap-8">
                         <div className="space-y-3">
                             <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-6">EMIS Code</label>
-                            <div className="relative flex items-center">
+                            <div className={`relative flex items-center transition-all ${errors.emisCode ? ' ring-2 ring-rose-500/20' : ''}`}>
                                 <Fingerprint className="absolute left-6 text-slate-400" size={20} />
                                 <input 
                                     type="text" 
@@ -115,10 +139,11 @@ const Register = () => {
                                     onChange={(e) => setFormData({...formData, emisCode: e.target.value})}
                                 />
                             </div>
+                            {errors.emisCode && <p className="text-rose-500 text-xs font-bold ml-6 flex items-center gap-1"><AlertCircle size={12} /> {errors.emisCode}</p>}
                         </div>
                         <div className="space-y-3">
                             <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-6">Phone Direct</label>
-                            <div className="relative flex items-center">
+                            <div className={`relative flex items-center transition-all ${errors.phone ? ' ring-2 ring-rose-500/20' : ''}`}>
                                 <Phone className="absolute left-6 text-slate-400" size={20} />
                                 <input 
                                     type="text" 
@@ -128,6 +153,7 @@ const Register = () => {
                                     onChange={(e) => setFormData({...formData, phone: e.target.value})}
                                 />
                             </div>
+                            {errors.phone && <p className="text-rose-500 text-xs font-bold ml-6 flex items-center gap-1"><AlertCircle size={12} /> {errors.phone}</p>}
                         </div>
                     </div>
 
@@ -194,7 +220,7 @@ const Register = () => {
                     {/* Email */}
                     <div className="space-y-3">
                         <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-6">Administrative Email</label>
-                        <div className="relative flex items-center">
+                        <div className={`relative flex items-center transition-all ${errors.email ? ' ring-2 ring-rose-500/20' : ''}`}>
                             <Mail className="absolute left-6 text-slate-400" size={20} />
                             <input 
                                 type="email" 
@@ -204,13 +230,14 @@ const Register = () => {
                                 onChange={(e) => setFormData({...formData, email: e.target.value})}
                             />
                         </div>
+                        {errors.email && <p className="text-rose-500 text-xs font-bold ml-6 flex items-center gap-1"><AlertCircle size={12} /> {errors.email}</p>}
                     </div>
 
                     {/* Password */}
                     <div className="grid md:grid-cols-2 gap-8">
                         <div className="space-y-3">
                             <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-6">Master Password</label>
-                            <div className="relative flex items-center">
+                            <div className={`relative flex items-center transition-all ${errors.password ? ' ring-2 ring-rose-500/20' : ''}`}>
                                 <Lock className="absolute left-6 text-slate-400" size={20} />
                                 <input 
                                     type={showPassword ? "text" : "password"}
@@ -219,16 +246,16 @@ const Register = () => {
                                     value={formData.password}
                                     onChange={(e) => setFormData({...formData, password: e.target.value})}
                                 />
-                                <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-6 text-slate-400 hover:text-indigo-600 transition-colors">
+                                <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-6 text-slate-400 hover:text-indigo-600 transition-colors cursor-pointer">
                                     {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                                 </button>
                             </div>
                             <p className="text-[10px] font-bold text-slate-400 ml-6">8+ chars: Upper, Lower, Symbol, Int.</p>
-                            {errors.password && <p className="text-rose-500 text-xs font-bold ml-6 mt-1">{errors.password}</p>}
+                            {errors.password && <p className="text-rose-500 text-xs font-bold ml-6 mt-1 flex items-center gap-1"><AlertCircle size={12} /> {errors.password}</p>}
                         </div>
                         <div className="space-y-3">
                             <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-6">Verify Secret</label>
-                            <div className="relative flex items-center">
+                            <div className={`relative flex items-center transition-all ${errors.verifySecret ? ' ring-2 ring-rose-500/20' : ''}`}>
                                 <CheckCircle2 className="absolute left-6 text-slate-400" size={20} />
                                 <input 
                                     type={showSecret ? "text" : "password"}
@@ -237,23 +264,24 @@ const Register = () => {
                                     value={formData.verifySecret}
                                     onChange={(e) => setFormData({...formData, verifySecret: e.target.value})}
                                 />
-                                <button type="button" onClick={() => setShowSecret(!showSecret)} className="absolute right-6 text-slate-400 hover:text-indigo-600 transition-colors">
+                                <button type="button" onClick={() => setShowSecret(!showSecret)} className="absolute right-6 text-slate-400 hover:text-indigo-600 transition-colors cursor-pointer">
                                     {showSecret ? <EyeOff size={20} /> : <Eye size={20} />}
                                 </button>
                             </div>
+                            {errors.verifySecret && <p className="text-rose-500 text-xs font-bold ml-6 flex items-center gap-1"><AlertCircle size={12} /> {errors.verifySecret}</p>}
                         </div>
                     </div>
 
                     {/* Footer Actions */}
                     <div className="text-center pt-10 space-y-8">
                         <p className="text-xs font-bold text-slate-400">
-                            Submitting this form confirms agreement to our <span className="text-indigo-600 cursor-pointer">Governance Protocol</span>.
+                            Submitting this form confirms agreement to our <span className="text-indigo-600 cursor-pointer hover:underline">Governance Protocol</span>.
                         </p>
                         
                         <button 
                             type="submit" 
                             disabled={loading}
-                            className={`w-full py-6 bg-indigo-600 text-white rounded-[32px] font-black text-xl shadow-2xl shadow-indigo-200 hover:scale-[1.02] active:scale-[0.98] transition-all ${loading ? 'opacity-70 cursor-not-allowed' : ''}`}
+                            className={`w-full py-6 bg-indigo-600 text-white rounded-[32px] font-black text-xl shadow-2xl shadow-indigo-200 hover:scale-[1.02] active:scale-[0.98] transition-all cursor-pointer ${loading ? 'opacity-70 cursor-not-allowed' : ''}`}
                         >
                             {loading ? 'Orchestrating Deployment...' : 'Deploy Institutional Portal'}
                         </button>
@@ -265,7 +293,7 @@ const Register = () => {
                         )}
 
                         <div className="text-xs font-bold text-slate-400">
-                            Already orchestrated? <Link to="/login" className="text-indigo-600">Authenticate Portal</Link>
+                            Already orchestrated? <Link to="/login" className="text-indigo-600 hover:underline">Authenticate Portal</Link>
                         </div>
                     </div>
                 </form>
