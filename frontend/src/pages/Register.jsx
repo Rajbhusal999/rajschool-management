@@ -127,16 +127,32 @@ const Register = () => {
                     }])
                     .select();
 
-                if (error) throw error;
+                if (error) {
+                    // Handle unique constraint violations with human-readable messages
+                    if (error.code === '23505') {
+                        if (error.message.includes('email')) {
+                            setApiError('This Administrative Email is already registered. Please authenticate or use a different address.');
+                            return;
+                        }
+                        if (error.message.includes('emis_code')) {
+                            setApiError('This EMIS Code is already associated with an institution. Please verify your credentials.');
+                            return;
+                        }
+                    }
+                    throw error;
+                }
 
                 console.log('Institutional Portal Deployed:', data);
                 navigate('/login');
             } catch (err) {
                 console.error('Deployment Error:', err);
-                // Extract more descriptive error message (handling both Supabase and Generic errors)
                 const errorDetail = err.details || err.hint || '';
                 const baseMessage = err.message || 'Connection to regional orchestration network failed.';
-                setApiError(`${baseMessage}${errorDetail ? ` (${errorDetail})` : ''}`);
+                
+                // If we haven't already set a custom API error, set the general one
+                if (!apiError) {
+                    setApiError(`${baseMessage}${errorDetail ? ` (${errorDetail})` : ''}`);
+                }
             } finally {
                 setLoading(false);
             }
