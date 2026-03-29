@@ -52,18 +52,20 @@ const Subscription = () => {
             const id = sessionStorage.getItem('institutionId');
             if (!id) return;
 
-            const { data, error } = await supabase
+            const { data: instData, error } = await supabase
                 .from('institutions')
                 .select('status, expiry_date')
                 .eq('id', id)
                 .single();
 
-            if (data) {
+            if (instData) {
                 const now = new Date();
-                const expiryDate = data.expiry_date ? new Date(data.expiry_date) : null;
-                const isSubscribed = (data.status === 'ACTIVE' && expiryDate && expiryDate > now) || data.status === 'PENDING';
+                const expiryDate = instData.expiry_date ? new Date(instData.expiry_date) : null;
+                
+                // Subscription validation: Must be ACTIVE (not expired) or PENDING verification
+                const hasValidAccess = (instData.status === 'ACTIVE' && expiryDate && expiryDate > now) || instData.status === 'PENDING';
 
-                if (isSubscribed) {
+                if (hasValidAccess) {
                     navigate('/dashboard');
                 }
             }

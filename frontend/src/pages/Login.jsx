@@ -53,8 +53,13 @@ const Login = () => {
             const now = new Date();
             const expiryDate = data.expiry_date ? new Date(data.expiry_date) : null;
             
-            // Allow access if ACTIVE (not expired) or if a subscription is PENDING verification
-            if ((data.status === 'ACTIVE' && expiryDate && expiryDate > now) || data.status === 'PENDING') {
+            // Access Plan: 
+            // 1. ACTIVE and not expired -> Dashboard
+            // 2. PENDING (Verification) -> Dashboard (Banner will show)
+            // 3. UNPAID / Others        -> Subscription
+            const hasValidAccess = (data.status === 'ACTIVE' && expiryDate && expiryDate > now) || data.status === 'PENDING';
+            
+            if (hasValidAccess) {
                 navigate('/dashboard');
             } else {
                 navigate('/subscription');

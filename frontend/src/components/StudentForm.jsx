@@ -29,7 +29,10 @@ const StudentForm = ({ student, onClose, onSave }) => {
     tempTole: '',
     scholarshipType: 'None',
     disabilityType: 'None',
-    schoolId: 1
+    guardianPhone: '',
+    guardianEmail: '',
+    studentPhoto: null,
+    schoolId: sessionStorage.getItem('institutionId') || 1
   });
 
   const [sameAsPerm, setSameAsPerm] = useState(false);
@@ -60,8 +63,35 @@ const StudentForm = ({ student, onClose, onSave }) => {
     }
   };
 
+  const [errors, setErrors] = useState({});
+
+  const validate = () => {
+      const newErrors = {};
+      if (!formData.fullName) newErrors.fullName = 'Full Name is required';
+      if (!formData.studentClass) newErrors.studentClass = 'Class selection is required';
+      if (!formData.parentContact) newErrors.parentContact = "Parent's Phone is required";
+      if (!formData.dobNepali) newErrors.dobNepali = 'Date of Birth (BS) is required';
+      
+      // DOB Pattern YYYY/MM/DD
+      const dobPattern = /^\d{4}\/\d{2}\/\d{2}$/;
+      if (formData.dobNepali && !dobPattern.test(formData.dobNepali)) {
+          newErrors.dobNepali = 'Use YYYY/MM/DD format (e.g. 2060/01/15)';
+      }
+
+      // Phone Format (Nepal: 10 digits)
+      const phonePattern = /^\d{10}$/;
+      if (formData.parentContact && !phonePattern.test(formData.parentContact)) {
+          newErrors.parentContact = 'Valid 10-digit phone required';
+      }
+
+      setErrors(newErrors);
+      return Object.keys(newErrors).length === 0;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!validate()) return;
+    
     try {
       if (student) {
         await studentService.update(student.id, formData);
@@ -75,181 +105,269 @@ const StudentForm = ({ student, onClose, onSave }) => {
     }
   };
 
-  const SectionTitle = ({ icon: Icon, title }) => (
-    <div className="flex items-center gap-2 pb-2 border-b border-slate-100 mb-4 mt-6 first:mt-0">
-      <Icon size={18} className="text-indigo-600" />
-      <h3 className="font-bold text-slate-800 uppercase tracking-wider text-xs">{title}</h3>
+  const SectionTitle = ({ title }) => (
+    <div className="pb-4 border-b border-slate-100 mb-6 mt-10 first:mt-0">
+      <h3 className="font-extrabold text-slate-800 tracking-tight text-lg">{title}</h3>
+    </div>
+  );
+
+  const FormField = ({ label, name, required, placeholder, type = "text", options }) => (
+    <div className="space-y-2">
+      <label className="block text-sm font-bold text-slate-600 ml-1">
+        {label} {required && <span className="text-rose-500">*</span>}
+      </label>
+      {type === "select" ? (
+        <select 
+          name={name} 
+          required={required}
+          className={`w-full h-12 px-5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-4 focus:ring-indigo-100 outline-none transition font-semibold text-slate-700 appearance-none ${errors[name] ? 'border-rose-300 ring-4 ring-rose-50' : ''}`}
+          value={formData[name]} 
+          onChange={handleChange}
+        >
+          {options.map(opt => <option key={opt.value} value={opt.value}>{opt.label}</option>)}
+        </select>
+      ) : (
+        <input 
+          type={type} 
+          name={name} 
+          required={required}
+          placeholder={placeholder}
+          className={`w-full h-12 px-5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-4 focus:ring-indigo-100 outline-none transition font-semibold text-slate-700 placeholder:text-slate-300 ${errors[name] ? 'border-rose-300 ring-4 ring-rose-50' : ''}`}
+          value={formData[name]} 
+          onChange={handleChange} 
+        />
+      )}
+      {errors[name] && <p className="text-[10px] font-bold text-rose-500 ml-2 animate-in slide-in-from-top-1 duration-200">{errors[name]}</p>}
     </div>
   );
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4 overflow-y-auto">
-      <div className="bg-white w-full max-w-3xl rounded-2xl shadow-2xl p-0 relative flex flex-col max-h-[90vh]">
-        <div className="p-6 border-b border-slate-100 flex items-center justify-between bg-white sticky top-0 z-10 rounded-t-2xl">
-          <h2 className="text-xl font-bold text-slate-900">
-            {student ? 'Edit Student Profile' : 'Register New Student'}
+    <div className="fixed inset-0 z-[60] flex items-center justify-center bg-slate-900/60 backdrop-blur-md p-4 overflow-y-auto font-['Outfit',sans-serif]">
+      <div className="bg-white w-full max-w-4xl rounded-[40px] shadow-2xl p-0 relative flex flex-col max-h-[92vh] animate-in zoom-in-95 duration-300">
+        <div className="px-10 py-8 border-b border-slate-100 flex items-center justify-between bg-white sticky top-0 z-20 rounded-t-[40px]">
+          <h2 className="text-2xl font-black text-slate-900 tracking-tight">
+            {student ? 'Edit Student Profile' : 'Add New Student'}
           </h2>
           <button 
             onClick={onClose}
-            className="p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-full transition"
+            className="p-3 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-2xl transition-all"
           >
-            <X size={20} />
+            <X size={24} strokeWidth={2.5} />
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="p-8 overflow-y-auto space-y-6">
-          {/* General Info */}
+        <form onSubmit={handleSubmit} className="px-10 py-10 overflow-y-auto space-y-12">
+          {/* Basic Info Section */}
           <section>
-            <SectionTitle icon={User} title="Academic & General Info" />
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="md:col-span-2">
-                <label className="block text-xs font-bold text-slate-500 mb-1 uppercase">Full Name *</label>
-                <input type="text" name="fullName" required className="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none transition" value={formData.fullName} onChange={handleChange} />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-8">
+              <FormField 
+                label="Full Name" 
+                name="fullName" 
+                required 
+                placeholder="Institutional Title" 
+              />
+              <FormField 
+                label="Select Class" 
+                name="studentClass" 
+                required 
+                type="select"
+                options={[
+                  { label: "-- Select Class --", value: "" },
+                  ...['Nursery', 'LKG', 'UKG', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'].map(c => ({ label: c, value: c }))
+                ]}
+              />
+              <FormField 
+                label="Roll No (Class Roll)" 
+                name="rollNo" 
+                placeholder="Optional (Auto-filled if empty)" 
+              />
+              <FormField 
+                label="Date of Birth (BS)" 
+                name="dobNepali" 
+                required 
+                placeholder="YYYY/MM/DD" 
+              />
+              <FormField 
+                label="Gender" 
+                name="gender" 
+                required 
+                type="select"
+                options={[
+                  { label: "Male", value: "Male" },
+                  { label: "Female", value: "Female" },
+                  { label: "Other", value: "Other" }
+                ]}
+              />
+              <FormField 
+                label="EMIS No (Optional)" 
+                name="emisNo" 
+                placeholder="EMIS Identifier" 
+              />
+              <div className="space-y-2">
+                <label className="block text-sm font-bold text-slate-600 ml-1">Student Photo (Max 2MB, JPG/PNG)</label>
+                <div className="relative group">
+                    <input 
+                      type="file" 
+                      className="w-full px-5 py-3 bg-slate-50 border border-slate-200 rounded-xl font-semibold text-slate-500 text-sm file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-[10px] file:font-black file:bg-indigo-600 file:text-white hover:file:bg-indigo-700 transition-all cursor-pointer"
+                      accept="image/*"
+                      onChange={(e) => {
+                          const file = e.target.files[0];
+                          if (file && file.size > 2 * 1024 * 1024) {
+                              setErrors({...errors, studentPhoto: 'File must be under 2MB'});
+                          } else {
+                              setFormData({...formData, studentPhoto: file});
+                              const { studentPhoto: _, ...rest } = errors;
+                              setErrors(rest);
+                          }
+                      }}
+                    />
+                </div>
+                {errors.studentPhoto && <p className="text-[10px] font-bold text-rose-500 ml-2">{errors.studentPhoto}</p>}
               </div>
-              <div>
-                <label className="block text-xs font-bold text-slate-500 mb-1 uppercase">Class *</label>
-                <select name="studentClass" required className="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none transition" value={formData.studentClass} onChange={handleChange}>
-                  <option value="">Select</option>
-                  {['Nursery', 'LKG', 'UKG', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'].map(c => <option key={c} value={c}>{c}</option>)}
-                </select>
-              </div>
-              <div>
-                <label className="block text-xs font-bold text-slate-500 mb-1 uppercase">Roll No</label>
-                <input type="text" name="rollNo" className="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none transition" value={formData.rollNo} onChange={handleChange} />
-              </div>
-              <div>
-                <label className="block text-xs font-bold text-slate-500 mb-1 uppercase">DOB (Nepali) *</label>
-                <input type="text" name="dobNepali" placeholder="YYYY/MM/DD" required className="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none transition" value={formData.dobNepali} onChange={handleChange} />
-              </div>
-              <div>
-                <label className="block text-xs font-bold text-slate-500 mb-1 uppercase">Gender *</label>
-                <select name="gender" className="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none transition" value={formData.gender} onChange={handleChange}>
-                  <option value="Male">Male</option>
-                  <option value="Female">Female</option>
-                  <option value="Other">Other</option>
-                </select>
-              </div>
-              <div>
-                <label className="block text-xs font-bold text-slate-500 mb-1 uppercase">EMIS No</label>
-                <input type="text" name="emisNo" className="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none transition" value={formData.emisNo} onChange={handleChange} />
-              </div>
-              <div>
-                <label className="block text-xs font-bold text-slate-500 mb-1 uppercase">Caste</label>
-                <input type="text" name="caste" className="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none transition" value={formData.caste} onChange={handleChange} />
-              </div>
+              <FormField 
+                label="Caste" 
+                name="caste" 
+                placeholder="Enter Caste" 
+              />
             </div>
+            <p className="mt-8 text-xs font-bold text-slate-400 italic">
+              * Symbol No will be auto-generated sequentially (e.g. HI4101 for Class 4)
+            </p>
           </section>
 
           {/* Parent Info */}
           <section>
-            <SectionTitle icon={Users} title="Parent / Guardian Details" />
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-xs font-bold text-slate-500 mb-1 uppercase">Father's Name</label>
-                <input type="text" name="fatherName" className="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none transition" value={formData.fatherName} onChange={handleChange} />
-              </div>
-              <div>
-                <label className="block text-xs font-bold text-slate-500 mb-1 uppercase">Mother's Name</label>
-                <input type="text" name="motherName" className="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none transition" value={formData.motherName} onChange={handleChange} />
-              </div>
-              <div>
-                <label className="block text-xs font-bold text-slate-500 mb-1 uppercase">Guardian's Name</label>
-                <input type="text" name="guardianName" className="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none transition" value={formData.guardianName} onChange={handleChange} />
-              </div>
-              <div>
-                <label className="block text-xs font-bold text-slate-500 mb-1 uppercase">Parent's Phone *</label>
-                <input type="text" name="parentContact" required className="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none transition" value={formData.parentContact} onChange={handleChange} />
-              </div>
+            <SectionTitle title="Parent / Guardian Details" />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-8">
+              <FormField label="Father's Name" name="fatherName" placeholder="Paternal Name" />
+              <FormField label="Mother's Name" name="motherName" placeholder="Maternal Name" />
+              <FormField label="Guardian's Name" name="guardianName" placeholder="Legal Guardian" />
+              <FormField label="Parent's Phone" name="parentContact" required placeholder="Primary Contact" />
+              <FormField label="Guardian's Phone" name="guardianPhone" placeholder="Alternate Contact" />
+              <FormField label="Guardian's Email" name="guardianEmail" placeholder="Optional" />
             </div>
           </section>
 
-          {/* Addresses */}
+          {/* Permanent Address */}
           <section>
-            <SectionTitle icon={MapPin} title="Permanent Address" />
-            <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
-              <div className="md:col-span-2">
-                <label className="block text-[10px] font-bold text-slate-400 mb-1 uppercase">Province</label>
-                <input type="text" name="permProvince" className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-md text-sm outline-none transition" value={formData.permProvince} onChange={handleChange} />
-              </div>
-              <div className="md:col-span-2">
-                <label className="block text-[10px] font-bold text-slate-400 mb-1 uppercase">District</label>
-                <input type="text" name="permDistrict" className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-md text-sm outline-none transition" value={formData.permDistrict} onChange={handleChange} />
-              </div>
-              <div>
-                <label className="block text-[10px] font-bold text-slate-400 mb-1 uppercase">Ward</label>
-                <input type="text" name="permWardNo" className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-md text-sm outline-none transition" value={formData.permWardNo} onChange={handleChange} />
-              </div>
-              <div className="md:col-span-2">
-                <label className="block text-[10px] font-bold text-slate-400 mb-1 uppercase">Local Level</label>
-                <input type="text" name="permLocalLevel" className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-md text-sm outline-none transition" value={formData.permLocalLevel} onChange={handleChange} />
-              </div>
-              <div className="md:col-span-3">
-                <label className="block text-[10px] font-bold text-slate-400 mb-1 uppercase">Tole / Village</label>
-                <input type="text" name="permTole" className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-md text-sm outline-none transition" value={formData.permTole} onChange={handleChange} />
-              </div>
+            <SectionTitle title="Permanent Address" />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-8">
+              <FormField label="Province" name="permProvince" type="select" options={[
+                  { label: "Select Province", value: "" },
+                  { label: "Koshi Province", value: "1" },
+                  { label: "Madhesh Province", value: "2" },
+                  { label: "Bagmati Province", value: "3" },
+                  { label: "Gandaki Province", value: "4" },
+                  { label: "Lumbini Province", value: "5" },
+                  { label: "Karnali Province", value: "6" },
+                  { label: "Sudurpashchim Province", value: "7" }
+              ]} />
+              <FormField label="District" name="permDistrict" type="select" options={[
+                  { label: "Select District", value: "" },
+                  { label: "Kathmandu", value: "Kathmandu" },
+                  { label: "Lalitpur", value: "Lalitpur" },
+                  { label: "Bhaktapur", value: "Bhaktapur" },
+                  { label: "Chitwan", value: "Chitwan" },
+                  { label: "Kaski", value: "Kaski" }
+              ]} />
+              <FormField label="Local Level" name="permLocalLevel" type="select" options={[
+                  { label: "Select Local Level", value: "" },
+                  { label: "Metropolitan", value: "Metropolitan" },
+                  { label: "Sub-Metropolitan", value: "Sub-Metropolitan" },
+                  { label: "Municipality", value: "Municipality" },
+                  { label: "Rural Municipality", value: "Rural Municipality" }
+              ]} />
+              <FormField label="Ward No" name="permWardNo" placeholder="e.g. 04" />
+              <FormField label="Tole" name="permTole" placeholder="Neighborhood Name" />
             </div>
+          </section>
 
-            <div className="flex items-center gap-2 mt-6 mb-4">
-              <input type="checkbox" id="sameAsPerm" className="w-4 h-4 text-indigo-600 rounded" checked={sameAsPerm} onChange={handleSameAsPerm} />
-              <label htmlFor="sameAsPerm" className="text-sm font-semibold text-slate-600">Temporary Address same as Permanent</label>
+          {/* Temporary Address */}
+          <section>
+            <div className="flex items-center justify-between mb-6">
+                <SectionTitle title="Temporary Address" />
+                <label className="flex items-center gap-3 cursor-pointer group mt-6 pr-2">
+                    <input type="checkbox" className="peer sr-only" checked={sameAsPerm} onChange={handleSameAsPerm} />
+                    <div className="w-6 h-6 border-2 border-slate-200 rounded-lg group-hover:border-indigo-500 transition-all peer-checked:bg-indigo-600 peer-checked:border-indigo-600 relative">
+                        <div className="absolute inset-0 flex items-center justify-center opacity-0 peer-checked:opacity-100 transition-opacity">
+                            <div className="w-3 h-1.5 border-l-2 border-b-2 border-white -rotate-45 mb-0.5"></div>
+                        </div>
+                    </div>
+                    <span className="text-sm font-black text-slate-500 group-hover:text-indigo-600 transition-colors">Same as Permanent Address</span>
+                </label>
             </div>
 
             {!sameAsPerm && (
-              <div className="grid grid-cols-2 md:grid-cols-5 gap-3 animate-in fade-in duration-300">
-                <div className="md:col-span-2">
-                  <label className="block text-[10px] font-bold text-slate-400 mb-1 uppercase">Province</label>
-                  <input type="text" name="tempProvince" className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-md text-sm outline-none transition" value={formData.tempProvince} onChange={handleChange} />
-                </div>
-                <div className="md:col-span-2">
-                  <label className="block text-[10px] font-bold text-slate-400 mb-1 uppercase">District</label>
-                  <input type="text" name="tempDistrict" className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-md text-sm outline-none transition" value={formData.tempDistrict} onChange={handleChange} />
-                </div>
-                <div>
-                  <label className="block text-[10px] font-bold text-slate-400 mb-1 uppercase">Ward</label>
-                  <input type="text" name="tempWardNo" className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-md text-sm outline-none transition" value={formData.tempWardNo} onChange={handleChange} />
-                </div>
-                <div className="md:col-span-2">
-                  <label className="block text-[10px] font-bold text-slate-400 mb-1 uppercase">Local Level</label>
-                  <input type="text" name="tempLocalLevel" className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-md text-sm outline-none transition" value={formData.tempLocalLevel} onChange={handleChange} />
-                </div>
-                <div className="md:col-span-3">
-                  <label className="block text-[10px] font-bold text-slate-400 mb-1 uppercase">Tole / Village</label>
-                  <input type="text" name="tempTole" className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-md text-sm outline-none transition" value={formData.tempTole} onChange={handleChange} />
-                </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-8 animate-in slide-in-from-top-4 duration-300">
+                <FormField label="Province" name="tempProvince" type="select" options={[
+                    { label: "Select Province", value: "" },
+                    { label: "Koshi Province", value: "1" },
+                    { label: "Madhesh Province", value: "2" },
+                    { label: "Bagmati Province", value: "3" },
+                    { label: "Gandaki Province", value: "4" },
+                    { label: "Lumbini Province", value: "5" },
+                    { label: "Karnali Province", value: "6" },
+                    { label: "Sudurpashchim Province", value: "7" }
+                ]} />
+                <FormField label="District" name="tempDistrict" type="select" options={[
+                    { label: "Select District", value: "" },
+                    { label: "Chitwan", value: "Chitwan" },
+                    { label: "Kaski", value: "Kaski" }
+                ]} />
+                <FormField label="Local Level" name="tempLocalLevel" type="select" options={[
+                    { label: "Select Local Level", value: "" },
+                    { label: "Metropolitan", value: "Metropolitan" },
+                    { label: "Sub-Metropolitan", value: "Sub-Metropolitan" }
+                ]} />
+                <FormField label="Ward No" name="tempWardNo" />
+                <FormField label="Tole" name="tempTole" />
               </div>
             )}
           </section>
 
           {/* Additional Info */}
           <section>
-            <SectionTitle icon={Info} title="Additional Information" />
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-xs font-bold text-slate-500 mb-1 uppercase">Scholarship Category</label>
-                <select name="scholarshipType" className="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none transition" value={formData.scholarshipType} onChange={handleChange}>
-                  <option value="None">None</option>
-                  <option value="Dalit">Dalit</option>
-                  <option value="Marginalised">Marginalised</option>
-                  <option value="100% Girl">100% Girl</option>
-                  <option value="Other">Other</option>
-                </select>
-              </div>
-              <div>
-                <label className="block text-xs font-bold text-slate-500 mb-1 uppercase">Disability Status</label>
-                <select name="disabilityType" className="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none transition" value={formData.disabilityType} onChange={handleChange}>
-                  <option value="None">None</option>
-                  <option value="Physical">Physical</option>
-                  <option value="Mental">Mental</option>
-                  <option value="Other">Other</option>
-                </select>
-              </div>
+            <SectionTitle title="Additional Info" />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-8">
+              <FormField 
+                label="Scholarship Type" 
+                name="scholarshipType" 
+                type="select" 
+                options={[
+                  { label: "None", value: "None" },
+                  { label: "Dalit", value: "Dalit" },
+                  { label: "Marginalised", value: "Marginalised" },
+                  { label: "Other", value: "Other" }
+                ]} 
+              />
+              <FormField 
+                label="Disability" 
+                name="disabilityType" 
+                type="select" 
+                options={[
+                  { label: "None", value: "None" },
+                  { label: "Physical", value: "Physical" },
+                  { label: "Mental", value: "Mental" },
+                  { label: "Other", value: "Other" }
+                ]} 
+              />
             </div>
           </section>
 
-          <div className="pt-8 pb-4 flex items-center justify-end gap-4 sticky bottom-0 bg-white border-t border-slate-100 -mx-8 px-8 z-10">
-            <button type="button" onClick={onClose} className="px-6 py-2.5 text-slate-600 font-bold hover:bg-slate-50 rounded-xl transition">Cancel</button>
-            <button type="submit" className="px-10 py-2.5 bg-indigo-600 text-white font-bold rounded-xl hover:bg-indigo-700 transition shadow-lg shadow-indigo-100">
-              {student ? 'Update Profile' : 'Register Student'}
+          {/* Form Actions */}
+          <div className="pt-10 pb-4 flex items-center justify-end gap-6 sticky bottom-0 bg-white border-t border-slate-100 -mx-10 px-10 z-20">
+            <button 
+              type="button" 
+              onClick={onClose} 
+              className="flex-1 h-14 bg-slate-100 hover:bg-slate-200 text-slate-800 font-black text-sm uppercase tracking-widest rounded-2xl transition-all max-w-[240px]"
+            >
+              Cancel
+            </button>
+            <button 
+              type="submit" 
+              className="flex-1 h-14 bg-indigo-600 hover:bg-indigo-700 text-white font-black text-sm uppercase tracking-widest rounded-2xl transition-all shadow-xl shadow-indigo-100 max-w-[320px]"
+            >
+              {student ? 'Update Changes' : 'Save Student'}
             </button>
           </div>
         </form>
