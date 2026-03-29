@@ -22,7 +22,9 @@ const Register = () => {
         establishment: '',
         email: '',
         password: '',
-        verifySecret: ''
+        verifySecret: '',
+        logoFile: null,
+        backgroundFile: null
     });
 
     const validate = () => {
@@ -52,6 +54,12 @@ const Register = () => {
             setErrors(prev => ({ ...prev, [type]: `Max ${maxSize}MB allowed` }));
         } else {
             setErrors(prev => ({ ...prev, [type]: null }));
+            if (type === 'logo') {
+                setFormData(prev => ({ ...prev, logoFile: file }));
+            }
+            if (type === 'background') {
+                setFormData(prev => ({ ...prev, backgroundFile: file }));
+            }
         }
     };
 
@@ -66,6 +74,43 @@ const Register = () => {
                     throw new Error('Supabase configuration missing. Have you added the Environment Variables to Vercel?');
                 }
 
+                // 1. Upload Logo if exists
+                let logoUrl = null;
+                if (formData.logoFile) {
+                    const fileExt = formData.logoFile.name.split('.').pop();
+                    const fileName = `${formData.emisCode}_${Math.random()}.${fileExt}`;
+                    const filePath = `logos/${fileName}`;
+
+                    const { error: uploadError } = await supabase.storage
+                        .from('logos')
+                        .upload(fileName, formData.logoFile);
+
+                    if (uploadError) throw uploadError;
+
+                    const { data: publicUrlData } = supabase.storage
+                        .from('logos')
+                        .getPublicUrl(fileName);
+                    
+                    logoUrl = publicUrlData.publicUrl;
+                }
+
+                // 2. Upload Background if exists
+                let bgUrl = null;
+                if (formData.backgroundFile) {
+                    const fileName = `${formData.emisCode}_bg_${Math.random()}.${formData.backgroundFile.name.split('.').pop()}`;
+                    const { error: uploadError } = await supabase.storage
+                        .from('backgrounds')
+                        .upload(fileName, formData.backgroundFile);
+
+                    if (uploadError) throw uploadError;
+
+                    const { data: publicUrlData } = supabase.storage
+                        .from('backgrounds')
+                        .getPublicUrl(fileName);
+                    
+                    bgUrl = publicUrlData.publicUrl;
+                }
+
                 // Supabase Insertion Logic
                 const { data, error } = await supabase
                     .from('institutions')
@@ -76,7 +121,9 @@ const Register = () => {
                         address: formData.address,
                         establishment: formData.establishment,
                         email: formData.email,
-                        password: formData.password
+                        password: formData.password,
+                        logo_url: logoUrl,
+                        background_url: bgUrl
                     }])
                     .select();
 

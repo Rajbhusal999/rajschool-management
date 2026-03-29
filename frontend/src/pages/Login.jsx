@@ -32,7 +32,7 @@ const Login = () => {
         try {
             const { data, error } = await supabase
                 .from('institutions')
-                .select('id, school_name, status, expiry_date, address, establishment')
+                .select('id, school_name, status, expiry_date, address, establishment, logo_url, background_url')
                 .eq('emis_code', formData.emisCode)
                 .eq('password', formData.password)
                 .single();
@@ -46,6 +46,8 @@ const Login = () => {
             sessionStorage.setItem('schoolName', data.school_name);
             if (data.address) sessionStorage.setItem('schoolAddress', data.address);
             if (data.establishment) sessionStorage.setItem('estdYear', data.establishment);
+            if (data.logo_url) sessionStorage.setItem('schoolLogo', data.logo_url);
+            if (data.background_url) sessionStorage.setItem('schoolBackground', data.background_url);
             
             // Redirection logic based on subscription
             const now = new Date();

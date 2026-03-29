@@ -14,6 +14,8 @@ import { ActivityTrendChart, CompositionChart } from '../components/Charts';
 const SchoolDashboard = () => {
     const navigate = useNavigate();
     const [schoolName, setSchoolName] = useState('Raj School');
+    const [schoolLogo, setSchoolLogo] = useState(null);
+    const [schoolBackground, setSchoolBackground] = useState(null);
     const [stats, setStats] = useState({
         students: 0,
         teachers: 0,
@@ -29,12 +31,16 @@ const SchoolDashboard = () => {
         const fetchSchoolData = async () => {
             const rawId = sessionStorage.getItem('institutionId');
             const name = sessionStorage.getItem('schoolName');
+            const logo = sessionStorage.getItem('schoolLogo');
+            const bg = sessionStorage.getItem('schoolBackground');
             
             if (!rawId) {
                 navigate('/login');
                 return;
             }
             if (name) setSchoolName(name);
+            if (logo) setSchoolLogo(logo);
+            if (bg) setSchoolBackground(bg);
 
             const id = Number(rawId);
 
@@ -69,6 +75,14 @@ const SchoolDashboard = () => {
                 // Update session storage if data has changed
                 if (instData.address) sessionStorage.setItem('schoolAddress', instData.address);
                 if (instData.establishment) sessionStorage.setItem('estdYear', instData.establishment);
+                if (instData.logo_url) {
+                    sessionStorage.setItem('schoolLogo', instData.logo_url);
+                    setSchoolLogo(instData.logo_url);
+                }
+                if (instData.background_url) {
+                    sessionStorage.setItem('schoolBackground', instData.background_url);
+                    setSchoolBackground(instData.background_url);
+                }
 
                 // Subscription validation
                 const now = new Date();
@@ -111,9 +125,24 @@ const SchoolDashboard = () => {
     if (loading) return <div className="flex items-center justify-center min-h-[60vh] text-indigo-600 font-black animate-pulse">Initializing Terminal...</div>;
 
     return (
-        <div className="space-y-10 animate-in fade-in duration-700">
+        <div className="space-y-10 animate-in fade-in duration-700 relative">
             
-            {/* Verification Pending Banner */}
+            {/* Background Light Vision Artifact */}
+            {schoolBackground && (
+                <div 
+                    className="fixed inset-0 pointer-events-none z-0 opacity-[0.04] transition-opacity duration-1000"
+                    style={{
+                        backgroundImage: `url(${schoolBackground})`,
+                        backgroundSize: '80% auto', // Watermark style
+                        backgroundPosition: 'center',
+                        backgroundRepeat: 'no-repeat',
+                        filter: 'grayscale(100%) brightness(1.2)'
+                    }}
+                />
+            )}
+
+            <div className="relative z-10 space-y-10">
+                {/* Verification Pending Banner */}
             {stats.status === 'PENDING' && (
                 <div className="bg-amber-50 border-2 border-amber-200 rounded-[32px] p-6 flex flex-col md:flex-row items-center justify-between gap-6 shadow-sm border-dashed">
                     <div className="flex items-center gap-4 text-amber-700">
@@ -133,13 +162,24 @@ const SchoolDashboard = () => {
 
             {/* Title & Clock Header */}
             <header className="flex flex-col xl:flex-row xl:items-end justify-between gap-8">
-                <div className="space-y-1">
-                    <h1 className="text-[52px] font-[1000] text-indigo-600 tracking-tight leading-none drop-shadow-sm">
-                        School Overview
-                    </h1>
-                    <p className="text-lg font-black text-slate-400 max-w-md">
-                        Welcome back! Here's what's happening today.
-                    </p>
+                <div className="flex flex-col md:flex-row md:items-center gap-6">
+                    {schoolLogo ? (
+                        <div className="w-24 h-24 bg-white p-2 rounded-[32px] shadow-xl border border-slate-100 shrink-0">
+                            <img src={schoolLogo} alt={schoolName} className="w-full h-full object-contain rounded-[24px]" />
+                        </div>
+                    ) : (
+                        <div className="w-20 h-20 bg-indigo-600 rounded-[28px] flex items-center justify-center text-white shadow-lg shadow-indigo-200 shrink-0">
+                            <Building2 size={36} strokeWidth={2.5} />
+                        </div>
+                    )}
+                    <div className="space-y-1">
+                        <h1 className="text-[52px] font-[1000] text-indigo-600 tracking-tight leading-none drop-shadow-sm">
+                            {schoolName}
+                        </h1>
+                        <p className="text-lg font-black text-slate-400 max-w-md">
+                            Dashboard • Overview
+                        </p>
+                    </div>
                 </div>
                 <div className="w-full xl:w-auto">
                     <DigitalClock />
@@ -276,6 +316,7 @@ const SchoolDashboard = () => {
             </div>
 
         </div>
+    </div>
     );
 };
 
