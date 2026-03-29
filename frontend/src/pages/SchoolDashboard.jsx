@@ -27,30 +27,46 @@ const SchoolDashboard = () => {
 
     useEffect(() => {
         const fetchSchoolData = async () => {
-            const id = sessionStorage.getItem('institutionId');
+            const rawId = sessionStorage.getItem('institutionId');
             const name = sessionStorage.getItem('schoolName');
             
-            if (!id) {
+            if (!rawId) {
                 navigate('/login');
                 return;
             }
             if (name) setSchoolName(name);
 
-            if (id) {
+            const id = Number(rawId);
+
+            try {
+                // Pre-check for already stored data to speed up display
+                const storedAddress = sessionStorage.getItem('schoolAddress');
+                const storedEstd = sessionStorage.getItem('estdYear');
+                
+                // Fetch the latest status to ensure subscription is still valid
                 const { data: instData, error: instError } = await supabase
                     .from('institutions')
-                    .select('status, expiry_date, address, estd_year')
+                    .select('status, expiry_date, address, establishment')
                     .eq('id', id)
                     .single();
 
-                if (instError || !instData) {
+                if (instError) {
+                    console.error('Error fetching institutional data:', instError);
+                    // Only redirect if it's a critical auth error
+                    if (instError.code === 'PGRST116') navigate('/login');
+                    return;
+                }
+
+                if (!instData) {
                     navigate('/login');
                     return;
                 }
 
+                // Update session storage if data has changed
                 if (instData.address) sessionStorage.setItem('schoolAddress', instData.address);
-                if (instData.estd_year) sessionStorage.setItem('estdYear', instData.estd_year);
+                if (instData.establishment) sessionStorage.setItem('estdYear', instData.establishment);
 
+                // Subscription validation
                 const now = new Date();
                 const expiryDate = instData.expiry_date ? new Date(instData.expiry_date) : null;
                 const isSubscribed = (instData.status === 'ACTIVE' && expiryDate && expiryDate > now) || instData.status === 'PENDING';
@@ -78,8 +94,11 @@ const SchoolDashboard = () => {
                     status: instData.status,
                     plan: instData.status === 'PENDING' ? 'Pending' : '5_years'
                 });
+            } catch (err) {
+                console.error('Fatal dashboard error:', err);
+            } finally {
+                setLoading(false);
             }
-            setLoading(false);
         };
 
         fetchSchoolData();
