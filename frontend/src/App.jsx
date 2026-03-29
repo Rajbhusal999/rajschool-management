@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
 import Sidebar from "./components/Sidebar";
 import TopNav from "./components/TopNav";
 import StudentList from "./pages/StudentList";
@@ -7,7 +7,6 @@ import TeacherList from "./pages/TeacherList";
 import AttendanceEntry from "./pages/AttendanceEntry";
 import AttendanceReports from "./pages/AttendanceReports";
 import LandingPage from "./pages/LandingPage";
-import { useLocation } from "react-router-dom";
 
 import SubjectList from "./pages/SubjectList";
 import MarkEntry from "./pages/MarkEntry";
@@ -22,12 +21,57 @@ import Subscription from "./pages/Subscription";
 import Payment from "./pages/Payment";
 import About from "./pages/About";
 
-import { GraduationCap } from "lucide-react";
+import { GraduationCap, ShieldAlert } from "lucide-react";
+
+// Error Boundary Component
+class ErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false, error: null };
+  }
+  static getDerivedStateFromError(error) {
+    return { hasError: true, error };
+  }
+  componentDidCatch(error, errorInfo) {
+    console.error("Uncaught error:", error, errorInfo);
+  }
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div className="min-h-screen bg-rose-50 flex items-center justify-center p-6">
+          <div className="max-w-md w-full bg-white p-8 rounded-[32px] shadow-xl border-2 border-rose-100 text-center space-y-4">
+            <div className="w-16 h-16 bg-rose-100 text-rose-600 rounded-2xl flex items-center justify-center mx-auto">
+              <ShieldAlert size={32} />
+            </div>
+            <h1 className="text-2xl font-black text-slate-800 tracking-tight">System Interrupted</h1>
+            <p className="text-slate-500 font-bold text-sm leading-relaxed">
+              We encountered a rendering error. Our core engine has safely paused the interface.
+            </p>
+            <div className="bg-slate-50 p-4 rounded-xl text-left overflow-auto max-h-40 border border-slate-100">
+              <code className="text-[10px] text-rose-600 font-mono leading-none break-all">
+                {this.state.error?.toString()}
+              </code>
+            </div>
+            <button 
+              onClick={() => window.location.reload()}
+              className="w-full py-4 bg-indigo-600 text-white rounded-2xl font-black uppercase tracking-widest hover:bg-indigo-700 transition-all shadow-lg shadow-indigo-200"
+            >
+              Restart Engine
+            </button>
+          </div>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
 
 function App() {
   return (
     <Router>
-      <Layout />
+      <ErrorBoundary>
+        <Layout />
+      </ErrorBoundary>
     </Router>
   );
 }

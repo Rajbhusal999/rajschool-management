@@ -5,7 +5,7 @@ import {
     ShieldCheck, Bell, MessageSquare, BookOpen,
     ClipboardList, Trophy, Settings, LogOut,
     ChevronRight, CreditCard, Activity, Target,
-    Star, Zap, Rocket, Building2
+    Star, Zap, Rocket, Building2, CalendarCheck
 } from 'lucide-react';
 import { supabase } from '../supabaseClient';
 import DigitalClock from '../components/DigitalClock';
@@ -51,13 +51,17 @@ const SchoolDashboard = () => {
                     .single();
 
                 if (instError) {
-                    console.error('Error fetching institutional data:', instError);
-                    // Only redirect if it's a critical auth error
-                    if (instError.code === 'PGRST116') navigate('/login');
-                    return;
+                    console.error('Database Error:', instError);
+                    // If the institution ID is invalid or missing, clear session and bail out
+                    if (instError.code === 'PGRST116') {
+                        sessionStorage.clear();
+                        navigate('/login');
+                        return;
+                    }
                 }
 
                 if (!instData) {
+                    sessionStorage.clear();
                     navigate('/login');
                     return;
                 }

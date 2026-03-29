@@ -110,9 +110,11 @@ const Login = () => {
                             <input 
                                 type="text"
                                 placeholder="Institutional Identity"
+                                name="emisCode"
+                                autoComplete="username"
                                 className="w-full h-[72px] pl-16 pr-6 bg-white border-[2px] border-slate-100 rounded-[28px] font-bold text-[#1A1C2E] outline-none shadow-sm focus:border-indigo-600 focus:shadow-[0_0_0_10px_rgba(79,70,229,0.04)] transition-all placeholder:text-slate-300"
                                 value={formData.emisCode}
-                                onChange={(e) => setFormData({...formData, emisCode: e.target.value})}
+                                onChange={(e) => setFormData({...formData, emisCode: e.target.value.trim()})}
                                 required
                             />
                         </div>
@@ -130,6 +132,8 @@ const Login = () => {
                             <input 
                                 type={showPassword ? "text" : "password"}
                                 placeholder="••••••••"
+                                name="password"
+                                autoComplete="current-password"
                                 className="w-full h-[72px] pl-16 pr-16 bg-white border-[2px] border-slate-100 rounded-[28px] font-bold text-[#1A1C2E] outline-none shadow-sm focus:border-indigo-600 focus:shadow-[0_0_0_10px_rgba(79,70,229,0.04)] transition-all placeholder:text-slate-300"
                                 value={formData.password}
                                 onChange={(e) => setFormData({...formData, password: e.target.value})}
