@@ -54,15 +54,25 @@ const Payment = () => {
         if (error) {
             alert('Error submitting transaction: ' + error.message);
         } else {
-            // Also update the institution status to PENDING
-            await supabase
-                .from('institutions')
-                .update({ status: 'PENDING' })
-                .eq('id', institutionId);
+        // 2. Also update the institution status to PENDING
+        const { error: updateError } = await supabase
+            .from('institutions')
+            .update({ status: 'PENDING' })
+            .eq('id', Number(institutionId));
 
-            setSuccess(true);
-            setTimeout(() => navigate('/login'), 3000);
+        if (updateError) {
+            alert('Status Update Error: ' + updateError.message);
+            setIsSubmitting(false);
+            return;
         }
+
+        // 3. Clear session storage and redirect to login
+        // This forces the user to log in again with their fresh PENDING status
+        setSuccess(true);
+        setTimeout(() => {
+            sessionStorage.clear();
+            navigate('/login');
+        }, 3000);
         setIsSubmitting(false);
     };
 
