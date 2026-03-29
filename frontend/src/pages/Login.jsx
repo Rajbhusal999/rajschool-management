@@ -25,7 +25,7 @@ const Login = () => {
         try {
             const { data, error } = await supabase
                 .from('institutions')
-                .select('id, school_name')
+                .select('id, school_name, status, expiry_date')
                 .eq('emis_code', formData.emisCode)
                 .eq('password', formData.password)
                 .single();
@@ -38,7 +38,16 @@ const Login = () => {
             sessionStorage.setItem('institutionId', data.id);
             sessionStorage.setItem('schoolName', data.school_name);
             
-            navigate('/subscription');
+            // Redirection logic based on subscription
+            const now = new Date();
+            const expiryDate = data.expiry_date ? new Date(data.expiry_date) : null;
+            
+            // Allow access if ACTIVE (not expired) or if a subscription is PENDING verification
+            if ((data.status === 'ACTIVE' && expiryDate && expiryDate > now) || data.status === 'PENDING') {
+                navigate('/dashboard');
+            } else {
+                navigate('/subscription');
+            }
         } catch (err) {
             setError(err.message);
         } finally {

@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { supabase } from '../supabaseClient';
 import { Check, Star, Zap, ShieldCheck, ArrowRight } from 'lucide-react';
 import '../styles/CyberBackground.css';
 
@@ -45,6 +46,30 @@ const PricingCard = ({ plan, price, features, isPopular, onSelect }) => (
 
 const Subscription = () => {
     const navigate = useNavigate();
+
+    useEffect(() => {
+        const checkAccess = async () => {
+            const id = sessionStorage.getItem('institutionId');
+            if (!id) return;
+
+            const { data, error } = await supabase
+                .from('institutions')
+                .select('status, expiry_date')
+                .eq('id', id)
+                .single();
+
+            if (data) {
+                const now = new Date();
+                const expiryDate = data.expiry_date ? new Date(data.expiry_date) : null;
+                const isSubscribed = (data.status === 'ACTIVE' && expiryDate && expiryDate > now) || data.status === 'PENDING';
+
+                if (isSubscribed) {
+                    navigate('/dashboard');
+                }
+            }
+        };
+        checkAccess();
+    }, [navigate]);
 
     const plans = [
         {

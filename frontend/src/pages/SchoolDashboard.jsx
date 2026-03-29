@@ -4,19 +4,24 @@ import {
     Users, GraduationCap, Calendar, TrendingUp, 
     ShieldCheck, Bell, MessageSquare, BookOpen,
     ClipboardList, Trophy, Settings, LogOut,
-    ChevronRight, CreditCard, Activity, Target
+    ChevronRight, CreditCard, Activity, Target,
+    Star, Zap, Rocket, Building2
 } from 'lucide-react';
 import { supabase } from '../supabaseClient';
-import '../styles/CyberBackground.css';
+import DigitalClock from '../components/DigitalClock';
+import { ActivityTrendChart, CompositionChart } from '../components/Charts';
 
 const SchoolDashboard = () => {
     const navigate = useNavigate();
-    const [schoolName, setSchoolName] = useState('My Institution');
+    const [schoolName, setSchoolName] = useState('Raj School');
     const [stats, setStats] = useState({
         students: 0,
         teachers: 0,
-        subjects: 0,
-        attendance: '94%'
+        subjects: 12,
+        attendance: '96.8%',
+        daysRemaining: 0,
+        status: 'ACTIVE',
+        plan: '5_years'
     });
     const [loading, setLoading] = useState(true);
 
@@ -27,237 +32,221 @@ const SchoolDashboard = () => {
             if (name) setSchoolName(name);
 
             if (id) {
-                // Fetch basic counts for dashboard
-                const { count: studentCount } = await supabase
-                    .from('students')
-                    .select('*', { count: 'exact', head: true })
-                    .eq('institution_id', id);
-                
-                const { count: teacherCount } = await supabase
-                    .from('teachers')
-                    .select('*', { count: 'exact', head: true })
-                    .eq('institution_id', id);
+                const { data: instData, error: instError } = await supabase
+                    .from('institutions')
+                    .select('status, expiry_date, address, estd_year')
+                    .eq('id', id)
+                    .single();
+
+                if (instError || !instData) {
+                    navigate('/login');
+                    return;
+                }
+
+                if (instData.address) sessionStorage.setItem('schoolAddress', instData.address);
+                if (instData.estd_year) sessionStorage.setItem('estdYear', instData.estd_year);
+
+                const now = new Date();
+                const expiryDate = instData.expiry_date ? new Date(instData.expiry_date) : null;
+                const isSubscribed = (instData.status === 'ACTIVE' && expiryDate && expiryDate > now) || instData.status === 'PENDING';
+
+                if (!isSubscribed) {
+                    navigate('/subscription');
+                    return;
+                }
+
+                let diffDays = 0;
+                if (expiryDate) {
+                    const diffTime = Math.abs(expiryDate - now);
+                    diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                }
+
+                const { count: studentCount } = await supabase.from('students').select('*', { count: 'exact', head: true }).eq('school_id', id);
+                const { count: teacherCount } = await supabase.from('teachers').select('*', { count: 'exact', head: true }).eq('school_id', id);
 
                 setStats({
                     students: studentCount || 0,
                     teachers: teacherCount || 0,
-                    subjects: 12, // Default or fetch from curriculum
-                    attendance: '96.8%'
+                    subjects: 12,
+                    attendance: '96.8%',
+                    daysRemaining: diffDays,
+                    status: instData.status,
+                    plan: instData.status === 'PENDING' ? 'Pending' : '5_years'
                 });
             }
             setLoading(false);
         };
 
         fetchSchoolData();
-    }, []);
+    }, [navigate]);
 
-    const logout = () => {
-        sessionStorage.clear();
-        navigate('/login');
-    };
+    if (loading) return <div className="flex items-center justify-center min-h-[60vh] text-indigo-600 font-black animate-pulse">Initializing Terminal...</div>;
 
     return (
-        <div className="min-h-screen bg-[#0F172A] text-white font-['Outfit',sans-serif] relative overflow-hidden">
-            <div className="cyber-background fixed inset-0 z-0"></div>
+        <div className="space-y-10 animate-in fade-in duration-700">
+            
+            {/* Verification Pending Banner */}
+            {stats.status === 'PENDING' && (
+                <div className="bg-amber-50 border-2 border-amber-200 rounded-[32px] p-6 flex flex-col md:flex-row items-center justify-between gap-6 shadow-sm border-dashed">
+                    <div className="flex items-center gap-4 text-amber-700">
+                        <div className="w-12 h-12 bg-amber-200/50 rounded-2xl flex items-center justify-center shrink-0">
+                            <Activity size={24} className="animate-pulse" />
+                        </div>
+                        <div>
+                            <h3 className="font-black uppercase tracking-widest text-sm">Security Handshake in Progress</h3>
+                            <p className="text-amber-800/70 text-xs font-bold font-mono">Our core is validating your transaction. Full features will activate post-verification.</p>
+                        </div>
+                    </div>
+                    <div className="px-6 py-2 bg-amber-200 ring-2 ring-amber-100 rounded-full text-amber-800 text-[10px] font-black uppercase tracking-[0.2em] whitespace-nowrap">
+                        Mode: Observation Only
+                    </div>
+                </div>
+            )}
 
-            <div className="relative z-10 p-8 pt-6 max-w-[1600px] mx-auto space-y-8">
-                {/* Dashboard Header */}
-                <header className="flex flex-col md:flex-row md:items-center justify-between gap-6">
-                    <div className="space-y-2">
+            {/* Title & Clock Header */}
+            <header className="flex flex-col xl:flex-row xl:items-end justify-between gap-8">
+                <div className="space-y-1">
+                    <h1 className="text-[52px] font-[1000] text-indigo-600 tracking-tight leading-none drop-shadow-sm">
+                        School Overview
+                    </h1>
+                    <p className="text-lg font-black text-slate-400 max-w-md">
+                        Welcome back! Here's what's happening today.
+                    </p>
+                </div>
+                <div className="w-full xl:w-auto">
+                    <DigitalClock />
+                </div>
+            </header>
+
+            {/* Quick Metrics Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                {[
+                    { label: 'Total Students', value: stats.students, sub: 'Active Enrollment', icon: Users, color: 'indigo' },
+                    { label: 'Total Teachers', value: stats.teachers, sub: 'Academic Staff', icon: GraduationCap, color: 'emerald' },
+                    { label: 'Plan Level', value: stats.plan, sub: 'Premium Status', icon: Star, color: 'amber' }
+                ].map((card, i) => (
+                    <div key={i} className="bg-white border border-slate-200 p-8 rounded-[40px] shadow-sm flex items-center gap-6 group hover:border-indigo-300 transition-all hover:shadow-xl hover:shadow-indigo-500/5">
+                        <div className={`w-20 h-20 bg-${card.color}-500/10 rounded-[28px] flex items-center justify-center text-${card.color}-600 group-hover:scale-110 transition-transform`}>
+                            <card.icon size={36} strokeWidth={2.5} />
+                        </div>
+                        <div className="space-y-1">
+                            <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{card.label}</h4>
+                            <p className="text-4xl font-[1000] text-slate-800 tracking-tighter tabular-nums">{card.value}</p>
+                            <p className={`text-xs font-black text-${card.color}-500 uppercase tracking-tight`}>{card.sub}</p>
+                        </div>
+                    </div>
+                ))}
+            </div>
+
+            {/* Teacher Salary - Exclusive Banner */}
+            <div className="bg-white border border-slate-200 rounded-[40px] p-8 shadow-sm flex flex-col md:flex-row items-center justify-between gap-8 group hover:border-indigo-200 transition-all">
+                <div className="flex items-center gap-8">
+                    <div className="w-20 h-20 bg-indigo-600 rounded-[28px] flex items-center justify-center text-white shadow-lg shadow-indigo-200">
+                        <CreditCard size={36} strokeWidth={2.5} />
+                    </div>
+                    <div className="space-y-1 text-center md:text-left">
+                        <div className="flex flex-col md:flex-row md:items-center gap-3">
+                            <h3 className="text-3xl font-[1000] text-slate-800 tracking-tight">Teacher Salary</h3>
+                            <span className="px-4 py-1.5 bg-indigo-600 text-white text-[10px] font-black uppercase tracking-widest rounded-full shadow-md shadow-indigo-200">
+                                5-Year Exclusive
+                            </span>
+                        </div>
+                        <p className="text-sm font-bold text-slate-400 uppercase tracking-widest">Manage, track, and process monthly teacher salary records.</p>
+                    </div>
+                </div>
+                <button className="w-full md:w-auto px-10 py-5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-[24px] font-black text-sm uppercase tracking-widest shadow-xl shadow-indigo-200 transition-all flex items-center justify-center gap-3 group">
+                    <CalendarCheck size={20} />
+                    Manage Salaries
+                </button>
+            </div>
+
+            {/* Middle Section: Chart and Tools */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                {/* Activity Trend Card */}
+                <div className="lg:col-span-2 bg-white border border-slate-200 rounded-[40px] p-8 shadow-sm">
+                    <div className="flex items-center justify-between mb-10">
                         <div className="flex items-center gap-3">
-                            <div className="w-12 h-12 bg-indigo-600 rounded-2xl flex items-center justify-center shadow-lg shadow-indigo-500/20 border border-indigo-400/30">
-                                <ShieldCheck size={28} />
-                            </div>
-                            <h1 className="text-3xl font-[900] tracking-tight">{schoolName}</h1>
+                            <Activity size={24} className="text-indigo-600" />
+                            <h3 className="text-xl font-[1000] tracking-tight text-slate-800 uppercase">Activity Trend</h3>
                         </div>
-                        <p className="text-slate-400 font-medium flex items-center gap-2">
-                            <span className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></span>
-                            Institutional Control Center • System Active
-                        </p>
+                        <span className="px-5 py-2 bg-emerald-500/10 text-emerald-600 text-[10px] font-black uppercase tracking-widest rounded-full border border-emerald-100">Live Insight</span>
                     </div>
-
-                    <div className="flex items-center gap-4 bg-slate-900/50 p-2 rounded-3xl border border-slate-800 backdrop-blur-xl">
-                        <button className="p-3 text-slate-400 hover:text-white hover:bg-slate-800 rounded-2xl transition-all relative">
-                            <Bell size={22} />
-                            <span className="absolute top-3 right-3 w-2 h-2 bg-rose-500 rounded-full border-2 border-slate-900"></span>
-                        </button>
-                        <button className="p-3 text-slate-400 hover:text-white hover:bg-slate-800 rounded-2xl transition-all">
-                            <Settings size={22} />
-                        </button>
-                        <div className="w-px h-8 bg-slate-800 mx-2"></div>
-                        <button 
-                            onClick={logout}
-                            className="flex items-center gap-3 px-5 py-2.5 bg-rose-500/10 hover:bg-rose-500/20 text-rose-500 border border-rose-500/30 rounded-2xl font-black text-sm transition-all group"
-                        >
-                            <LogOut size={18} className="group-hover:-translate-x-1 transition-transform" />
-                            Sign Out
-                        </button>
+                    <div className="h-[300px] w-full">
+                        <ActivityTrendChart />
                     </div>
-                </header>
-
-                {/* Metrics Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                    {[
-                        { label: 'Total Students', value: stats.students, icon: Users, color: 'indigo' },
-                        { label: 'Academic Staff', value: stats.teachers, icon: GraduationCap, color: 'purple' },
-                        { label: 'Curriculum Units', value: stats.subjects, icon: BookOpen, color: 'cyan' },
-                        { label: 'Today\'s Attendance', value: stats.attendance, icon: Activity, color: 'emerald' }
-                    ].map((card, i) => (
-                        <div key={i} className="bg-slate-900/40 border border-slate-800 p-6 rounded-[32px] backdrop-blur-xl hover:border-slate-700 transition-all group relative overflow-hidden">
-                            <div className={`absolute top-0 right-0 w-32 h-32 bg-${card.color}-500/5 blur-[60px] rounded-full`}></div>
-                            <div className="flex items-center justify-between mb-4">
-                                <div className={`w-12 h-12 bg-slate-800 rounded-2xl flex items-center justify-center text-${card.color}-400 group-hover:scale-110 transition-transform`}>
-                                    <card.icon size={24} />
-                                </div>
-                                <div className="text-[10px] font-black uppercase tracking-widest text-slate-500 bg-slate-800/50 px-3 py-1.5 rounded-full border border-slate-700/50">
-                                    Live Data
-                                </div>
+                    <div className="flex justify-center gap-6 mt-6">
+                        {['Admissions', 'Exam Activity', 'Billing'].map((l, i) => (
+                            <div key={i} className="flex items-center gap-2">
+                                <div className={`w-3 h-3 rounded-full ${i===0?'bg-emerald-500':i===1?'bg-indigo-500':'bg-purple-500'}`}></div>
+                                <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">{l}</span>
                             </div>
-                            <div className="space-y-1">
-                                <h3 className="text-3xl font-[900] tracking-tight">{card.value}</h3>
-                                <p className="text-sm font-bold text-slate-400 uppercase tracking-widest">{card.label}</p>
-                            </div>
-                        </div>
-                    ))}
+                        ))}
+                    </div>
                 </div>
 
-                {/* Primary Workspace Sections */}
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                    {/* Activity Feed & Quick Actions */}
-                    <div className="lg:col-span-2 space-y-8">
-                        <section className="bg-slate-900/40 border border-slate-800 rounded-[40px] p-8 backdrop-blur-xl shadow-2xl overflow-hidden relative">
-                            <div className="absolute top-0 right-0 w-80 h-80 bg-indigo-500/5 blur-[100px] rounded-full"></div>
-                            
-                            <div className="flex items-center justify-between mb-8 relative z-10">
-                                <div className="space-y-1">
-                                    <h2 className="text-2xl font-[900] tracking-tight">Institutional Terminal</h2>
-                                    <p className="text-sm font-bold text-slate-400 uppercase tracking-widest">Execute campus-wide operations</p>
-                                </div>
-                                <div className="px-4 py-2 bg-indigo-500/10 border border-indigo-500/30 rounded-2xl text-indigo-400 text-xs font-black uppercase tracking-widest">
-                                    System Ver 4.2
-                                </div>
-                            </div>
+                {/* Data Extraction Tools Tool */}
+                <div className="bg-[#FDF6E3] border border-[#DEB887]/20 rounded-[40px] p-10 flex flex-col items-center justify-center text-center shadow-sm relative overflow-hidden group">
+                    <div className="absolute top-0 right-0 w-32 h-32 bg-[#8B4513]/5 blur-[40px] rounded-full translate-x-10 translate-y-[-10px]"></div>
+                    <h3 className="text-2xl font-[1000] text-[#8B4513] tracking-tight mb-4 group-hover:scale-105 transition-transform">Data Extraction Tools</h3>
+                    <p className="text-xs font-bold text-[#8B4513]/60 uppercase tracking-widest leading-relaxed mb-10 max-w-[200px]">
+                        Generate bulk admit cards, student IDs, and custom reports in just a few clicks.
+                    </p>
+                    <button className="w-full py-5 bg-white border-2 border-slate-100 hover:border-slate-200 text-slate-800 rounded-[24px] font-black text-sm uppercase tracking-widest shadow-xl shadow-[#8B4513]/5 transition-all flex items-center justify-center gap-3">
+                        <Rocket size={18} />
+                        Launch Extraction Bridge
+                    </button>
+                </div>
+            </div>
 
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 relative z-10">
-                                {[
-                                    { title: 'Student Onboarding', desc: 'Secure digital registration', icon: Users, path: '/students', color: 'indigo' },
-                                    { title: 'Attendance Log', desc: 'Execute daily verify protocol', icon: Calendar, path: '/attendance/entry', color: 'emerald' },
-                                    { title: 'Grading Nexus', desc: 'Process academic performance', icon: Trophy, path: '/exams/entry', color: 'amber' },
-                                    { title: 'Faculty Matrix', desc: 'Manage department staff', icon: GraduationCap, path: '/teachers', color: 'purple' }
-                                ].map((action, i) => (
-                                    <Link 
-                                        key={i} 
-                                        to={action.path}
-                                        className="flex items-center gap-5 p-5 bg-slate-800/30 hover:bg-slate-800/60 border border-slate-700/50 rounded-3xl transition-all hover:scale-[1.02] active:scale-[0.98] group"
-                                    >
-                                        <div className={`w-14 h-14 bg-${action.color}-500/10 rounded-2xl flex items-center justify-center text-${action.color}-400 shrink-0 shadow-lg`}>
-                                            <action.icon size={28} />
-                                        </div>
-                                        <div className="flex-1 min-w-0">
-                                            <h4 className="font-[900] leading-tight text-white mb-1">{action.title}</h4>
-                                            <p className="text-xs font-bold text-slate-500 uppercase tracking-tight truncate">{action.desc}</p>
-                                        </div>
-                                        <ChevronRight size={18} className="text-slate-600 group-hover:translate-x-1 transition-transform" />
-                                    </Link>
-                                ))}
-                            </div>
-                        </section>
-
-                        {/* Recent Activity Mini-Shell */}
-                        <section className="bg-slate-900/40 border border-slate-800 rounded-[40px] p-8 backdrop-blur-xl relative overflow-hidden">
-                            <h2 className="text-xl font-[900] tracking-tight mb-6 flex items-center gap-3">
-                                <Activity size={20} className="text-indigo-400" />
-                                Recent Network Activity
-                            </h2>
-                            <div className="space-y-4">
-                                {[
-                                    { type: 'Attendance', detail: 'Primary Section B marked successfully', time: '12m ago', icon: Calendar, color: 'emerald' },
-                                    { type: 'Exam Entry', detail: 'Mid-term maths results updated', time: '45m ago', icon: Trophy, color: 'amber' },
-                                    { type: 'Security', detail: 'System login from EMIS Core 2.0', time: '1h ago', icon: ShieldCheck, color: 'indigo' }
-                                ].map((item, i) => (
-                                    <div key={i} className="flex items-center gap-5 p-3 hover:bg-slate-800/30 rounded-2xl transition-colors">
-                                        <div className={`w-10 h-10 rounded-xl bg-${item.color}-500/10 flex items-center justify-center text-${item.color}-400`}>
-                                            <item.icon size={18} />
-                                        </div>
-                                        <div className="flex-1">
-                                            <p className="text-sm font-bold text-slate-200">{item.detail}</p>
-                                            <p className="text-[10px] font-black uppercase tracking-widest text-slate-500">{item.type} • {item.time}</p>
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-                        </section>
+            {/* Bottom Row: Operations and Composition */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                {/* Recent Operations Card */}
+                <div className="lg:col-span-2 bg-white border border-slate-200 rounded-[40px] p-10 shadow-sm">
+                    <div className="flex items-center gap-3 mb-10 border-b border-slate-100 pb-6">
+                        <Calendar size={24} className="text-indigo-600" />
+                        <h3 className="text-xl font-[1000] tracking-tight text-slate-800 uppercase">Recent Operations</h3>
                     </div>
+                    <div className="space-y-8 min-h-[300px] flex flex-col justify-center items-center text-slate-300">
+                         <div className="w-20 h-20 bg-slate-50 border border-slate-100 rounded-3xl flex items-center justify-center animate-pulse">
+                            <Activity size={32} />
+                         </div>
+                         <p className="text-xs font-black uppercase tracking-[0.3em]">Monitoring Network Core...</p>
+                    </div>
+                </div>
 
-                    {/* Subscription & Support Sidebar */}
-                    <div className="space-y-8">
-                        <section className="bg-gradient-to-br from-indigo-600 to-purple-700 rounded-[40px] p-8 shadow-2xl shadow-indigo-500/20 relative overflow-hidden border border-white/10 group">
-                            <div className="absolute top-0 right-0 w-40 h-40 bg-white/10 blur-[50px] rounded-full translate-x-10 translate-y-[-10px]"></div>
-                            <div className="relative z-10 space-y-6">
-                                <div className="flex justify-between items-start">
-                                    <div className="w-12 h-12 bg-white/20 backdrop-blur-lg rounded-2xl flex items-center justify-center border border-white/20">
-                                        <TrendingUp size={24} className="text-white" />
-                                    </div>
-                                    <span className="px-3 py-1 bg-white/20 text-white text-[10px] font-black uppercase tracking-widest rounded-full border border-white/20">Premium Active</span>
-                                </div>
-                                <div className="space-y-1">
-                                    <h3 className="text-2xl font-[1000] text-white tracking-tight">Enterprise Nexus</h3>
-                                    <p className="text-sm font-bold text-white/70 uppercase tracking-widest">Validity: 730 Days Remaining</p>
-                                </div>
-                                <Link 
-                                    to="/subscription"
-                                    className="block w-full py-4 bg-white text-indigo-700 rounded-3xl font-[1000] text-center shadow-lg hover:bg-slate-100 transition-all uppercase tracking-widest text-sm"
-                                >
-                                    Renew Subscription
-                                </Link>
-                            </div>
-                        </section>
-
-                        <section className="bg-slate-900/40 border border-slate-800 rounded-[40px] p-8 backdrop-blur-xl space-y-6">
-                            <div className="flex items-center gap-4">
-                                <div className="w-12 h-12 bg-slate-800 rounded-2xl flex items-center justify-center text-cyan-400">
-                                    <MessageSquare size={24} />
-                                </div>
-                                <div>
-                                    <h3 className="font-[900] text-lg tracking-tight leading-tight">Dev Support</h3>
-                                    <p className="text-xs font-bold text-slate-500 uppercase tracking-widest">Connect with our core team</p>
-                                </div>
-                            </div>
-                            <button className="w-full py-4 bg-slate-800/50 hover:bg-slate-800 border border-slate-700 rounded-3xl text-sm font-[1000] uppercase tracking-widest text-slate-300 transition-all">
-                                Open Secure Comms
-                            </button>
-                        </section>
-
-                        {/* System Health */}
-                        <section className="p-8 bg-slate-900/40 border border-slate-800 rounded-[40px] backdrop-blur-xl">
-                            <div className="flex items-center justify-between mb-4">
-                                <h3 className="text-xs font-black uppercase tracking-[0.2em] text-slate-400">Node Status</h3>
-                                <span className="text-xs font-black text-emerald-400 uppercase">Online</span>
-                            </div>
-                            <div className="space-y-4">
-                                <div className="space-y-1">
-                                    <div className="flex justify-between text-[10px] font-black uppercase text-slate-500 mb-1">
-                                        <span>Cloud Sync</span>
-                                        <span>99.9%</span>
-                                    </div>
-                                    <div className="w-full h-1.5 bg-slate-800 rounded-full overflow-hidden">
-                                        <div className="w-[99.9%] h-full bg-indigo-500 shadow-[0_0_10px_rgba(79,70,229,0.5)]"></div>
-                                    </div>
-                                </div>
-                                <div className="space-y-1">
-                                    <div className="flex justify-between text-[10px] font-black uppercase text-slate-500 mb-1">
-                                        <span>Database Load</span>
-                                        <span>12.4%</span>
-                                    </div>
-                                    <div className="w-full h-1.5 bg-slate-800 rounded-full overflow-hidden">
-                                        <div className="w-[12%] h-full bg-cyan-500 shadow-[0_0_10px_rgba(6,182,212,0.5)]"></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </section>
+                {/* Composition Card */}
+                <div className="bg-white border border-slate-200 rounded-[40px] p-10 shadow-sm flex flex-col items-center">
+                    <div className="flex items-center gap-3 mb-8 w-full border-b border-slate-100 pb-6">
+                        <Target size={24} className="text-indigo-600" />
+                        <h3 className="text-xl font-[1000] tracking-tight text-slate-800 uppercase">Composition</h3>
+                    </div>
+                    <div className="w-full h-[250px]">
+                        <CompositionChart />
+                    </div>
+                    <div className="mt-8 text-center bg-slate-50 p-6 rounded-3xl w-full border border-slate-100">
+                        <h5 className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Gender Distribution</h5>
+                        <p className="text-xl font-[1000] text-slate-700 tracking-tight">Balanced Ratio</p>
                     </div>
                 </div>
             </div>
+
+            {/* Income Expenditure Footer Section */}
+            <div className="bg-white border border-slate-200 rounded-[40px] p-10 shadow-sm flex flex-col md:flex-row items-center justify-between gap-8 group hover:border-emerald-200 transition-all border-l-8 border-l-emerald-500">
+                <div className="flex flex-col md:flex-row items-center gap-8">
+                    <div className="w-20 h-20 bg-emerald-100 rounded-[28px] flex items-center justify-center text-emerald-600">
+                        <Building2 size={36} strokeWidth={2.5} />
+                    </div>
+                    <div className="space-y-1 text-center md:text-left">
+                        <h3 className="text-2xl font-[1000] text-[#8B4513] tracking-tight mb-2">Income Expenditure Management</h3>
+                        <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">If your school is a government school, you can also use income expenditure management.</p>
+                    </div>
+                </div>
+                <button className="w-full md:w-auto px-10 py-5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-[24px] font-black text-sm uppercase tracking-widest shadow-xl shadow-emerald-200 transition-all flex items-center justify-center gap-3">
+                    Open System
+                    <ChevronRight size={18} />
+                </button>
+            </div>
+
         </div>
     );
 };

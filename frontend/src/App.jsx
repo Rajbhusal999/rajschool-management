@@ -1,6 +1,7 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Sidebar from "./components/Sidebar";
+import TopNav from "./components/TopNav";
 import StudentList from "./pages/StudentList";
 import TeacherList from "./pages/TeacherList";
 import AttendanceEntry from "./pages/AttendanceEntry";
@@ -52,10 +53,10 @@ const Layout = () => {
   }
 
   return (
-    <div className="flex min-h-screen bg-slate-50">
-      <Sidebar />
-      <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
-        <main className="flex-1 overflow-y-auto p-4 md:p-8">
+    <div className="min-h-screen bg-slate-50 flex flex-col font-['Outfit',sans-serif]">
+      <TopNav />
+      <div className="flex-1 flex flex-col min-w-0">
+        <main className="flex-1 p-4 md:p-8 max-w-[1600px] mx-auto w-full">
           <Routes>
             <Route path="/dashboard" element={<SchoolDashboard />} />
             <Route path="/login" element={<Login />} />

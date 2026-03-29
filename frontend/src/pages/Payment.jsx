@@ -54,6 +54,12 @@ const Payment = () => {
         if (error) {
             alert('Error submitting transaction: ' + error.message);
         } else {
+            // Also update the institution status to PENDING
+            await supabase
+                .from('institutions')
+                .update({ status: 'PENDING' })
+                .eq('id', institutionId);
+
             setSuccess(true);
             setTimeout(() => navigate('/dashboard'), 3000);
         }
