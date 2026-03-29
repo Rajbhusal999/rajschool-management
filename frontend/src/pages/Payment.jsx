@@ -61,7 +61,7 @@ const Payment = () => {
                 .eq('id', institutionId);
 
             setSuccess(true);
-            setTimeout(() => navigate('/dashboard'), 3000);
+            setTimeout(() => navigate('/login'), 3000);
         }
         setIsSubmitting(false);
     };
