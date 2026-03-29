@@ -29,6 +29,11 @@ const SchoolDashboard = () => {
         const fetchSchoolData = async () => {
             const id = sessionStorage.getItem('institutionId');
             const name = sessionStorage.getItem('schoolName');
+            
+            if (!id) {
+                navigate('/login');
+                return;
+            }
             if (name) setSchoolName(name);
 
             if (id) {

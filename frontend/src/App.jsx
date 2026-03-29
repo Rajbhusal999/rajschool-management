@@ -59,8 +59,6 @@ const Layout = () => {
         <main className="flex-1 p-4 md:p-8 max-w-[1600px] mx-auto w-full">
           <Routes>
             <Route path="/dashboard" element={<SchoolDashboard />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/admin-login" element={<AdminLogin />} />
             <Route path="/students" element={<StudentList />} />
 
             <Route path="/teachers" element={<TeacherList />} />

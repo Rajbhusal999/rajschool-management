@@ -15,7 +15,14 @@ const Login = () => {
         remember: false
     });
     const [loading, setLoading] = useState(false);
-    const [error, setError] = useState('');
+    const [error, setError] = React.useState('');
+
+    React.useEffect(() => {
+        const id = sessionStorage.getItem('institutionId');
+        if (id) {
+            navigate('/dashboard');
+        }
+    }, [navigate]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
