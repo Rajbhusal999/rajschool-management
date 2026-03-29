@@ -16,6 +16,7 @@ const AdminDashboard = () => {
     const [activeTab, setActiveTab] = useState('institutions'); // 'institutions' or 'subscriptions'
     const [error, setError] = useState(null);
     const [actionStatus, setActionStatus] = useState(null);
+    const [selectedScreenshot, setSelectedScreenshot] = useState(null);
 
     useEffect(() => {
         fetchInstitutions();
@@ -274,6 +275,7 @@ const AdminDashboard = () => {
                                         <th className="px-6 py-5 text-[11px] font-black text-slate-500 uppercase tracking-[0.2em] border-b border-slate-800">Amount</th>
                                         <th className="px-6 py-5 text-[11px] font-black text-slate-500 uppercase tracking-[0.2em] border-b border-slate-800 text-center">Gateway</th>
                                         <th className="px-6 py-5 text-[11px] font-black text-slate-500 uppercase tracking-[0.2em] border-b border-slate-800">Transaction ID</th>
+                                        <th className="px-6 py-5 text-[11px] font-black text-slate-500 uppercase tracking-[0.2em] border-b border-slate-800 text-center">Proof</th>
                                         <th className="px-6 py-5 text-[11px] font-black text-slate-500 uppercase tracking-[0.2em] border-b border-slate-800">Date Sent</th>
                                         <th className="px-6 py-5 text-[11px] font-black text-slate-500 uppercase tracking-[0.2em] border-b border-slate-800 text-center">Status</th>
                                         <th className="px-6 py-5 text-[11px] font-black text-slate-500 uppercase tracking-[0.2em] border-b border-slate-800 text-right">Auth Actions</th>
@@ -294,6 +296,18 @@ const AdminDashboard = () => {
                                                 </span>
                                             </td>
                                             <td className="px-6 py-6 font-mono text-sm text-slate-300 tracking-widest">{sub.transaction_code}</td>
+                                            <td className="px-6 py-6 text-center">
+                                                {sub.screenshot_url ? (
+                                                    <button 
+                                                        onClick={() => setSelectedScreenshot(sub.screenshot_url)}
+                                                        className="w-10 h-10 rounded-lg overflow-hidden border border-white/10 hover:border-indigo-500 transition-all bg-black/40"
+                                                    >
+                                                        <img src={sub.screenshot_url} alt="Proof" className="w-full h-full object-cover opacity-60 hover:opacity-100 transition-all" />
+                                                    </button>
+                                                ) : (
+                                                    <span className="text-[10px] font-bold text-slate-600">NO PROOF</span>
+                                                )}
+                                            </td>
                                             <td className="px-6 py-6 text-xs font-bold text-slate-500">{formatDate(sub.created_at)}</td>
                                             <td className="px-6 py-6 text-center">
                                                 <span className={`px-4 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-widest 
@@ -332,6 +346,28 @@ const AdminDashboard = () => {
 
                 {/* Cyber Decorative Elements */}
                 <div className="fixed bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-[#00D1FF] to-transparent opacity-20"></div>
+
+                {/* Screenshot Modal */}
+                {selectedScreenshot && (
+                    <div 
+                        className="fixed inset-0 z-[100] bg-black/90 backdrop-blur-sm flex items-center justify-center p-8 animate-in fade-in duration-300"
+                        onClick={() => setSelectedScreenshot(null)}
+                    >
+                        <div className="relative max-w-4xl w-full max-h-[90vh] flex flex-col items-center gap-6">
+                            <img 
+                                src={selectedScreenshot} 
+                                alt="Payment Proof Full" 
+                                className="w-full h-full object-contain rounded-2xl shadow-2xl border border-white/10"
+                            />
+                            <button 
+                                onClick={() => setSelectedScreenshot(null)}
+                                className="px-8 py-3 bg-white/10 hover:bg-white/20 text-white rounded-xl font-black text-[10px] uppercase tracking-[0.3em] border border-white/10 transition-all"
+                            >
+                                Close Handshake Visual
+                            </button>
+                        </div>
+                    </div>
+                )}
             </main>
         </div>
     );

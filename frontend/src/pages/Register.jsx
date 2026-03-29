@@ -143,7 +143,11 @@ const Register = () => {
                 }
 
                 console.log('Institutional Portal Deployed:', data);
-                navigate('/login');
+                if (data && data[0]) {
+                    sessionStorage.setItem('institutionId', data[0].id);
+                    sessionStorage.setItem('schoolName', data[0].school_name);
+                }
+                navigate('/subscription');
             } catch (err) {
                 console.error('Deployment Error:', err);
                 const errorDetail = err.details || err.hint || '';

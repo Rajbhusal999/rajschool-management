@@ -16,6 +16,9 @@ const Payment = () => {
     const [selectedPlan, setSelectedPlan] = useState(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [success, setSuccess] = useState(false);
+    const [screenshotFile, setScreenshotFile] = useState(null);
+    const [previewUrl, setPreviewUrl] = useState(null);
+    const [uploadError, setUploadError] = useState('');
 
     useEffect(() => {
         const plan = sessionStorage.getItem('selectedPlan');
@@ -26,11 +29,32 @@ const Payment = () => {
         }
     }, [navigate]);
 
+    const handleFileChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            if (file.size > 2 * 1024 * 1024) {
+                setUploadError('Screenshot must be less than 2MB');
+                return;
+            }
+            setScreenshotFile(file);
+            setPreviewUrl(URL.createObjectURL(file));
+            setUploadError('');
+        }
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (!transactionCode.trim()) return;
+        if (!transactionCode.trim()) {
+            setUploadError('Transaction ID is required');
+            return;
+        }
+        if (!screenshotFile) {
+            setUploadError('Payment screenshot is required');
+            return;
+        }
 
         setIsSubmitting(true);
+        setUploadError('');
         const institutionId = sessionStorage.getItem('institutionId');
         
         if (!institutionId) {
@@ -39,41 +63,60 @@ const Payment = () => {
             return;
         }
 
-        // Map the selected plan to the database insertion
-        const { error } = await supabase
-            .from('subscriptions')
-            .insert([{
-                institution_id: institutionId,
-                plan_name: selectedPlan.plan,
-                amount: parseFloat(selectedPlan.price.replace(',', '')),
-                payment_method: selectedMethod === 'esewa' ? 'eSewa' : 'Mobile Banking',
-                transaction_code: transactionCode.trim(),
-                status: 'PENDING'
-            }]);
+        try {
+            // 1. Upload Screenshot
+            const fileExt = screenshotFile.name.split('.').pop();
+            const fileName = `${institutionId}_${Date.now()}.${fileExt}`;
+            const filePath = `screenshots/${fileName}`;
 
-        if (error) {
-            alert('Error submitting transaction: ' + error.message);
-        } else {
-        // 2. Also update the institution status to PENDING
-        const { error: updateError } = await supabase
-            .from('institutions')
-            .update({ status: 'PENDING' })
-            .eq('id', Number(institutionId));
+            // Note: We're using the 'logos' bucket as a fallback if 'payment_screenshots' isn't created.
+            // But ideally, the user should create 'payment_screenshots' bucket.
+            const { error: uploadError } = await supabase.storage
+                .from('logos') // Using 'logos' bucket for now as it exists
+                .upload(filePath, screenshotFile);
 
-        if (updateError) {
-            alert('Status Update Error: ' + updateError.message);
+            if (uploadError) throw uploadError;
+
+            const { data: publicUrlData } = supabase.storage
+                .from('logos')
+                .getPublicUrl(filePath);
+            
+            const screenshotUrl = publicUrlData.publicUrl;
+
+            // 2. Insert Subscription record
+            const { error: subError } = await supabase
+                .from('subscriptions')
+                .insert([{
+                    institution_id: institutionId,
+                    plan_name: selectedPlan.plan,
+                    amount: parseFloat(selectedPlan.price.replace(',', '')),
+                    payment_method: selectedMethod === 'esewa' ? 'eSewa' : 'Mobile Banking',
+                    transaction_code: transactionCode.trim(),
+                    screenshot_url: screenshotUrl,
+                    status: 'PENDING'
+                }]);
+
+            if (subError) throw subError;
+
+            // 3. Update the institution status to PENDING
+            const { error: updateError } = await supabase
+                .from('institutions')
+                .update({ status: 'PENDING' })
+                .eq('id', Number(institutionId));
+
+            if (updateError) throw updateError;
+
+            setSuccess(true);
+            setTimeout(() => {
+                sessionStorage.clear();
+                navigate('/login');
+            }, 3000);
+        } catch (err) {
+            console.error('Payment Submission Error:', err);
+            setUploadError(err.message || 'Verification hand-shake failed.');
+        } finally {
             setIsSubmitting(false);
-            return;
         }
-
-        // 3. Clear session storage and redirect to login
-        // This forces the user to log in again with their fresh PENDING status
-        setSuccess(true);
-        setTimeout(() => {
-            sessionStorage.clear();
-            navigate('/login');
-        }, 3000);
-        setIsSubmitting(false);
     };
 
     if (success) {
@@ -199,6 +242,47 @@ const Payment = () => {
                                     required
                                 />
                             </div>
+
+                            <div className="space-y-3">
+                                <label className="text-[11px] font-black text-slate-500 uppercase tracking-widest ml-4">
+                                    Upload Payment Screenshot
+                                </label>
+                                <div className="relative group/upload">
+                                    <input 
+                                        type="file"
+                                        accept="image/*"
+                                        onChange={handleFileChange}
+                                        className="hidden"
+                                        id="screenshot-upload"
+                                    />
+                                    <label 
+                                        htmlFor="screenshot-upload"
+                                        className={`w-full h-32 border-2 border-dashed rounded-[32px] flex flex-col items-center justify-center cursor-pointer transition-all gap-2 overflow-hidden
+                                            ${previewUrl ? 'border-indigo-500 bg-indigo-500/5' : 'border-white/10 bg-white/5 hover:border-white/20 hover:bg-white/10'}`}
+                                    >
+                                        {previewUrl ? (
+                                            <img src={previewUrl} alt="Preview" className="w-full h-full object-cover opacity-60 group-hover/upload:opacity-80 transition-opacity" />
+                                        ) : (
+                                            <>
+                                                <Wallet size={32} className="text-slate-600 group-hover/upload:text-indigo-400 transition-colors" />
+                                                <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Select Visual Proof (Max 2MB)</span>
+                                            </>
+                                        )}
+                                        {previewUrl && (
+                                            <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover/upload:opacity-100 transition-opacity bg-black/40">
+                                                <span className="text-[10px] font-black text-white uppercase tracking-widest">Change Image</span>
+                                            </div>
+                                        )}
+                                    </label>
+                                </div>
+                            </div>
+
+                            {uploadError && (
+                                <div className="p-4 bg-rose-500/10 border border-rose-500/20 rounded-[20px] flex items-center gap-3">
+                                    <div className="w-2 h-2 rounded-full bg-rose-500 animate-pulse"></div>
+                                    <p className="text-[10px] font-black text-rose-500 uppercase tracking-widest">{uploadError}</p>
+                                </div>
+                            )}
 
                             <button 
                                 type="submit"
