@@ -110,12 +110,12 @@ const MarkSlipPrint = () => {
                 {/* Info Section */}
                 <div className="ms-info-grid">
                     <div className="ms-info-item">
-                        <span className="label">Subject:-</span>
-                        <span className="value border-b-dotted flex-grow">{subject}</span>
+                        <span className="label text-left">Class:-</span>
+                        <span className="value border-b-dotted w-32">{studentClass}</span>
                     </div>
-                    <div className="ms-info-item text-right">
-                        <span className="label">Class:-</span>
-                        <span className="value border-b-dotted w-24">{studentClass}</span>
+                    <div className="ms-info-item text-right justify-end ml-auto">
+                        <span className="label">Subject:-</span>
+                        <span className="value border-b-dotted flex-grow min-w-[200px]">{subject}</span>
                     </div>
                 </div>
 
@@ -123,15 +123,15 @@ const MarkSlipPrint = () => {
                 <table className="ms-table">
                     <thead>
                         <tr>
-                            <th rowSpan="2" className="w-16">Symbol no.</th>
-                            <th rowSpan="2">Student's Name</th>
-                            <th colSpan="2" className="text-center">Obtained marks</th>
-                            <th rowSpan="2" className="w-20">Total mark</th>
-                            <th rowSpan="2" className="w-20">Attendance</th>
+                            <th rowSpan="2" className="w-24">Symbol Number</th>
+                            <th rowSpan="2">Student Name</th>
+                            <th colSpan="2" className="text-center">Obtained Marks</th>
+                            <th rowSpan="2" className="w-28">Total Marks</th>
+                            <th rowSpan="2" className="w-28">Attendance</th>
                         </tr>
                         <tr>
-                            <th className="w-16 text-center">RW</th>
-                            <th className="w-16 text-center">LS</th>
+                            <th className="w-16 text-center">WR</th>
+                            <th className="w-16 text-center">OR</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -170,8 +170,8 @@ const MarkSlipPrint = () => {
                 {/* Footer Section */}
                 <div className="ms-footer mt-12 flex justify-start">
                     <div className="ms-signature-box">
-                        <span className="label">Subject teacher:</span>
-                        <span className="signature-line w-64 border-b"></span>
+                        <span className="label">Subject Teacher:</span>
+                        <span className="signature-line w-64 border-b-dotted"></span>
                     </div>
                 </div>
             </div>
