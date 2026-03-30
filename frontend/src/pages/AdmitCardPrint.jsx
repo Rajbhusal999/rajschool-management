@@ -48,12 +48,23 @@ const AdmitCardPrint = () => {
             ]);
             
             setInstitution(instRes.data);
+            setInstitution(instRes.data);
             setSchedule(schRes.data);
             
             // Filter only selected students from the class
-            const selectedStudents = stdRes.data.filter(s => studentIds.includes(s.id.toString()));
-            // Sort by roll number if available
-            selectedStudents.sort((a, b) => (parseInt(a.rollNo) || 0) - (parseInt(b.rollNo) || 0));
+            // Robust check using both s.id and s.ID or s.Id
+            const items = Array.isArray(stdRes.data) ? stdRes.data : [];
+            const selectedStudents = items.filter(s => {
+                const sid = (s.id || s.ID || s.Id || "").toString();
+                return studentIds.includes(sid);
+            });
+            
+            // Sort by roll number if available - handling both snake and camel
+            selectedStudents.sort((a, b) => {
+                const rollA = parseInt(a.rollNo || a.roll_no || 0);
+                const rollB = parseInt(b.rollNo || b.roll_no || 0);
+                return rollA - rollB;
+            });
             setStudents(selectedStudents);
         } catch (error) {
             console.error('Error fetching data:', error);
@@ -136,36 +147,26 @@ const AdmitCardPrint = () => {
                         size: A4 portrait; 
                         margin: 5mm; 
                     }
+                    /* Force black text and visible elements */
+                    * {
+                        -webkit-print-color-adjust: exact !important;
+                        print-color-adjust: exact !important;
+                        color: black !important;
+                    }
+                    .text-rose-600 { color: #e11d48 !important; } /* Keep exam red if possible */
+                    
                     /* Ultra-aggressive hide all site layout elements */
                     nav, header, footer, aside, .top-nav, .nav-container, .sidebar, 
                     .back-button, button.back-button, .print-hidden, [class*="TopNav"], [class*="Sidebar"] {
                         display: none !important;
                         opacity: 0 !important;
-                        visibility: hidden !important;
-                        height: 0 !important;
-                        width: 0 !important;
-                        position: absolute !important;
-                        pointer-events: none !important;
-                    }
-                    /* Reset global layout containers to take full width */
-                    body, html, #root, .min-h-screen, main, [class*="layout"], [class*="wrapper"] {
-                        margin: 0 !important;
-                        padding: 0 !important;
-                        background: white !important;
-                        min-height: 0 !important;
-                        max-width: none !important;
-                        width: 100% !important;
-                        display: block !important;
-                    }
-                    .admit-card-page {
-                        page-break-after: always !important;
-                        break-after: page !important;
                     }
                 }
                 .admit-card-container {
-                    height: 147mm;
-                    width: 210mm;
-                    padding: 8mm;
+                    height: 138mm;
+                    width: 200mm;
+                    margin: 0 auto;
+                    padding: 5mm;
                     position: relative;
                     overflow: hidden;
                     box-sizing: border-box;
@@ -224,7 +225,8 @@ const AdmitCardPrint = () => {
 
 const AdmitCard = ({ student, institution, schedule, examType, year, isLastInPage }) => {
     // Subject grid construction
-    const subjectList = schedule?.subjectData || [];
+    const scheduleData = schedule?.[0] || schedule || {};
+    const subjectList = scheduleData.subjectData || scheduleData.subject_data || [];
     const tableRows = [];
     for (let i = 0; i < 5; i++) {
         tableRows.push({
@@ -280,26 +282,26 @@ const AdmitCard = ({ student, institution, schedule, examType, year, isLastInPag
                     <div className="grid grid-cols-12 gap-4 mt-6 border border-black rounded p-3 bg-white/40 backdrop-blur-sm relative z-10 font-bold text-xs">
                         <div className="col-span-8 space-y-2">
                             <div className="flex items-end border-b border-dotted border-black/30 pb-0.5">
-                                <span className="text-[9px] uppercase tracking-wider text-slate-400 w-32 font-black">Student Name:</span>
-                                <span className="flex-1 uppercase font-black">{student.fullName}</span>
+                                <span className="text-[9px] uppercase tracking-wider text-slate-500 w-32 font-black">Student Name:</span>
+                                <span className="flex-1 uppercase font-black text-black">{student.fullName || student.full_name}</span>
                             </div>
                             <div className="flex items-end border-b border-dotted border-black/30 pb-0.5">
-                                <span className="text-[9px] uppercase tracking-wider text-slate-400 w-32 font-black">Symbol / Roll:</span>
-                                <span className="flex-1 font-black">{student.symbolNo || student.rollNo}</span>
+                                <span className="text-[9px] uppercase tracking-wider text-slate-500 w-32 font-black">Symbol / Roll:</span>
+                                <span className="flex-1 font-black text-black">{student.symbolNo || student.symbol_no || student.rollNo || student.roll_no}</span>
                             </div>
                         </div>
                         <div className="col-span-4 border-l border-black/20 pl-4 space-y-2">
                             <div className="flex justify-between items-end border-b border-dotted border-black/30 pb-0.5">
-                                <span className="text-[9px] uppercase tracking-wider text-slate-400 font-black">Class:</span>
-                                <span>{student.class}</span>
+                                <span className="text-[9px] uppercase tracking-wider text-slate-500 font-black">Class:</span>
+                                <span className="text-black font-bold">{student.class || student.studentClass || "7"}</span>
                             </div>
                             <div className="flex justify-between items-end border-b border-dotted border-black/30 pb-0.5">
-                                <span className="text-[9px] uppercase tracking-wider text-slate-400 font-black">Shift:</span>
-                                <span className="uppercase">{schedule?.shift || 'DAY'}</span>
+                                <span className="text-[9px] uppercase tracking-wider text-slate-500 font-black">Shift:</span>
+                                <span className="uppercase text-black font-bold">{scheduleData.shift || "DAY"}</span>
                             </div>
                             <div className="flex justify-between items-end border-b border-dotted border-black/30 pb-0.5">
-                                <span className="text-[9px] uppercase tracking-wider text-slate-400 font-black">Time:</span>
-                                <span className="whitespace-nowrap">{schedule?.examTime || '10:00 - 01:00'}</span>
+                                <span className="text-[9px] uppercase tracking-wider text-slate-500 font-black">Time:</span>
+                                <span className="whitespace-nowrap text-black font-bold">{scheduleData.examTime || scheduleData.exam_time || '10:00 - 01:00'}</span>
                             </div>
                         </div>
                     </div>

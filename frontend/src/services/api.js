@@ -142,7 +142,7 @@ const resequenceClassSymbolNumbers = async (schoolId, className) => {
 export const studentService = {
     getAll: async (params = {}) => {
         let query = supabase.from('students').select('*');
-        const schoolId = params.schoolId || sessionStorage.getItem('institutionId');
+        const schoolId = params.schoolId || getInstitutionId();
         if (schoolId) query = query.eq('school_id', Number(schoolId));
         const filterClass = params.studentClass || params.class;
         if (filterClass) query = query.eq('class', filterClass);
@@ -407,9 +407,9 @@ export const examService = {
         if (params.year) query = query.eq('year', Number(params.year));
         if (params.examType) query = query.eq('exam_type', params.examType);
         if (params.class) query = query.eq('class', params.class);
-        const { data, error } = await query.single();
-        if (error && error.code !== 'PGRST116') handleError(error, 'examService.getSchedule');
-        return { data: mapToCamelCase(data) };
+        const { data, error } = await query.order('id', { ascending: false }).limit(1);
+        if (error) handleError(error, 'examService.getSchedule');
+        return { data: mapToCamelCase(data?.[0]) };
     },
     saveSchedule: async (dataSpec) => {
         const schoolId = getInstitutionId();
