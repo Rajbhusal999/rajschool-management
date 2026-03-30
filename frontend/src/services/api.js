@@ -323,10 +323,17 @@ export const examService = {
     },
     saveSubject: async (dataSpec) => {
         const schoolId = dataSpec.schoolId || sessionStorage.getItem('institutionId');
-        const mappedData = mapToSnakeCase({ ...dataSpec, schoolId: Number(schoolId) });
-        const { data: insertedData, error } = await supabase.from('subjects').insert([mappedData]).select();
+        const dataToSave = { ...dataSpec, schoolId: Number(schoolId) };
+        
+        // Remove id if it's not present (for new records) to allow auto-generation
+        if (!dataToSave.id) {
+            delete dataToSave.id;
+        }
+        
+        const mappedData = mapToSnakeCase(dataToSave);
+        const { data, error } = await supabase.from('subjects').upsert([mappedData]).select();
         if (error) handleError(error, 'examService.saveSubject');
-        return { data: mapToCamelCase(insertedData[0]) };
+        return { data: mapToCamelCase(data?.[0]) };
     },
     deleteSubject: async (id) => await supabase.from('subjects').delete().eq('id', id),
     getMarks: async (params) => {

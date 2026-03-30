@@ -47,7 +47,7 @@ const SubjectList = () => {
         ...formData,
         schoolId: sessionStorage.getItem('institutionId'),
         classGroup: selectedGroup,
-        id: editingSubject?.id
+        ...(editingSubject?.id && { id: editingSubject.id })
       };
       await examService.saveSubject(payload);
       setShowModal(false);
