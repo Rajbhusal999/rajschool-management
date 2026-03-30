@@ -147,8 +147,19 @@ const AdmitCardPrint = () => {
                         size: A4 portrait; 
                         margin: 5mm; 
                     }
-                    /* Force black text and visible elements */
-                    * {
+                    .print-black {
+                        color: black !important;
+                    }
+                    /* Ensure white text stays white in the badge */
+                    .bg-black {
+                        background-color: black !important;
+                        color: white !important;
+                    }
+                    .bg-black * {
+                        color: white !important;
+                    }
+                    /* Force black text for everything else */
+                    body *:not(.bg-black):not(.bg-black *) {
                         -webkit-print-color-adjust: exact !important;
                         print-color-adjust: exact !important;
                         color: black !important;
