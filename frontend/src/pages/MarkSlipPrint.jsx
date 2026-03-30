@@ -90,22 +90,31 @@ const MarkSlipPrint = () => {
     return (
         <div className="markslip-print-wrapper">
             <div className="print-page portrait A4">
+                {/* Watermark Logo */}
+                {schoolInfo?.logo && (
+                    <div className="ms-watermark">
+                        <img src={schoolInfo.logo} alt="watermark" />
+                    </div>
+                )}
+
                 {/* Header Section */}
                 <div className="ms-header text-center">
                     <h1 className="ms-school-name uppercase bold">{schoolInfo?.schoolName || 'SCHOOL NAME'}</h1>
                     <p className="ms-school-address">{schoolInfo?.address || 'Address'}</p>
-                    <h2 className="ms-title uppercase bold">Markslip</h2>
+                    <div className="ms-title-wrapper">
+                        <h2 className="ms-title uppercase bold">Markslip</h2>
+                    </div>
                     <h3 className="ms-exam-type uppercase">{examType?.replace('_', ' ')} Exam - {year}</h3>
                 </div>
 
                 {/* Info Section */}
                 <div className="ms-info-grid">
                     <div className="ms-info-item">
-                        <span className="label">Subject:</span>
+                        <span className="label">Subject:-</span>
                         <span className="value border-b-dotted flex-grow">{subject}</span>
                     </div>
                     <div className="ms-info-item text-right">
-                        <span className="label">Class:</span>
+                        <span className="label">Class:-</span>
                         <span className="value border-b-dotted w-24">{studentClass}</span>
                     </div>
                 </div>
