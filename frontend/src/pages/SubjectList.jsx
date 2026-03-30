@@ -12,7 +12,9 @@ const SubjectList = () => {
     subjectName: '',
     subjectCode: '',
     creditHour: '',
-    classGroup: '1-3'
+    classGroup: '1-3',
+    subjectType: 'Compulsory',
+    hasCreditHour: true
   });
 
   const classGroups = ['PG', 'LKG', 'NURSERY', '1-3', '4-5', '6-8', '9-10'];
@@ -50,7 +52,7 @@ const SubjectList = () => {
       await examService.saveSubject(payload);
       setShowModal(false);
       setEditingSubject(null);
-      setFormData({ subjectName: '', subjectCode: '', creditHour: '', classGroup: selectedGroup });
+      setFormData({ subjectName: '', subjectCode: '', creditHour: '', classGroup: selectedGroup, subjectType: 'Compulsory', hasCreditHour: true });
       fetchSubjects();
     } catch (error) {
       console.error('Error saving subject:', error);
@@ -63,7 +65,9 @@ const SubjectList = () => {
       subjectName: subject.subjectName,
       subjectCode: subject.subjectCode || '',
       creditHour: subject.creditHour,
-      classGroup: subject.classGroup
+      classGroup: subject.classGroup,
+      subjectType: subject.subjectType || 'Compulsory',
+      hasCreditHour: subject.hasCreditHour !== undefined ? subject.hasCreditHour : true
     });
     setShowModal(true);
   };
@@ -96,7 +100,7 @@ const SubjectList = () => {
         <button 
           onClick={() => {
             setEditingSubject(null);
-            setFormData({ subjectName: '', subjectCode: '', creditHour: '', classGroup: selectedGroup });
+            setFormData({ subjectName: '', subjectCode: '', creditHour: '', classGroup: selectedGroup, subjectType: 'Compulsory', hasCreditHour: true });
             setShowModal(true);
           }}
           className="flex items-center gap-2 px-6 py-3 bg-indigo-600 text-white rounded-2xl font-bold hover:bg-indigo-700 transition-all shadow-lg shadow-indigo-100"
@@ -131,7 +135,12 @@ const SubjectList = () => {
               <div className="flex justify-between items-start mb-4">
                 <div>
                   <h3 className="text-lg font-black text-slate-800">{subject.subjectName}</h3>
-                  <span className="text-[10px] font-black uppercase text-indigo-500 tracking-widest">{subject.subjectCode || 'No Code'}</span>
+                  <div className="flex gap-2 items-center mt-1">
+                    <span className="text-[10px] font-black uppercase text-indigo-500 tracking-widest">{subject.subjectCode || 'No Code'}</span>
+                    {subject.subjectType === 'Optional' && (
+                      <span className="text-[8px] font-black uppercase bg-amber-100 text-amber-600 px-1.5 py-0.5 rounded-md tracking-widest leading-none">Optional</span>
+                    )}
+                  </div>
                 </div>
                 <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                   <button onClick={() => handleEdit(subject)} className="p-2 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-xl transition-all"><Edit2 size={16} /></button>
@@ -141,7 +150,7 @@ const SubjectList = () => {
               <div className="flex items-center gap-2 px-4 py-2 bg-slate-50 rounded-xl w-fit">
                 <Info size={14} className="text-slate-400" />
                 <span className="text-xs font-bold text-slate-600">
-                  {subject.creditHour} {isEarlyYears ? 'Total Marks' : 'Credit Hours'}
+                  {!subject.hasCreditHour ? 'Credit: Absent' : `${subject.creditHour} ${isEarlyYears ? 'Total Marks' : 'Credit Hours'}`}
                 </span>
               </div>
             </div>
@@ -180,6 +189,43 @@ const SubjectList = () => {
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
+                  <label className="text-xs font-black uppercase text-slate-400 tracking-wider">Subject Category</label>
+                  <div className="flex gap-3 bg-slate-50 p-1 rounded-2xl">
+                    {['Compulsory', 'Optional'].map(type => (
+                      <button
+                        key={type}
+                        type="button"
+                        onClick={() => setFormData(prev => ({ ...prev, subjectType: type }))}
+                        className={`flex-1 py-3 rounded-xl font-bold text-sm transition-all ${formData.subjectType === type ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-500 hover:text-slate-800'}`}
+                      >
+                        {type}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-xs font-black uppercase text-slate-400 tracking-wider">Credit Status</label>
+                  <div className="flex gap-3 bg-slate-50 p-1 rounded-2xl">
+                    {[
+                      { label: 'Present', value: true },
+                      { label: 'Absent', value: false }
+                    ].map(option => (
+                      <button
+                        key={option.label}
+                        type="button"
+                        onClick={() => setFormData(prev => ({ ...prev, hasCreditHour: option.value }))}
+                        className={`flex-1 py-3 rounded-xl font-bold text-sm transition-all ${formData.hasCreditHour === option.value ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-500 hover:text-slate-800'}`}
+                      >
+                        {option.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
                   <label className="text-xs font-black uppercase text-slate-400 tracking-wider">Subject Code</label>
                   <input
                     type="text"
@@ -190,20 +236,22 @@ const SubjectList = () => {
                     placeholder="MATH-101"
                   />
                 </div>
-                <div className="space-y-2">
-                  <label className="text-xs font-black uppercase text-slate-400 tracking-wider">{isEarlyYears ? 'Total Marks' : 'Credit Hours'}</label>
-                  <input
-                    type="number"
-                    name="creditHour"
-                    value={formData.creditHour}
-                    onChange={handleInputChange}
-                    step={isEarlyYears ? "1" : "0.5"}
-                    min="0"
-                    className="w-full px-5 py-4 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-indigo-500 font-bold transition-all"
-                    placeholder="e.g. 4"
-                    required
-                  />
-                </div>
+                {formData.hasCreditHour && (
+                  <div className="space-y-2 animate-in slide-in-from-top-2 duration-200">
+                    <label className="text-xs font-black uppercase text-slate-400 tracking-wider">{isEarlyYears ? 'Total Marks' : 'Credit Hours'}</label>
+                    <input
+                      type="number"
+                      name="creditHour"
+                      value={formData.creditHour}
+                      onChange={handleInputChange}
+                      step={isEarlyYears ? "1" : "0.5"}
+                      min="0"
+                      className="w-full px-5 py-4 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-indigo-500 font-bold transition-all"
+                      placeholder="e.g. 4"
+                      required
+                    />
+                  </div>
+                )}
               </div>
               <div className="pt-4 flex gap-3">
                 <button type="button" onClick={() => setShowModal(false)} className="flex-1 py-4 font-bold text-slate-500 hover:bg-slate-50 rounded-2xl transition-all">Cancel</button>
