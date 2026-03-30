@@ -26,172 +26,189 @@ const ReceiptBody = ({
   handleCustomLabelChange, 
   handleKeyDown, 
   calculateTotal,
-  numberToWords
+  numberToWords,
+  schoolLogo
 }) => (
-  <div className="relative border-2 border-slate-300 p-6 pt-4 pb-8 bg-[#FDFCF8] shadow-sm max-w-[48%] flex-1 print:border-slate-800 print:shadow-none print:bg-white print:p-1 print:pb-1 print:max-h-[195mm] overflow-hidden print:text-[9px]">
+  <div className="relative border-2 border-slate-900 p-6 pt-4 pb-8 bg-white shadow-sm max-w-[48%] flex-1 print:shadow-none print:bg-white print:p-0 print:pb-0 print:max-h-[190mm] overflow-hidden print:w-[138mm] print:min-w-[138mm]">
     {/* Watermark */}
-    <div className="absolute inset-0 flex items-center justify-center opacity-[0.06] pointer-events-none select-none z-0">
-      <span className="text-4xl font-black rotate-[-45deg] whitespace-nowrap uppercase tracking-widest text-slate-900 border-4 border-slate-900 px-6 py-2">
+    <div className="absolute inset-0 flex items-center justify-center opacity-[0.04] pointer-events-none select-none z-0">
+      <span className="text-4xl font-black rotate-[-45deg] whitespace-nowrap uppercase tracking-[0.3em] text-slate-900 border-8 border-slate-900 px-8 py-4">
         {type === 'school' ? 'SCHOOL COPY' : 'STUDENT COPY'}
       </span>
     </div>
 
-    <div className="relative z-10 space-y-3 print:space-y-1">
+    <div className="relative z-10 space-y-4 print:space-y-0.5 print:p-4">
       {/* Header */}
-      <div className="text-center space-y-1">
-        <h2 className="text-2xl font-black text-slate-800 tracking-tight uppercase print:text-sm">{schoolName}</h2>
-        <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest print:text-[7.5px]">{schoolAddress} | ESTD: {estdYear}</p>
-        <div className="inline-block px-6 py-1 bg-slate-100 border border-slate-300 rounded-full mt-2 font-black text-xs uppercase tracking-widest print:py-0 print:px-2 print:text-[9px] print:mt-0">
-          {translations.receiptTitle}
+      <div className="relative border-b-2 border-slate-900 pb-3 print:pb-1 min-h-[80px] print:min-h-[60px] flex items-center justify-center">
+        <div className="absolute left-0 top-1/2 -translate-y-1/2 w-20 h-20 bg-white border-2 border-slate-900 rounded-lg flex items-center justify-center print:w-14 print:h-14 overflow-hidden shadow-sm">
+          {schoolLogo ? (
+            <img src={schoolLogo} alt="Logo" className="w-full h-full object-contain" />
+          ) : (
+            <div className="flex flex-col items-center">
+              <span className="text-[10px] text-slate-300 font-bold print:hidden italic">NO LOGO</span>
+            </div>
+          )}
+        </div>
+        <div className="text-center px-20">
+          <h2 className="text-3xl font-black text-slate-900 tracking-tighter uppercase print:text-2xl leading-none">{schoolName}</h2>
+          <p className="text-[11px] font-black text-slate-700 uppercase tracking-widest print:text-[8px] mt-1 mb-0.5">{schoolAddress}</p>
+          <p className="text-[10px] font-bold text-slate-500 print:text-[7px] leading-none mb-1">ESTD: {estdYear}</p>
+          <div className="inline-block px-6 py-1 bg-slate-900 text-white rounded-full mt-1.5 font-black text-xs uppercase tracking-[0.2em] print:text-[10px] print:mt-0.5 shadow-sm">
+            {translations.receiptTitle}
+          </div>
         </div>
       </div>
 
       {/* Top Info */}
-      <div className="grid grid-cols-2 text-[11px] font-bold text-slate-700">
-        <div className="flex items-center gap-2">
-          <span>{translations.receiptNo}:</span>
-          <span className="border-b-2 border-dotted border-slate-400 flex-1 px-2">{receiptNo}</span>
+      <div className="flex justify-between items-center text-xs font-black text-slate-900 border-b border-slate-300 pb-2 print:pb-1 print:text-[10px]">
+        <div className="flex items-center gap-1">
+          <span className="opacity-70">{translations.receiptNo}:</span>
+          <span className="text-lg print:text-sm font-mono tracking-tighter px-1">{receiptNo}</span>
         </div>
-        <div className="flex items-center gap-2 justify-end text-right">
-          <span>{translations.date}:</span>
-          <div className="border-b-2 border-dotted border-slate-400 px-2 min-w-[100px]">
+        <div className="flex items-center gap-2">
+          <span className="opacity-70">{translations.date}:</span>
+          <div className="min-w-[120px] print:min-w-[100px]">
             <input 
               id="date"
               type="text" 
               autoComplete="off"
-              className="w-full bg-transparent outline-none border-none print:hidden h-4 text-right focus:bg-slate-50 transition-colors px-1 rounded"
+              className="w-full bg-transparent outline-none border-none print:hidden h-5 text-right focus:bg-slate-50 transition-colors px-1"
               value={formData.date}
               onChange={(e) => setFormData({...formData, date: e.target.value})}
               onKeyDown={(e) => handleKeyDown(e, 'fee-1')}
             />
-            <span className="hidden print:inline">{formData.date}</span>
+            <span className="hidden print:inline font-mono">{formData.date}</span>
           </div>
         </div>
       </div>
 
       {/* Student Details */}
-      <div className="space-y-3 print:space-y-0 text-[11px] print:text-[8.5px] font-bold text-slate-700">
-        <div className="flex items-center gap-2">
-          <span>{translations.studentName}:</span>
-          <div className="border-b-2 border-dotted border-slate-400 flex-1 px-2">
+      <div className="space-y-2.5 print:space-y-0 text-xs print:text-[10px] font-bold text-slate-900">
+        <div className="flex items-center gap-2 border-b border-dotted border-slate-500">
+          <span className="whitespace-nowrap opacity-70 italic">{translations.studentName}:</span>
+          <div className="flex-1">
             <input 
               id="studentName"
               type="text" 
               autoComplete="off"
-              className="w-full bg-transparent outline-none border-none print:hidden h-4 focus:bg-slate-50 transition-colors px-1 rounded"
+              className="w-full bg-transparent outline-none border-none print:hidden h-5 focus:bg-slate-50 transition-colors px-2 font-black"
               value={formData.studentName}
               onChange={(e) => setFormData({...formData, studentName: e.target.value})}
               onKeyDown={(e) => handleKeyDown(e, 'rollNo')}
             />
-            <span className="hidden print:inline">{formData.studentName}</span>
+            <span className="hidden print:inline font-black uppercase leading-tight">{formData.studentName}</span>
           </div>
         </div>
-        <div className="grid grid-cols-3 gap-4 print:gap-1">
+        
+        <div className="grid grid-cols-3 gap-4 border-b border-dotted border-slate-500 pb-0.5 print:pb-0">
           <div className="flex items-center gap-2">
-            <span>{translations.rollNo}:</span>
-            <div className="border-b-2 border-dotted border-slate-400 flex-1 px-1">
+            <span className="whitespace-nowrap opacity-70 italic">{translations.rollNo}:</span>
+            <div className="flex-1">
               <input 
                 id="rollNo"
                 type="text" 
                 autoComplete="off"
-                className="w-full bg-transparent outline-none border-none print:hidden h-4 text-center focus:bg-slate-50 transition-colors rounded"
+                className="w-full bg-transparent outline-none border-none print:hidden h-5 text-center focus:bg-slate-50 transition-colors font-black"
                 value={formData.rollNo}
                 onChange={(e) => setFormData({...formData, rollNo: e.target.value})}
                 onKeyDown={(e) => handleKeyDown(e, 'section')}
               />
-              <span className="hidden print:inline">{formData.rollNo}</span>
+              <span className="hidden print:inline font-black leading-tight">{formData.rollNo}</span>
             </div>
           </div>
-          <div className="flex items-center gap-2">
-            <span>{translations.section}:</span>
-            <div className="border-b-2 border-dotted border-slate-400 flex-1 px-1">
+          <div className="flex items-center gap-2 border-l border-dotted border-slate-400 px-3">
+            <span className="whitespace-nowrap opacity-70 italic">{translations.section}:</span>
+            <div className="flex-1">
               <input 
                 id="section"
                 type="text" 
                 autoComplete="off"
-                className="w-full bg-transparent outline-none border-none print:hidden h-4 text-center focus:bg-slate-50 transition-colors rounded"
+                className="w-full bg-transparent outline-none border-none print:hidden h-5 text-center focus:bg-slate-50 transition-colors font-black"
                 value={formData.section}
                 onChange={(e) => setFormData({...formData, section: e.target.value})}
                 onKeyDown={(e) => handleKeyDown(e, 'className')}
               />
-              <span className="hidden print:inline">{formData.section}</span>
+              <span className="hidden print:inline font-black uppercase leading-tight">{formData.section}</span>
             </div>
           </div>
-          <div className="flex items-center gap-2">
-            <span>{translations.class}:</span>
-            <div className="border-b-2 border-dotted border-slate-400 flex-1 px-1">
+          <div className="flex items-center gap-2 border-l border-dotted border-slate-400 pl-3">
+            <span className="whitespace-nowrap opacity-70 italic">{translations.class}:</span>
+            <div className="flex-1">
               <input 
                 id="className"
                 type="text" 
                 autoComplete="off"
-                className="w-full bg-transparent outline-none border-none print:hidden h-4 text-center focus:bg-slate-50 transition-colors rounded"
+                className="w-full bg-transparent outline-none border-none print:hidden h-5 text-center focus:bg-slate-50 transition-colors font-black"
                 value={formData.className}
                 onChange={(e) => setFormData({...formData, className: e.target.value})}
                 onKeyDown={(e) => handleKeyDown(e, 'month')}
               />
-              <span className="hidden print:inline">{formData.className}</span>
+              <span className="hidden print:inline font-black uppercase text-lg print:text-xs leading-tight">{formData.className}</span>
             </div>
           </div>
         </div>
-        <div className="grid grid-cols-2 gap-4 print:gap-1">
+
+        <div className="grid grid-cols-2 gap-4 border-b border-dotted border-slate-500 pb-0.5 print:pb-0">
           <div className="flex items-center gap-2">
-            <span>{translations.month}:</span>
-            <div className="border-b-2 border-dotted border-slate-400 flex-1 px-2">
+            <span className="whitespace-nowrap opacity-70 italic">{translations.month}:</span>
+            <div className="flex-1">
               <input 
                 id="month"
                 type="text" 
                 autoComplete="off"
-                className="w-full bg-transparent outline-none border-none print:hidden h-4 focus:bg-slate-50 transition-colors px-1 rounded"
+                className="w-full bg-transparent outline-none border-none print:hidden h-5 focus:bg-slate-50 transition-colors px-2 font-black"
                 value={formData.month}
                 onChange={(e) => setFormData({...formData, month: e.target.value})}
                 onKeyDown={(e) => handleKeyDown(e, 'guardianName')}
               />
-              <span className="hidden print:inline">{formData.month}</span>
+              <span className="hidden print:inline font-black uppercase leading-tight">{formData.month}</span>
             </div>
           </div>
-          <div className="flex items-center gap-2">
-            <span>{translations.guardianName}:</span>
-            <div className="border-b-2 border-dotted border-slate-400 flex-1 px-2">
+          <div className="flex items-center gap-2 border-l border-dotted border-slate-400 pl-3">
+            <span className="whitespace-nowrap opacity-70 italic">{translations.guardianName}:</span>
+            <div className="flex-1">
               <input 
                 id="guardianName"
                 type="text" 
                 autoComplete="off"
-                className="w-full bg-transparent outline-none border-none print:hidden h-4 focus:bg-slate-50 transition-colors px-1 rounded"
+                className="w-full bg-transparent outline-none border-none print:hidden h-5 focus:bg-slate-50 transition-colors px-2 font-black"
                 value={formData.guardianName}
                 onChange={(e) => setFormData({...formData, guardianName: e.target.value})}
                 onKeyDown={(e) => handleKeyDown(e, 'date')}
               />
-              <span className="hidden print:inline">{formData.guardianName}</span>
+              <span className="hidden print:inline font-black uppercase leading-tight">{formData.guardianName}</span>
             </div>
           </div>
         </div>
       </div>
 
       {/* Table */}
-      <table className="w-full border-collapse border-y border-slate-800 text-[10px] print:text-[8.5px] font-bold mt-2 print:mt-1">
+      <table className="w-full border-collapse border-b-2 border-t-2 border-slate-900 text-xs print:text-[10px] font-bold mt-2">
         <thead>
-          <tr className="bg-slate-50 border-b border-slate-800 print:bg-transparent">
-            <th className="border-r border-slate-800 w-10 py-1.5 print:py-0">{translations.serialNo}</th>
-            <th className="border-r border-slate-800 px-4 py-1.5 print:py-0 text-left">{translations.particulars}</th>
-            <th className="w-24 py-1.5 print:py-0">{translations.amount}</th>
+          <tr className="bg-slate-100 border-b-2 border-slate-900 print:bg-transparent">
+            <th className="border-r border-slate-900 w-12 py-2 print:py-0.5">{translations.serialNo}</th>
+            <th className="border-r border-slate-900 px-4 py-2 print:py-0.5 text-left">{translations.particulars}</th>
+            <th className="w-28 py-2 print:py-0.5">{translations.amount}</th>
           </tr>
         </thead>
         <tbody>
           {fees.map((fee, idx) => (
-            <tr key={fee.id} className="border-b border-slate-200 print:border-slate-100 last:border-slate-800 print:leading-none">
-              <td className="border-r border-slate-800 text-center py-1 print:py-0 bg-slate-50/50 print:bg-transparent h-4 print:h-3">{fee.id}</td>
-              <td className="border-r border-slate-800 px-4 py-1 print:px-2 print:py-0">
-                {idx < 18 ? (
-                  language === 'ne' ? fee.nameNe : fee.nameEn
-                ) : (
-                  <input 
-                    type="text" 
-                    placeholder="..."
-                    className="w-full bg-transparent outline-none border-none print:hidden h-3"
-                    value={language === 'ne' ? fee.nameNe : fee.nameEn}
-                    onChange={(e) => handleCustomLabelChange(idx, e.target.value)}
-                  />
-                )}
+            <tr key={fee.id} className="border-b border-slate-200 last:border-none h-8 print:h-[4.8mm] leading-none">
+              <td className="border-r border-slate-900 text-center py-0 font-mono opacity-60">{fee.id}</td>
+              <td className="border-r border-slate-900 px-4 py-0 print:px-3">
+                <div className="print:hidden">
+                  {idx < 15 ? (
+                    language === 'ne' ? fee.nameNe : fee.nameEn
+                  ) : (
+                    <input 
+                      type="text" 
+                      placeholder="..."
+                      className="w-full bg-transparent outline-none border-none h-4"
+                      value={language === 'ne' ? fee.nameNe : fee.nameEn}
+                      onChange={(e) => handleCustomLabelChange(idx, e.target.value)}
+                    />
+                  )}
+                </div>
                 <span className="hidden print:inline">{language === 'ne' ? fee.nameNe : fee.nameEn}</span>
               </td>
               <td className="py-0 px-0 relative">
@@ -199,35 +216,35 @@ const ReceiptBody = ({
                   id={`fee-${idx + 1}`}
                   type="number" 
                   autoComplete="off"
-                  className="w-full h-full bg-transparent outline-none border-none text-right px-2 font-mono print:hidden [-moz-appearance:_textfield] [&::-webkit-inner-spin-button]:m-0 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:m-0 focus:bg-slate-50 transition-colors"
+                  className="w-full h-full bg-transparent outline-none border-none text-right px-3 font-mono print:hidden [-moz-appearance:_textfield] [&::-webkit-inner-spin-button]:m-0 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:m-0 focus:bg-slate-50 transition-colors"
                   value={fee.amount}
                   onChange={(e) => handleFeeChange(idx, e.target.value)}
                   onKeyDown={(e) => handleKeyDown(e, idx < fees.length - 1 ? `fee-${idx + 2}` : 'submit-btn')}
                 />
-                <span className="hidden print:block text-right px-2 font-mono">{fee.amount ? parseFloat(fee.amount).toFixed(2) : ''}</span>
+                <span className="hidden print:block text-right px-3 font-mono font-black">{fee.amount ? parseFloat(fee.amount).toFixed(2) : ''}</span>
               </td>
             </tr>
           ))}
           {/* Total Row */}
-          <tr className="bg-slate-100/50 font-black text-xs print:text-[9.5px] print:bg-transparent">
-            <td colSpan={2} className="border-r border-slate-800 px-4 py-2 print:py-0 text-right">{translations.total}</td>
-            <td className="px-2 py-2 print:py-0 text-right font-mono">{calculateTotal().toFixed(2)}</td>
+          <tr className="bg-slate-50 font-black text-sm print:text-[11px] print:bg-transparent border-t-2 border-slate-900 h-9 print:h-6">
+            <td colSpan={2} className="border-r border-slate-900 px-6 text-right uppercase tracking-[0.1em]">{translations.total}</td>
+            <td className="px-3 text-right font-mono bg-slate-900 text-white print:bg-white print:text-black">{calculateTotal().toFixed(2)}</td>
           </tr>
         </tbody>
       </table>
 
       {/* Footer Area */}
-      <div className="pt-2 space-y-4 print:space-y-0 print:pt-1">
-        <div className="flex items-center gap-2 text-[10px] font-bold print:text-[8.5px]">
-          <span>{translations.inWords}:</span>
-          <div className="border-b-2 border-dotted border-slate-400 flex-1 min-h-[16px] print:min-h-0 px-2 font-black text-slate-600 italic">
+      <div className="pt-2 space-y-6 print:space-y-2">
+        <div className="flex items-center gap-3 text-[11px] font-black print:text-[10px]">
+          <span className="opacity-70 italic">{translations.inWords}:</span>
+          <div className="border-b border-dotted border-slate-600 flex-1 min-h-[20px] px-2 text-slate-800 italic uppercase">
             {numberToWords(calculateTotal())}
           </div>
         </div>
         
-        <div className="flex justify-end pt-4 print:pt-1">
-          <div className="text-center min-w-[120px]">
-            <div className="border-t border-slate-800 pt-1 text-[10px] font-black uppercase tracking-widest print:text-[8px]">
+        <div className="flex justify-end pt-6 print:pt-2">
+          <div className="text-center min-w-[140px]">
+            <div className="border-t-2 border-slate-900 pt-1.5 text-[11px] font-black uppercase tracking-[0.2em]">
               {translations.receiverSign}
             </div>
           </div>
@@ -254,7 +271,7 @@ const StudentFees = () => {
     className: '',
     month: '',
     guardianName: '',
-    date: '2082-12-17' // Default Nepali Date for March 30, 2026
+    date: '2082-12-17' // Default Nepali Date
   });
 
   const [fees, setFees] = useState([
@@ -273,18 +290,17 @@ const StudentFees = () => {
     { id: 13, nameEn: 'Red Cross', nameNe: 'रेडक्रस', amount: '' },
     { id: 14, nameEn: 'Recommendation/Certificate', nameNe: 'सिफारिश', amount: '' },
     { id: 15, nameEn: 'Miscellaneous', nameNe: 'विविध', amount: '' },
-    { id: 16, nameEn: 'Support', nameNe: 'सहयोग', amount: '' },
-    { id: 17, nameEn: 'School Diary', nameNe: 'वि. डायरी', amount: '' },
-    { id: 18, nameEn: 'Other', nameNe: 'अन्य', amount: '' },
-    { id: 19, nameEn: '', nameNe: '', amount: '' },
-    { id: 20, nameEn: '', nameNe: '', amount: '' },
-    { id: 21, nameEn: '', nameNe: '', amount: '' },
+    { id: 16, nameEn: '', nameNe: '', amount: '' },
+    { id: 17, nameEn: '', nameNe: '', amount: '' },
   ]);
 
   const schoolName = sessionStorage.getItem('schoolName') || 'RAJ SCHOOL';
   const schoolAddress = sessionStorage.getItem('schoolAddress') || 'Bharatpur-11, Chitwan';
   const estdYear = sessionStorage.getItem('estdYear') || '2050';
+  const schoolLogo = sessionStorage.getItem('schoolLogo');
   const institutionId = sessionStorage.getItem('institutionId');
+  
+  const [lastIssued, setLastIssued] = useState({ no: null, date: null });
 
   useEffect(() => {
     if (id) {
@@ -317,7 +333,6 @@ const StudentFees = () => {
           date: data.date || ''
         });
 
-        // Sync fees table
         if (data.items && Array.isArray(data.items)) {
           const updatedFees = fees.map(f => {
             const item = data.items.find(it => it.id === f.id);
@@ -328,7 +343,6 @@ const StudentFees = () => {
       }
     } catch (err) {
       console.error('Error loading receipt:', err);
-      setMessage({ type: 'error', text: 'Error loading receipt data' });
     } finally {
       setLoading(false);
     }
@@ -338,7 +352,7 @@ const StudentFees = () => {
     try {
       const { data, error } = await supabase
         .from('fee_receipts')
-        .select('receipt_no')
+        .select('receipt_no, date')
         .eq('institution_id', institutionId)
         .order('receipt_no', { ascending: false })
         .limit(1);
@@ -346,8 +360,10 @@ const StudentFees = () => {
       if (error) throw error;
       if (data && data.length > 0) {
         setReceiptNo(data[0].receipt_no + 1);
+        setLastIssued({ no: data[0].receipt_no, date: data[0].date });
       } else {
         setReceiptNo(100);
+        setLastIssued({ no: 'N/A', date: '--' });
       }
     } catch (err) {
       console.error('Error fetching receipt no:', err);
@@ -407,26 +423,14 @@ const StudentFees = () => {
         }]);
 
       if (error) throw error;
-
-      setMessage({ type: 'success', text: `Receipt #${receiptNo} saved successfully!` });
-      
-      // Trigger Print
+      setMessage({ type: 'success', text: `Receipt #${receiptNo} saved!` });
       window.print();
-
-      // Reset and increment
       setReceiptNo(prev => prev + 1);
-      setFormData({
-        ...formData,
-        studentName: '',
-        rollNo: '',
-        month: '',
-        guardianName: ''
-      });
+      setFormData({ ...formData, studentName: '', rollNo: '', month: '', guardianName: '' });
       setFees(fees.map(f => ({ ...f, amount: '' })));
-      
     } catch (err) {
-      console.error('Error saving receipt:', err);
-      setMessage({ type: 'error', text: 'Failed to save receipt' });
+      console.error('Save error:', err);
+      setMessage({ type: 'error', text: 'Failed to save' });
     } finally {
       setIsSubmitting(false);
       setTimeout(() => setMessage({ type: '', text: '' }), 3000);
@@ -446,11 +450,9 @@ const StudentFees = () => {
 
   const numberToWords = (num) => {
     if (!num || isNaN(num)) return '';
-    
     const single = ['', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine'];
     const double = ['Ten', 'Eleven', 'Twelve', 'Thirteen', 'Fourteen', 'Fifteen', 'Sixteen', 'Seventeen', 'Eighteen', 'Nineteen'];
     const tens = ['', '', 'Twenty', 'Thirty', 'Forty', 'Fifty', 'Sixty', 'Seventy', 'Eighty', 'Ninety'];
-
     const convert = (n) => {
       if (n < 10) return single[n];
       if (n < 20) return double[n - 10];
@@ -460,7 +462,6 @@ const StudentFees = () => {
       if (n < 10000000) return convert(Math.floor(n / 100000)) + ' Lakh' + (n % 100000 !== 0 ? ' ' + convert(n % 100000) : '');
       return convert(Math.floor(n / 10000000)) + ' Crore' + (n % 10000000 !== 0 ? ' ' + convert(n % 10000000) : '');
     };
-
     const words = convert(Math.floor(num));
     return words ? words + ' Only' : '';
   };
@@ -481,145 +482,133 @@ const StudentFees = () => {
     total: language === 'ne' ? 'जम्मा' : 'Total',
     inWords: language === 'ne' ? 'अक्षरेपी' : 'In Words',
     receiverSign: language === 'ne' ? 'बुझिलिनेको सही' : 'Receiver\'s Sign',
-    saveAndPrint: language === 'ne' 
-      ? (isReprintMode ? 'रसिद पुन: मुद्रण गर्नुहोस्' : 'बचत र प्रिन्ट रसिद') 
-      : (isReprintMode ? 'Reprint Receipt' : 'Save & Print Receipt'),
+    saveAndPrint: language === 'ne' ? (isReprintMode ? 'रसिद पुन: प्रिन्ट' : 'बचत र प्रिन्ट') : (isReprintMode ? 'Reprint Receipt' : 'Save & Print'),
     viewHistory: language === 'ne' ? 'इतिहास हेर्नुहोस्' : 'View History',
     back: language === 'ne' ? 'फिर्ता' : 'Back',
   };
 
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col font-['Outfit',sans-serif]">
-      {/* Action Bar - Hidden on Print */}
-      <div className="sticky top-0 z-50 bg-white border-b border-slate-200 px-8 py-4 flex items-center justify-between shadow-sm print:hidden">
-        <div className="flex items-center gap-6">
-          <button 
-            onClick={() => isReprintMode ? navigate('/billing/history') : navigate('/billing')} 
-            className="flex items-center gap-2 p-2 hover:bg-slate-100 rounded-xl transition-all font-black text-slate-600 uppercase text-xs tracking-widest"
-          >
-            <ArrowLeft size={18} /> {translations.back}
-          </button>
-          <h1 className="text-2xl font-black text-slate-800 tracking-tighter">
-            {isReprintMode ? 'View/Reprint Receipt' : 'New Receipt'}
-          </h1>
-        </div>
+      <div className="max-w-[1400px] mx-auto mt-6 mb-4 px-4 print:hidden">
+        <div className="bg-white rounded-[32px] border border-slate-100 shadow-xl shadow-slate-200/50 p-4 flex flex-wrap items-center justify-between gap-6">
+          <div className="flex items-center gap-6">
+            <button 
+              onClick={() => navigate('/billing')} 
+              className="flex items-center gap-2 px-4 py-2 hover:bg-slate-50 rounded-2xl transition-all font-black text-slate-500 uppercase text-xs"
+            >
+              <ArrowLeft size={18} /> {translations.back}
+            </button>
+            
+            <div className="h-8 w-px bg-slate-100"></div>
 
-        <div className="flex items-center gap-4">
-          {/* Status info */}
-          <div className="px-4 py-2.5 bg-sky-50 border border-sky-100 rounded-2xl flex items-center gap-3">
-             <History size={16} className="text-sky-500" />
-             <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">
-               Last Issued: <span className="text-sky-600 font-black">#{(receiptNo - 1)}</span> | Next: <span className="text-sky-600 font-black">#{receiptNo}</span>
-             </p>
+            <h1 className="text-3xl font-[1000] text-slate-900 tracking-tighter">New Receipt</h1>
+            
+            <button 
+              onClick={() => navigate('/billing/history')} 
+              className="flex items-center gap-2 px-6 py-2.5 bg-sky-500 text-white rounded-2xl text-xs font-black uppercase tracking-[0.1em] hover:bg-sky-600 transition-all shadow-lg shadow-sky-500/20"
+            >
+              <History size={16} /> {translations.viewHistory}
+            </button>
           </div>
 
-          <button 
-             onClick={() => setLanguage(language === 'en' ? 'ne' : 'en')}
-             className="px-6 py-2.5 bg-slate-100 border border-slate-200 rounded-2xl flex items-center gap-2 text-xs font-black text-slate-600 hover:bg-slate-200 transition-all uppercase tracking-widest"
-          >
-            <Languages size={18} className="text-indigo-500" />
-            {language === 'en' ? 'Nepali' : 'English'}
-          </button>
+          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-4 px-6 py-3 bg-sky-50 border border-sky-100 rounded-2xl shadow-sm">
+              <div className="flex items-center gap-3 text-sky-800">
+                <History size={16} className="text-sky-500" strokeWidth={2.5} />
+                <div className="flex items-center gap-2">
+                  <span className="text-[10px] font-black uppercase tracking-widest opacity-60">Last Issued:</span>
+                  <span className="text-sm font-[1000] tracking-tighter text-sky-900 font-mono">#{lastIssued.no}</span>
+                  <span className="text-[10px] font-bold opacity-60">({lastIssued.date})</span>
+                </div>
+              </div>
+              
+              <div className="h-4 w-[2px] bg-sky-200"></div>
+              
+              <div className="flex items-center gap-2 text-sky-900">
+                <span className="text-[10px] font-black uppercase tracking-widest opacity-60">Next:</span>
+                <span className="text-sm font-[1000] tracking-tighter text-sky-600 font-mono">#{receiptNo}</span>
+              </div>
+            </div>
 
-          <button 
-             onClick={() => navigate('/billing/history')}
-             className="px-6 py-2.5 bg-indigo-600 text-white rounded-2xl flex items-center gap-2 text-xs font-black hover:bg-indigo-700 transition-all uppercase tracking-widest shadow-lg shadow-indigo-100"
-          >
-            <History size={18} /> {translations.viewHistory}
-          </button>
+            <button 
+              onClick={() => setLanguage(language === 'en' ? 'ne' : 'en')} 
+              className="px-5 py-3 bg-white border border-slate-200 rounded-2xl flex items-center gap-2 text-[10px] font-[1000] text-slate-500 hover:bg-slate-50 transition-all uppercase tracking-widest shadow-sm"
+            >
+              <Languages size={16} className="text-indigo-500" /> {language === 'en' ? 'Nepali' : 'English'}
+            </button>
+          </div>
         </div>
       </div>
 
-      {/* Main Content Area */}
       <div className="flex-1 p-8 overflow-auto print:p-0">
-        
-        {/* Alerts */}
-        {message.text && (
-          <div className={`max-w-4xl mx-auto mb-8 p-4 rounded-2xl border flex items-center gap-3 animate-in fade-in slide-in-from-top-4
-            ${message.type === 'success' ? 'bg-emerald-50 border-emerald-100 text-emerald-600' : 'bg-rose-50 border-rose-100 text-rose-600'}`}
-          >
-            {message.type === 'success' ? <CheckCircle2 size={20} /> : <AlertCircle size={20} />}
-            <span className="text-xs font-black uppercase tracking-widest">{message.text}</span>
-          </div>
-        )}
-
-        {/* Dual Receipt Canvas */}
-        <div className="flex flex-col md:flex-row gap-8 justify-center max-w-[1200px] mx-auto print:gap-4 print:max-w-none print:flex-row">
+        <div className="flex flex-col md:flex-row gap-8 justify-center max-w-[1400px] mx-auto print:gap-1 print:max-w-none print:flex-row print:justify-center receipt-print-wrapper">
             <ReceiptBody 
-              type="school" 
-              schoolName={schoolName}
-              schoolAddress={schoolAddress}
-              estdYear={estdYear}
-              translations={translations}
-              receiptNo={receiptNo}
-              formData={formData}
-              fees={fees}
-              language={language}
-              setFormData={setFormData}
-              handleFeeChange={handleFeeChange}
-              handleCustomLabelChange={handleCustomLabelChange}
-              handleKeyDown={handleKeyDown}
-              calculateTotal={calculateTotal}
-              numberToWords={numberToWords}
+              type="school" schoolName={schoolName} schoolAddress={schoolAddress} estdYear={estdYear} 
+              translations={translations} receiptNo={receiptNo} formData={formData} fees={fees} 
+              language={language} setFormData={setFormData} handleFeeChange={handleFeeChange} 
+              handleCustomLabelChange={handleCustomLabelChange} handleKeyDown={handleKeyDown} 
+              calculateTotal={calculateTotal} numberToWords={numberToWords}
+              schoolLogo={schoolLogo}
             />
             <ReceiptBody 
-              type="student" 
-              schoolName={schoolName}
-              schoolAddress={schoolAddress}
-              estdYear={estdYear}
-              translations={translations}
-              receiptNo={receiptNo}
-              formData={formData}
-              fees={fees}
-              language={language}
-              setFormData={setFormData}
-              handleFeeChange={handleFeeChange}
-              handleCustomLabelChange={handleCustomLabelChange}
-              handleKeyDown={handleKeyDown}
-              calculateTotal={calculateTotal}
-              numberToWords={numberToWords}
+              type="student" schoolName={schoolName} schoolAddress={schoolAddress} estdYear={estdYear} 
+              translations={translations} receiptNo={receiptNo} formData={formData} fees={fees} 
+              language={language} setFormData={setFormData} handleFeeChange={handleFeeChange} 
+              handleCustomLabelChange={handleCustomLabelChange} handleKeyDown={handleKeyDown} 
+              calculateTotal={calculateTotal} numberToWords={numberToWords}
+              schoolLogo={schoolLogo}
             />
         </div>
 
-        {/* Submission Button - Hidden on Print */}
-        <div className="max-w-[1200px] mx-auto mt-12 mb-20 flex justify-center print:hidden">
+        <div className="max-w-[1400px] mx-auto mt-12 mb-20 flex justify-center print:hidden">
           <button 
-            id="submit-btn"
-            disabled={isSubmitting || loading}
-            onClick={handleSaveAndPrint}
-            className="group relative flex items-center gap-4 px-12 py-6 bg-rose-500 text-white rounded-[32px] font-black uppercase tracking-[0.2em] text-sm shadow-[0_20px_40px_rgba(244,63,94,0.3)] hover:bg-rose-600 hover:translate-y-[-4px] active:translate-y-0 transition-all disabled:opacity-50 disabled:translate-y-0 focus:ring-4 focus:ring-rose-200"
+            id="submit-btn" disabled={isSubmitting || loading} onClick={handleSaveAndPrint}
+            className="group relative flex items-center gap-4 px-12 py-6 bg-indigo-600 text-white rounded-full font-black uppercase tracking-widest text-sm shadow-xl hover:bg-indigo-700 transition-all hover:scale-105 active:scale-95"
           >
-            <Printer size={24} className="group-hover:rotate-12 transition-transform" />
-            {isSubmitting ? 'Syncing Vault...' : translations.saveAndPrint}
-            <div className="absolute inset-0 rounded-[32px] bg-white opacity-0 group-hover:opacity-10 transition-opacity"></div>
+            <Printer size={24} /> {isSubmitting ? 'Processing...' : translations.saveAndPrint}
           </button>
         </div>
       </div>
 
-      {/* Print Specific Styles */}
       <style dangerouslySetInnerHTML={{ __html: `
         @media print {
-          body { background: white !important; margin: 0 !important; padding: 0 !important; overflow: visible !important; width: 297mm !important; }
-          #root { height: auto !important; }
-          .print\\:hidden { display: none !important; }
           @page { size: landscape; margin: 0; }
-          .min-h-screen { min-height: 0 !important; height: auto !important; }
-          .overflow-auto { overflow: visible !important; }
+          body, html { 
+            background: white !important; 
+            margin: 0 !important; 
+            padding: 0 !important;
+            width: 297mm !important; 
+            height: 210mm !important; 
+          }
+          #root { height: auto !important; }
+          .print\\:hidden, .print-hide, .nav-header { display: none !important; }
           .flex-1 { flex: none !important; }
-          .flex { 
+          .receipt-print-wrapper { 
             display: flex !important; 
-            flex-direction: row !important; 
-            flex-wrap: nowrap !important;
-            gap: 2mm !important; 
-            justify-content: center !important; 
-            align-items: flex-start !important;
+            flex-direction: row !important;
+            justify-content: center !important;
+            gap: 12mm !important;
+            width: 100% !important;
+            margin: 0 !important;
+            padding: 0 !important;
           }
-          /* Extreme scaling hack to fit A4 height */
+          .receipt-container { margin: 0 !important; padding: 0 !important; }
           .relative.border-2 { 
-            zoom: 0.88; 
-            margin-top: 2mm !important;
-            max-height: 200mm !important;
+            zoom: 0.9; 
+            width: 138mm !important; 
+            min-width: 138mm !important;
+            max-height: 190mm !important;
+            border-color: #000 !important;
+            border-width: 1.5pt !important;
+            background: white !important;
+            box-shadow: none !important;
+            page-break-inside: avoid !important;
+            overflow: hidden !important;
           }
+          table, th, td { border-color: #000 !important; border-width: 1pt !important; }
+          
+          /* Extra safety for nested headers */
+          header, [role="navigation"] { display: none !important; }
         }
       ` }} />
     </div>

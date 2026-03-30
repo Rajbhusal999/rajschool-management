@@ -22,7 +22,7 @@ const BackButton = () => {
   return (
     <button
       onClick={handleBack}
-      className="group mb-6 inline-flex items-center gap-2.5 px-4 py-2 bg-white hover:bg-slate-50 border border-slate-200 rounded-xl text-slate-500 hover:text-indigo-600 font-black text-xs uppercase tracking-[0.15em] transition-all duration-300 shadow-sm hover:shadow-md hover:-translate-x-1"
+      className="group mb-6 inline-flex items-center gap-2.5 px-4 py-2 bg-white hover:bg-slate-50 border border-slate-200 rounded-xl text-slate-500 hover:text-indigo-600 font-black text-xs uppercase tracking-[0.15em] transition-all duration-300 shadow-sm hover:shadow-md hover:-translate-x-1 print:hidden"
     >
       <ArrowLeft 
         size={16} 

@@ -66,25 +66,29 @@ const BillingHistory = () => {
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col font-['Outfit',sans-serif]">
       {/* Header Area */}
-      <div className="bg-white border-b border-slate-200 px-8 py-6 flex items-center justify-between shadow-sm">
-        <div className="space-y-1">
-          <h1 className="text-3xl font-black text-slate-800 tracking-tight">Billing History</h1>
-          <p className="text-slate-500 font-bold text-xs uppercase tracking-widest">Manage and track all issued fee receipts</p>
-        </div>
+      <div className="max-w-[1400px] mx-auto mt-6 mb-4 px-4">
+        <div className="bg-white rounded-[32px] border border-slate-100 shadow-xl shadow-slate-200/50 p-6 flex flex-wrap items-center justify-between gap-6">
+          <div className="space-y-1">
+            <h1 className="text-3xl font-[1000] text-slate-900 tracking-tighter">Billing History</h1>
+            <p className="text-slate-500 font-bold text-[10px] uppercase tracking-[0.2em] opacity-70">
+              Manage and track all issued fee receipts
+            </p>
+          </div>
 
-        <div className="flex items-center gap-4">
-          <button 
-            onClick={() => navigate('/billing/student-fees')} 
-            className="flex items-center gap-2 px-6 py-3 bg-rose-500 text-white rounded-2xl font-black uppercase text-xs tracking-widest hover:bg-rose-600 transition-all shadow-lg shadow-rose-100"
-          >
-            <Plus size={18} /> New Receipt
-          </button>
-          <button 
-            onClick={() => navigate('/billing')} 
-            className="flex items-center gap-2 px-6 py-3 bg-slate-100 text-slate-600 rounded-2xl font-black uppercase text-xs tracking-widest hover:bg-slate-200 transition-all"
-          >
-            <ArrowLeft size={18} /> Back to Receipt
-          </button>
+          <div className="flex items-center gap-4">
+            <button 
+              onClick={() => navigate('/billing/student-fees')} 
+              className="flex items-center gap-2 px-6 py-3 bg-rose-500 text-white rounded-2xl font-black uppercase text-xs tracking-widest hover:bg-rose-600 transition-all shadow-lg shadow-rose-100"
+            >
+              <Plus size={18} /> New Receipt
+            </button>
+            <button 
+              onClick={() => navigate('/billing')} 
+              className="flex items-center gap-2 px-6 py-3 bg-slate-100 text-slate-500 rounded-2xl font-black uppercase text-xs tracking-widest hover:bg-slate-200 transition-all"
+            >
+              <ArrowLeft size={18} /> {translations?.back || 'Back'}
+            </button>
+          </div>
         </div>
       </div>
 

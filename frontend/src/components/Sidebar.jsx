@@ -5,7 +5,7 @@ import { LayoutDashboard, Users, GraduationCap, CalendarCheck, FileBarChart, Set
 
 const Sidebar = () => {
   return (
-    <div className="w-64 bg-white h-screen border-r border-slate-200 p-4 flex flex-col">
+    <div className="w-64 bg-white h-screen border-r border-slate-200 p-4 flex flex-col print:hidden">
       <div className="flex items-center gap-2 mb-8 px-2">
         <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center text-white font-bold">R</div>
         <span className="text-xl font-bold text-slate-800">RajSchool</span>
