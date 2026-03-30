@@ -579,10 +579,13 @@ const StudentFees = () => {
             padding: 0 !important;
             width: 297mm !important; 
             height: 210mm !important; 
+            overflow: hidden !important; /* Prevent extra pages */
           }
-          #root { height: auto !important; }
+          #root { height: 100% !important; overflow: hidden !important; }
+          .min-h-screen { min-height: 0 !important; }
+          main { padding: 0 !important; margin: 0 !important; }
           .print\\:hidden, .print-hide, .nav-header { display: none !important; }
-          .flex-1 { flex: none !important; }
+          .flex-1 { flex: none !important; padding: 0 !important; margin: 0 !important; }
           .receipt-print-wrapper { 
             display: flex !important; 
             flex-direction: row !important;
@@ -591,6 +594,7 @@ const StudentFees = () => {
             width: 100% !important;
             margin: 0 !important;
             padding: 0 !important;
+            padding-top: 10mm !important; /* Top margin for printer margins */
           }
           .receipt-container { margin: 0 !important; padding: 0 !important; }
           .relative.border-2 { 
