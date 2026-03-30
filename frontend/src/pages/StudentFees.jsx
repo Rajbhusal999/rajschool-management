@@ -193,7 +193,7 @@ const ReceiptBody = ({
         </thead>
         <tbody>
           {fees.map((fee, idx) => (
-            <tr key={fee.id} className="border-b border-slate-200 last:border-none h-8 print:h-5 leading-none">
+            <tr key={fee.id} className="border-b border-slate-200 last:border-none h-8 print:h-[4.8mm] leading-none">
               <td className="border-r border-slate-900 text-center py-0 font-mono opacity-60">{fee.id}</td>
               <td className="border-r border-slate-900 px-4 py-0 print:px-3">
                 {idx < 15 ? (
@@ -288,6 +288,8 @@ const StudentFees = () => {
     { id: 13, nameEn: 'Red Cross', nameNe: 'रेडक्रस', amount: '' },
     { id: 14, nameEn: 'Recommendation/Certificate', nameNe: 'सिफारिश', amount: '' },
     { id: 15, nameEn: 'Miscellaneous', nameNe: 'विविध', amount: '' },
+    { id: 16, nameEn: '', nameNe: '', amount: '' },
+    { id: 17, nameEn: '', nameNe: '', amount: '' },
   ]);
 
   const schoolName = sessionStorage.getItem('schoolName') || 'RAJ SCHOOL';
