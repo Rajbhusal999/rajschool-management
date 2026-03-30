@@ -11,6 +11,229 @@ import {
   AlertCircle
 } from 'lucide-react';
 
+const ReceiptBody = ({ 
+  type, 
+  schoolName, 
+  schoolAddress, 
+  estdYear, 
+  translations, 
+  receiptNo, 
+  formData, 
+  fees, 
+  language, 
+  setFormData, 
+  handleFeeChange, 
+  handleCustomLabelChange, 
+  handleKeyDown, 
+  calculateTotal 
+}) => (
+  <div className="relative border-2 border-slate-300 p-8 pt-4 pb-20 bg-[#FDFCF8] shadow-sm max-w-[500px] flex-1 print:border-slate-800 print:shadow-none print:bg-white min-h-[850px]">
+    {/* Watermark */}
+    <div className="absolute inset-0 flex items-center justify-center opacity-[0.06] pointer-events-none select-none z-0">
+      <span className="text-4xl font-black rotate-[-45deg] whitespace-nowrap uppercase tracking-widest text-slate-900 border-4 border-slate-900 px-6 py-2">
+        {type === 'school' ? 'SCHOOL COPY' : 'STUDENT COPY'}
+      </span>
+    </div>
+
+    <div className="relative z-10 space-y-6">
+      {/* Header */}
+      <div className="text-center space-y-1">
+        <h2 className="text-2xl font-black text-slate-800 tracking-tight uppercase">{schoolName}</h2>
+        <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">{schoolAddress} | ESTD: {estdYear}</p>
+        <div className="inline-block px-6 py-1 bg-slate-100 border border-slate-300 rounded-full mt-2 font-black text-xs uppercase tracking-widest">
+          {translations.receiptTitle}
+        </div>
+      </div>
+
+      {/* Top Info */}
+      <div className="grid grid-cols-2 text-[11px] font-bold text-slate-700">
+        <div className="flex items-center gap-2">
+          <span>{translations.receiptNo}:</span>
+          <span className="border-b-2 border-dotted border-slate-400 flex-1 px-2">{receiptNo}</span>
+        </div>
+        <div className="flex items-center gap-2 justify-end text-right">
+          <span>{translations.date}:</span>
+          <div className="border-b-2 border-dotted border-slate-400 px-2 min-w-[100px]">
+            <input 
+              id="date"
+              type="text" 
+              autoComplete="off"
+              className="w-full bg-transparent outline-none border-none print:hidden h-4 text-right focus:bg-slate-50 transition-colors px-1 rounded"
+              value={formData.date}
+              onChange={(e) => setFormData({...formData, date: e.target.value})}
+              onKeyDown={(e) => handleKeyDown(e, 'fee-1')}
+            />
+            <span className="hidden print:inline">{formData.date}</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Student Details */}
+      <div className="space-y-3 text-[11px] font-bold text-slate-700">
+        <div className="flex items-center gap-2">
+          <span>{translations.studentName}:</span>
+          <div className="border-b-2 border-dotted border-slate-400 flex-1 px-2">
+            <input 
+              id="studentName"
+              type="text" 
+              autoComplete="off"
+              className="w-full bg-transparent outline-none border-none print:hidden h-4 focus:bg-slate-50 transition-colors px-1 rounded"
+              value={formData.studentName}
+              onChange={(e) => setFormData({...formData, studentName: e.target.value})}
+              onKeyDown={(e) => handleKeyDown(e, 'rollNo')}
+            />
+            <span className="hidden print:inline">{formData.studentName}</span>
+          </div>
+        </div>
+        <div className="grid grid-cols-3 gap-4">
+          <div className="flex items-center gap-2">
+            <span>{translations.rollNo}:</span>
+            <div className="border-b-2 border-dotted border-slate-400 flex-1 px-1">
+              <input 
+                id="rollNo"
+                type="text" 
+                autoComplete="off"
+                className="w-full bg-transparent outline-none border-none print:hidden h-4 text-center focus:bg-slate-50 transition-colors rounded"
+                value={formData.rollNo}
+                onChange={(e) => setFormData({...formData, rollNo: e.target.value})}
+                onKeyDown={(e) => handleKeyDown(e, 'section')}
+              />
+              <span className="hidden print:inline">{formData.rollNo}</span>
+            </div>
+          </div>
+          <div className="flex items-center gap-2">
+            <span>{translations.section}:</span>
+            <div className="border-b-2 border-dotted border-slate-400 flex-1 px-1">
+              <input 
+                id="section"
+                type="text" 
+                autoComplete="off"
+                className="w-full bg-transparent outline-none border-none print:hidden h-4 text-center focus:bg-slate-50 transition-colors rounded"
+                value={formData.section}
+                onChange={(e) => setFormData({...formData, section: e.target.value})}
+                onKeyDown={(e) => handleKeyDown(e, 'className')}
+              />
+              <span className="hidden print:inline">{formData.section}</span>
+            </div>
+          </div>
+          <div className="flex items-center gap-2">
+            <span>{translations.class}:</span>
+            <div className="border-b-2 border-dotted border-slate-400 flex-1 px-1">
+              <input 
+                id="className"
+                type="text" 
+                autoComplete="off"
+                className="w-full bg-transparent outline-none border-none print:hidden h-4 text-center focus:bg-slate-50 transition-colors rounded"
+                value={formData.className}
+                onChange={(e) => setFormData({...formData, className: e.target.value})}
+                onKeyDown={(e) => handleKeyDown(e, 'month')}
+              />
+              <span className="hidden print:inline">{formData.className}</span>
+            </div>
+          </div>
+        </div>
+        <div className="grid grid-cols-2 gap-4">
+          <div className="flex items-center gap-2">
+            <span>{translations.month}:</span>
+            <div className="border-b-2 border-dotted border-slate-400 flex-1 px-2">
+              <input 
+                id="month"
+                type="text" 
+                autoComplete="off"
+                className="w-full bg-transparent outline-none border-none print:hidden h-4 focus:bg-slate-50 transition-colors px-1 rounded"
+                value={formData.month}
+                onChange={(e) => setFormData({...formData, month: e.target.value})}
+                onKeyDown={(e) => handleKeyDown(e, 'guardianName')}
+              />
+              <span className="hidden print:inline">{formData.month}</span>
+            </div>
+          </div>
+          <div className="flex items-center gap-2">
+            <span>{translations.guardianName}:</span>
+            <div className="border-b-2 border-dotted border-slate-400 flex-1 px-2">
+              <input 
+                id="guardianName"
+                type="text" 
+                autoComplete="off"
+                className="w-full bg-transparent outline-none border-none print:hidden h-4 focus:bg-slate-50 transition-colors px-1 rounded"
+                value={formData.guardianName}
+                onChange={(e) => setFormData({...formData, guardianName: e.target.value})}
+                onKeyDown={(e) => handleKeyDown(e, 'date')}
+              />
+              <span className="hidden print:inline">{formData.guardianName}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Table */}
+      <table className="w-full border-collapse border-y border-slate-800 text-[10px] font-bold mt-4">
+        <thead>
+          <tr className="bg-slate-50 border-b border-slate-800 print:bg-transparent">
+            <th className="border-r border-slate-800 w-10 py-1.5">{translations.serialNo}</th>
+            <th className="border-r border-slate-800 px-4 py-1.5 text-left">{translations.particulars}</th>
+            <th className="w-24 py-1.5">{translations.amount}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {fees.map((fee, idx) => (
+            <tr key={fee.id} className="border-b border-slate-300 print:border-slate-300 last:border-slate-800">
+              <td className="border-r border-slate-800 text-center py-1 bg-slate-50/50 print:bg-transparent">{fee.id}</td>
+              <td className="border-r border-slate-800 px-4 py-1">
+                {idx < 18 ? (
+                  language === 'ne' ? fee.nameNe : fee.nameEn
+                ) : (
+                  <input 
+                    type="text" 
+                    placeholder="..."
+                    className="w-full bg-transparent outline-none border-none print:hidden h-3"
+                    value={language === 'ne' ? fee.nameNe : fee.nameEn}
+                    onChange={(e) => handleCustomLabelChange(idx, e.target.value)}
+                  />
+                )}
+                <span className="hidden print:inline">{language === 'ne' ? fee.nameNe : fee.nameEn}</span>
+              </td>
+              <td className="py-0 px-0 relative">
+                <input 
+                  id={`fee-${idx + 1}`}
+                  type="number" 
+                  autoComplete="off"
+                  className="w-full h-full bg-transparent outline-none border-none text-right px-2 font-mono print:hidden [-moz-appearance:_textfield] [&::-webkit-inner-spin-button]:m-0 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:m-0 focus:bg-slate-50 transition-colors"
+                  value={fee.amount}
+                  onChange={(e) => handleFeeChange(idx, e.target.value)}
+                  onKeyDown={(e) => handleKeyDown(e, idx < fees.length - 1 ? `fee-${idx + 2}` : 'submit-btn')}
+                />
+                <span className="hidden print:block text-right px-2 font-mono">{fee.amount ? parseFloat(fee.amount).toFixed(2) : ''}</span>
+              </td>
+            </tr>
+          ))}
+          {/* Total Row */}
+          <tr className="bg-slate-100/50 font-black text-xs print:bg-transparent">
+            <td colSpan={2} className="border-r border-slate-800 px-4 py-2 text-right">{translations.total}</td>
+            <td className="px-2 py-2 text-right font-mono">{calculateTotal().toFixed(2)}</td>
+          </tr>
+        </tbody>
+      </table>
+
+      {/* Footer Area */}
+      <div className="pt-4 space-y-6">
+        <div className="flex items-center gap-2 text-[10px] font-bold">
+          <span>{translations.inWords}:</span>
+          <div className="border-b-2 border-dotted border-slate-400 flex-1 min-h-[20px]"></div>
+        </div>
+        
+        <div className="flex justify-end pt-8">
+          <div className="text-center min-w-[120px]">
+            <div className="border-t border-slate-800 pt-1 text-[10px] font-black uppercase tracking-widest">
+              {translations.receiverSign}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+);
+
 const StudentFees = () => {
   const navigate = useNavigate();
   const [language, setLanguage] = useState('ne'); // 'en' or 'ne'
@@ -188,214 +411,6 @@ const StudentFees = () => {
     back: language === 'ne' ? 'फिर्ता' : 'Back',
   };
 
-  const ReceiptBody = ({ type }) => (
-    <div className="relative border-2 border-slate-300 p-8 pt-4 pb-20 bg-[#FDFCF8] shadow-sm max-w-[500px] flex-1 print:border-slate-800 print:shadow-none print:bg-white min-h-[850px]">
-      {/* Watermark */}
-      <div className="absolute inset-0 flex items-center justify-center opacity-[0.06] pointer-events-none select-none z-0">
-        <span className="text-4xl font-black rotate-[-45deg] whitespace-nowrap uppercase tracking-widest text-slate-900 border-4 border-slate-900 px-6 py-2">
-          {type === 'school' ? 'SCHOOL COPY' : 'STUDENT COPY'}
-        </span>
-      </div>
-
-      <div className="relative z-10 space-y-6">
-        {/* Header */}
-        <div className="text-center space-y-1">
-          <h2 className="text-2xl font-black text-slate-800 tracking-tight uppercase">{schoolName}</h2>
-          <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">{schoolAddress} | ESTD: {estdYear}</p>
-          <div className="inline-block px-6 py-1 bg-slate-100 border border-slate-300 rounded-full mt-2 font-black text-xs uppercase tracking-widest">
-            {translations.receiptTitle}
-          </div>
-        </div>
-
-        {/* Top Info */}
-        <div className="grid grid-cols-2 text-[11px] font-bold text-slate-700">
-          <div className="flex items-center gap-2">
-            <span>{translations.receiptNo}:</span>
-            <span className="border-b-2 border-dotted border-slate-400 flex-1 px-2">{receiptNo}</span>
-          </div>
-          <div className="flex items-center gap-2 justify-end text-right">
-            <span>{translations.date}:</span>
-            <div className="border-b-2 border-dotted border-slate-400 px-2 min-w-[100px]">
-              <input 
-                id="date"
-                type="text" 
-                autoComplete="off"
-                className="w-full bg-transparent outline-none border-none print:hidden h-4 text-right focus:bg-slate-50 transition-colors px-1 rounded"
-                value={formData.date}
-                onChange={(e) => setFormData({...formData, date: e.target.value})}
-                onKeyDown={(e) => handleKeyDown(e, 'fee-1')}
-              />
-              <span className="hidden print:inline">{formData.date}</span>
-            </div>
-          </div>
-        </div>
-
-        {/* Student Details */}
-        <div className="space-y-3 text-[11px] font-bold text-slate-700">
-          <div className="flex items-center gap-2">
-            <span>{translations.studentName}:</span>
-            <div className="border-b-2 border-dotted border-slate-400 flex-1 px-2">
-              <input 
-                id="studentName"
-                type="text" 
-                autoComplete="off"
-                className="w-full bg-transparent outline-none border-none print:hidden h-4 focus:bg-slate-50 transition-colors px-1 rounded"
-                value={formData.studentName}
-                onChange={(e) => setFormData({...formData, studentName: e.target.value})}
-                onKeyDown={(e) => handleKeyDown(e, 'rollNo')}
-              />
-              <span className="hidden print:inline">{formData.studentName}</span>
-            </div>
-          </div>
-          <div className="grid grid-cols-3 gap-4">
-            <div className="flex items-center gap-2">
-              <span>{translations.rollNo}:</span>
-              <div className="border-b-2 border-dotted border-slate-400 flex-1 px-1">
-                <input 
-                  id="rollNo"
-                  type="text" 
-                  autoComplete="off"
-                  className="w-full bg-transparent outline-none border-none print:hidden h-4 text-center focus:bg-slate-50 transition-colors rounded"
-                  value={formData.rollNo}
-                  onChange={(e) => setFormData({...formData, rollNo: e.target.value})}
-                  onKeyDown={(e) => handleKeyDown(e, 'section')}
-                />
-                <span className="hidden print:inline">{formData.rollNo}</span>
-              </div>
-            </div>
-            <div className="flex items-center gap-2">
-              <span>{translations.section}:</span>
-              <div className="border-b-2 border-dotted border-slate-400 flex-1 px-1">
-                <input 
-                  id="section"
-                  type="text" 
-                  autoComplete="off"
-                  className="w-full bg-transparent outline-none border-none print:hidden h-4 text-center focus:bg-slate-50 transition-colors rounded"
-                  value={formData.section}
-                  onChange={(e) => setFormData({...formData, section: e.target.value})}
-                  onKeyDown={(e) => handleKeyDown(e, 'className')}
-                />
-                <span className="hidden print:inline">{formData.section}</span>
-              </div>
-            </div>
-            <div className="flex items-center gap-2">
-              <span>{translations.class}:</span>
-              <div className="border-b-2 border-dotted border-slate-400 flex-1 px-1">
-                <input 
-                  id="className"
-                  type="text" 
-                  autoComplete="off"
-                  className="w-full bg-transparent outline-none border-none print:hidden h-4 text-center focus:bg-slate-50 transition-colors rounded"
-                  value={formData.className}
-                  onChange={(e) => setFormData({...formData, className: e.target.value})}
-                  onKeyDown={(e) => handleKeyDown(e, 'month')}
-                />
-                <span className="hidden print:inline">{formData.className}</span>
-              </div>
-            </div>
-          </div>
-          <div className="grid grid-cols-2 gap-4">
-            <div className="flex items-center gap-2">
-              <span>{translations.month}:</span>
-              <div className="border-b-2 border-dotted border-slate-400 flex-1 px-2">
-                <input 
-                  id="month"
-                  type="text" 
-                  autoComplete="off"
-                  className="w-full bg-transparent outline-none border-none print:hidden h-4 focus:bg-slate-50 transition-colors px-1 rounded"
-                  value={formData.month}
-                  onChange={(e) => setFormData({...formData, month: e.target.value})}
-                  onKeyDown={(e) => handleKeyDown(e, 'guardianName')}
-                />
-                <span className="hidden print:inline">{formData.month}</span>
-              </div>
-            </div>
-            <div className="flex items-center gap-2">
-              <span>{translations.guardianName}:</span>
-              <div className="border-b-2 border-dotted border-slate-400 flex-1 px-2">
-                <input 
-                  id="guardianName"
-                  type="text" 
-                  autoComplete="off"
-                  className="w-full bg-transparent outline-none border-none print:hidden h-4 focus:bg-slate-50 transition-colors px-1 rounded"
-                  value={formData.guardianName}
-                  onChange={(e) => setFormData({...formData, guardianName: e.target.value})}
-                  onKeyDown={(e) => handleKeyDown(e, 'date')}
-                />
-                <span className="hidden print:inline">{formData.guardianName}</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Table */}
-        <table className="w-full border-collapse border-y border-slate-800 text-[10px] font-bold mt-4">
-          <thead>
-            <tr className="bg-slate-50 border-b border-slate-800 print:bg-transparent">
-              <th className="border-r border-slate-800 w-10 py-1.5">{translations.serialNo}</th>
-              <th className="border-r border-slate-800 px-4 py-1.5 text-left">{translations.particulars}</th>
-              <th className="w-24 py-1.5">{translations.amount}</th>
-            </tr>
-          </thead>
-          <tbody>
-            {fees.map((fee, idx) => (
-              <tr key={fee.id} className="border-b border-slate-300 print:border-slate-300 last:border-slate-800">
-                <td className="border-r border-slate-800 text-center py-1 bg-slate-50/50 print:bg-transparent">{fee.id}</td>
-                <td className="border-r border-slate-800 px-4 py-1">
-                  {idx < 18 ? (
-                    language === 'ne' ? fee.nameNe : fee.nameEn
-                  ) : (
-                    <input 
-                      type="text" 
-                      placeholder="..."
-                      className="w-full bg-transparent outline-none border-none print:hidden h-3"
-                      value={language === 'ne' ? fee.nameNe : fee.nameEn}
-                      onChange={(e) => handleCustomLabelChange(idx, e.target.value)}
-                    />
-                  )}
-                  <span className="hidden print:inline">{language === 'ne' ? fee.nameNe : fee.nameEn}</span>
-                </td>
-                <td className="py-0 px-0 relative">
-                  <input 
-                    id={`fee-${idx + 1}`}
-                    type="number" 
-                    autoComplete="off"
-                    className="w-full h-full bg-transparent outline-none border-none text-right px-2 font-mono print:hidden [-moz-appearance:_textfield] [&::-webkit-inner-spin-button]:m-0 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:m-0 [&::-webkit-outer-spin-button]:appearance-none focus:bg-slate-50 transition-colors"
-                    value={fee.amount}
-                    onChange={(e) => handleFeeChange(idx, e.target.value)}
-                    onKeyDown={(e) => handleKeyDown(e, idx < fees.length - 1 ? `fee-${idx + 2}` : 'submit-btn')}
-                  />
-                  <span className="hidden print:block text-right px-2 font-mono">{fee.amount ? parseFloat(fee.amount).toFixed(2) : ''}</span>
-                </td>
-              </tr>
-            ))}
-            {/* Total Row */}
-            <tr className="bg-slate-100/50 font-black text-xs print:bg-transparent">
-              <td colSpan={2} className="border-r border-slate-800 px-4 py-2 text-right">{translations.total}</td>
-              <td className="px-2 py-2 text-right font-mono">{calculateTotal().toFixed(2)}</td>
-            </tr>
-          </tbody>
-        </table>
-
-        {/* Footer Area */}
-        <div className="pt-4 space-y-6">
-          <div className="flex items-center gap-2 text-[10px] font-bold">
-            <span>{translations.inWords}:</span>
-            <div className="border-b-2 border-dotted border-slate-400 flex-1 min-h-[20px]"></div>
-          </div>
-          
-          <div className="flex justify-end pt-8">
-            <div className="text-center min-w-[120px]">
-              <div className="border-t border-slate-800 pt-1 text-[10px] font-black uppercase tracking-widest">
-                {translations.receiverSign}
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col font-['Outfit',sans-serif]">
       {/* Action Bar - Hidden on Print */}
@@ -451,8 +466,38 @@ const StudentFees = () => {
 
         {/* Dual Receipt Canvas */}
         <div className="flex flex-col md:flex-row gap-8 justify-center max-w-[1200px] mx-auto print:gap-4 print:max-w-none print:flex-row">
-            <ReceiptBody type="school" />
-            <ReceiptBody type="student" />
+            <ReceiptBody 
+              type="school" 
+              schoolName={schoolName}
+              schoolAddress={schoolAddress}
+              estdYear={estdYear}
+              translations={translations}
+              receiptNo={receiptNo}
+              formData={formData}
+              fees={fees}
+              language={language}
+              setFormData={setFormData}
+              handleFeeChange={handleFeeChange}
+              handleCustomLabelChange={handleCustomLabelChange}
+              handleKeyDown={handleKeyDown}
+              calculateTotal={calculateTotal}
+            />
+            <ReceiptBody 
+              type="student" 
+              schoolName={schoolName}
+              schoolAddress={schoolAddress}
+              estdYear={estdYear}
+              translations={translations}
+              receiptNo={receiptNo}
+              formData={formData}
+              fees={fees}
+              language={language}
+              setFormData={setFormData}
+              handleFeeChange={handleFeeChange}
+              handleCustomLabelChange={handleCustomLabelChange}
+              handleKeyDown={handleKeyDown}
+              calculateTotal={calculateTotal}
+            />
         </div>
 
         {/* Submission Button - Hidden on Print */}
