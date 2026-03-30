@@ -212,18 +212,19 @@ const AdmitCard = ({ student, institution, schedule, examType, year, isLastInPag
             <div className="card-border-outer">
                 <div className="card-border-inner">
                     {/* Background Watermark */}
-                    {institution?.schoolLogo && (
+                    {institution?.logoUrl && (
                         <div className="watermark-box">
-                            <img src={institution.schoolLogo} alt="" className="w-full h-full object-contain" />
+                            <img src={institution.logoUrl} alt="" className="w-full h-full object-contain" />
                         </div>
                     )}
 
                     {/* Header: Logo | Institution Info | Saraswati */}
                     <div className="flex items-center justify-between border-b-2 border-black pb-3 relative z-10">
                         <img 
-                            src={institution?.schoolLogo || 'https://icons.iconarchive.com/icons/paomedia/small-n-flat/1024/school-icon.png'} 
+                            src={institution?.logoUrl || 'https://cdn-icons-png.flaticon.com/512/5327/5327041.png'} 
                             alt="Logo" 
                             className="institution-logo-top" 
+                            onError={(e) => { e.target.onerror = null; e.target.src="https://cdn-icons-png.flaticon.com/512/5327/5327041.png"}}
                         />
                         
                         <div className="text-center flex-1 mx-4">
@@ -235,10 +236,10 @@ const AdmitCard = ({ student, institution, schedule, examType, year, isLastInPag
                         </div>
 
                         <img 
-                            src="https://zofkwhxscwskisajonql.supabase.co/storage/v1/object/public/system-assets/saraswati_bw.png" 
+                            src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Saraswati_veena.svg/512px-Saraswati_veena.svg.png" 
                             alt="Saraswati" 
                             className="saraswati-top-left"
-                            onError={(e) => { e.target.onerror = null; e.target.src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Saraswati_veena.svg/512px-Saraswati_veena.svg.png"}}
+                            onError={(e) => { e.target.onerror = null; e.target.src="https://cdn-icons-png.flaticon.com/512/2969/2969695.png"}}
                         />
                     </div>
 
