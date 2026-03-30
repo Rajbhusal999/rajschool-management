@@ -25,7 +25,8 @@ const ReceiptBody = ({
   handleFeeChange, 
   handleCustomLabelChange, 
   handleKeyDown, 
-  calculateTotal 
+  calculateTotal,
+  numberToWords
 }) => (
   <div className="relative border-2 border-slate-300 p-8 pt-4 pb-20 bg-[#FDFCF8] shadow-sm max-w-[500px] flex-1 print:border-slate-800 print:shadow-none print:bg-white min-h-[850px]">
     {/* Watermark */}
@@ -219,7 +220,9 @@ const ReceiptBody = ({
       <div className="pt-4 space-y-6">
         <div className="flex items-center gap-2 text-[10px] font-bold">
           <span>{translations.inWords}:</span>
-          <div className="border-b-2 border-dotted border-slate-400 flex-1 min-h-[20px]"></div>
+          <div className="border-b-2 border-dotted border-slate-400 flex-1 min-h-[20px] px-2 font-black text-slate-600 italic">
+            {numberToWords(calculateTotal())}
+          </div>
         </div>
         
         <div className="flex justify-end pt-8">
@@ -390,6 +393,27 @@ const StudentFees = () => {
     }
   };
 
+  const numberToWords = (num) => {
+    if (!num || isNaN(num)) return '';
+    
+    const single = ['', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine'];
+    const double = ['Ten', 'Eleven', 'Twelve', 'Thirteen', 'Fourteen', 'Fifteen', 'Sixteen', 'Seventeen', 'Eighteen', 'Nineteen'];
+    const tens = ['', '', 'Twenty', 'Thirty', 'Forty', 'Fifty', 'Sixty', 'Seventy', 'Eighty', 'Ninety'];
+
+    const convert = (n) => {
+      if (n < 10) return single[n];
+      if (n < 20) return double[n - 10];
+      if (n < 100) return tens[Math.floor(n / 10)] + (n % 10 !== 0 ? ' ' + single[n % 10] : '');
+      if (n < 1000) return single[Math.floor(n / 100)] + ' Hundred' + (n % 100 !== 0 ? ' and ' + convert(n % 100) : '');
+      if (n < 100000) return convert(Math.floor(n / 1000)) + ' Thousand' + (n % 1000 !== 0 ? ' ' + convert(n % 1000) : '');
+      if (n < 10000000) return convert(Math.floor(n / 100000)) + ' Lakh' + (n % 100000 !== 0 ? ' ' + convert(n % 100000) : '');
+      return convert(Math.floor(n / 10000000)) + ' Crore' + (n % 10000000 !== 0 ? ' ' + convert(n % 10000000) : '');
+    };
+
+    const words = convert(Math.floor(num));
+    return words ? words + ' Only' : '';
+  };
+
   const translations = {
     receiptTitle: language === 'ne' ? 'नगदी रसिद' : 'CASH RECEIPT',
     receiptNo: language === 'ne' ? 'र. नं.' : 'Receipt No.',
@@ -481,6 +505,7 @@ const StudentFees = () => {
               handleCustomLabelChange={handleCustomLabelChange}
               handleKeyDown={handleKeyDown}
               calculateTotal={calculateTotal}
+              numberToWords={numberToWords}
             />
             <ReceiptBody 
               type="student" 
@@ -497,6 +522,7 @@ const StudentFees = () => {
               handleCustomLabelChange={handleCustomLabelChange}
               handleKeyDown={handleKeyDown}
               calculateTotal={calculateTotal}
+              numberToWords={numberToWords}
             />
         </div>
 
