@@ -26,7 +26,7 @@ const StudentFees = () => {
     className: '',
     month: '',
     guardianName: '',
-    date: new Date().toISOString().split('T')[0]
+    date: '2082-12-17' // Default Nepali Date for March 30, 2026
   });
 
   const [fees, setFees] = useState([
@@ -204,7 +204,15 @@ const StudentFees = () => {
           </div>
           <div className="flex items-center gap-2 justify-end text-right">
             <span>{translations.date}:</span>
-            <span className="border-b-2 border-dotted border-slate-400 px-2 min-w-[100px]">{formData.date}</span>
+            <div className="border-b-2 border-dotted border-slate-400 px-2 min-w-[100px]">
+              <input 
+                type="text" 
+                className="w-full bg-transparent outline-none border-none print:hidden h-4 text-right"
+                value={formData.date}
+                onChange={(e) => setFormData({...formData, date: e.target.value})}
+              />
+              <span className="hidden print:inline">{formData.date}</span>
+            </div>
           </div>
         </div>
 
