@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { teacherService } from '../services/api';
-import { X, User, Users, Phone, MapPin, BookOpen, Calendar, ShieldCheck, Briefcase, Landmark } from 'lucide-react';
+import { X, User, Users, Phone, MapPin, BookOpen, Calendar, ShieldCheck, Briefcase, Landmark, FileText } from 'lucide-react';
 
 const TeacherForm = ({ teacher, onClose, onSave }) => {
   const [formData, setFormData] = useState({
@@ -15,6 +15,8 @@ const TeacherForm = ({ teacher, onClose, onSave }) => {
     panNo: '',
     bloodGroup: '',
     citizenshipNo: '',
+    citizenshipFront: null,
+    citizenshipBack: null,
     teacherPassword: '',
     bankName: '',
     accountNumber: '',
@@ -210,29 +212,58 @@ const TeacherForm = ({ teacher, onClose, onSave }) => {
               />
             </div>
 
-            <div className="space-y-2">
-              <label className="block text-sm font-bold text-slate-700 ml-1">PAN Number</label>
-              <input 
-                type="text" 
-                name="panNo" 
-                placeholder="Enter PAN no"
-                className="w-full px-5 py-4 bg-white border border-slate-200 rounded-[18px] outline-none focus:ring-4 focus:ring-indigo-50 transition-all font-medium text-slate-800" 
-                value={formData.panNo} 
-                onChange={handleChange} 
-              />
-            </div>
+          {/* Identification Section */}
+          <div className="md:col-span-2">
+            <SectionTitle icon={FileText} title="Identification Documents" />
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="space-y-2">
+                <label className="block text-sm font-bold text-slate-700 ml-1 flex items-center gap-2">
+                  <FileText size={16} className="text-slate-400" />
+                  Citizenship Number
+                </label>
+                <input 
+                  type="text" 
+                  name="citizenshipNo" 
+                  placeholder="Enter citizenship no"
+                  className="w-full px-5 py-4 bg-white border border-slate-200 rounded-[18px] outline-none focus:ring-4 focus:ring-indigo-50 transition-all font-medium text-slate-800" 
+                  value={formData.citizenshipNo} 
+                  onChange={handleChange} 
+                />
+              </div>
 
-            <div className="space-y-2">
-              <label className="block text-sm font-bold text-slate-700 ml-1">Citizenship Number</label>
-              <input 
-                type="text" 
-                name="citizenshipNo" 
-                placeholder="Enter citizenship no"
-                className="w-full px-5 py-4 bg-white border border-slate-200 rounded-[18px] outline-none focus:ring-4 focus:ring-indigo-50 transition-all font-medium text-slate-800" 
-                value={formData.citizenshipNo} 
-                onChange={handleChange} 
-              />
+              <div className="space-y-2">
+                <label className="block text-sm font-bold text-slate-700 ml-1 flex items-center gap-2">
+                  <FileText size={16} className="text-slate-400" />
+                  Citizenship Front Photo
+                </label>
+                <div className="relative group">
+                  <input 
+                    type="file" 
+                    className="w-full px-5 py-3.5 bg-slate-50 border border-dashed border-slate-300 rounded-[18px] outline-none file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-600 file:text-white hover:file:bg-indigo-700 cursor-pointer transition-all hover:border-indigo-300"
+                    onChange={(e) => {
+                      // Handle file selection
+                    }}
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <label className="block text-sm font-bold text-slate-700 ml-1 flex items-center gap-2">
+                  <FileText size={16} className="text-slate-400" />
+                  Citizenship Back Photo
+                </label>
+                <div className="relative group">
+                  <input 
+                    type="file" 
+                    className="w-full px-5 py-3.5 bg-slate-50 border border-dashed border-slate-300 rounded-[18px] outline-none file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-600 file:text-white hover:file:bg-indigo-700 cursor-pointer transition-all hover:border-indigo-300"
+                    onChange={(e) => {
+                      // Handle file selection
+                    }}
+                  />
+                </div>
+              </div>
             </div>
+          </div>
 
             <div className="space-y-2">
               <label className="block text-sm font-bold text-slate-700 ml-1">Bank Name</label>
