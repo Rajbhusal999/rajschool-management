@@ -18,7 +18,7 @@ const TopNav = () => {
     { name: 'Dashboard', path: '/dashboard', icon: LayoutDashboard },
     { name: 'Students', path: '/students', icon: Users },
     { name: 'Teachers', path: '/teachers', icon: GraduationCap },
-    { name: 'Exams', path: '/exams/entry', icon: ClipboardList },
+    { name: 'Exams', path: '/exams', icon: ClipboardList },
     { name: 'Billing', path: '/billing', icon: CreditCard },
     { name: 'Attendance', path: '/attendance/entry', icon: CalendarCheck },
     { name: 'Reports', path: '/attendance/reports', icon: FileBarChart },

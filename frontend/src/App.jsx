@@ -12,6 +12,7 @@ import SubjectList from "./pages/SubjectList";
 import MarkEntry from "./pages/MarkEntry";
 import ResultSheets from "./pages/ResultSheets";
 import GradeSheetPrint from "./pages/GradeSheetPrint";
+import ExamPortal from "./pages/ExamPortal";
 import Register from "./pages/Register";
 import AdminDashboard from "./pages/AdminDashboard";
 import SchoolDashboard from "./pages/SchoolDashboard";
@@ -109,9 +110,12 @@ const Layout = () => {
             <Route path="/attendance/entry" element={<AttendanceEntry />} />
             <Route path="/attendance/reports" element={<AttendanceReports />} />
             <Route path="/curriculum" element={<SubjectList />} />
+            <Route path="/exams" element={<ExamPortal />} />
             <Route path="/exams/entry" element={<MarkEntry />} />
             <Route path="/exams/results" element={<ResultSheets />} />
             <Route path="/exams/print" element={<GradeSheetPrint />} />
+            <Route path="/exams/admit-cards" element={<div className="p-12 min-h-[400px] flex items-center justify-center bg-white rounded-[32px] border border-slate-100 shadow-sm text-slate-400 font-black uppercase tracking-widest text-sm">Admit Card Module Coming Soon</div>} />
+            <Route path="/exams/subject-slips" element={<div className="p-12 min-h-[400px] flex items-center justify-center bg-white rounded-[32px] border border-slate-100 shadow-sm text-slate-400 font-black uppercase tracking-widest text-sm">Subject Slips Module Coming Soon</div>} />
           </Routes>
         </main>
       </div>
