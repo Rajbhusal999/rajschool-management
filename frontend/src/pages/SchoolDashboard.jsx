@@ -85,7 +85,9 @@ const SchoolDashboard = () => {
                 }
 
                 // Subscription validation: Must be ACTIVE (not expired) or PENDING verification
-                const hasValidAccess = (instData.status === 'ACTIVE' && expiryDate && expiryDate > now) || instData.status === 'PENDING';
+                const now = new Date();
+                const expiryDate = instData.expiry_date ? new Date(instData.expiry_date) : null;
+                const hasValidAccess = (instData.status === 'ACTIVE' && (!expiryDate || expiryDate > now)) || instData.status === 'PENDING';
 
                 if (!hasValidAccess) {
                     navigate('/subscription');
