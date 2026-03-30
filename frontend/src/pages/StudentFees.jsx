@@ -180,8 +180,8 @@ const StudentFees = () => {
   const ReceiptBody = ({ type }) => (
     <div className="relative border-2 border-slate-300 p-8 pt-4 pb-20 bg-[#FDFCF8] shadow-sm max-w-[500px] flex-1 print:border-slate-800 print:shadow-none print:bg-white min-h-[850px]">
       {/* Watermark */}
-      <div className="absolute inset-0 flex items-center justify-center opacity-[0.04] pointer-events-none select-none z-0">
-        <span className="text-8xl font-black rotate-[-45deg] whitespace-nowrap uppercase tracking-widest text-slate-900 border-8 border-slate-900 px-8 py-4">
+      <div className="absolute inset-0 flex items-center justify-center opacity-[0.06] pointer-events-none select-none z-0">
+        <span className="text-4xl font-black rotate-[-45deg] whitespace-nowrap uppercase tracking-widest text-slate-900 border-4 border-slate-900 px-6 py-2">
           {type === 'school' ? 'SCHOOL COPY' : 'STUDENT COPY'}
         </span>
       </div>
