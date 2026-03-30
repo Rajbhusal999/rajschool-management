@@ -39,9 +39,9 @@ const ReceiptBody = ({
     <div className="relative z-10 space-y-3 print:space-y-1">
       {/* Header */}
       <div className="text-center space-y-1">
-        <h2 className="text-2xl font-black text-slate-800 tracking-tight uppercase print:text-base">{schoolName}</h2>
-        <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest print:text-[8px]">{schoolAddress} | ESTD: {estdYear}</p>
-        <div className="inline-block px-6 py-1 bg-slate-100 border border-slate-300 rounded-full mt-2 font-black text-xs uppercase tracking-widest print:py-0.5 print:text-[10px] print:mt-1">
+        <h2 className="text-2xl font-black text-slate-800 tracking-tight uppercase print:text-sm">{schoolName}</h2>
+        <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest print:text-[7.5px]">{schoolAddress} | ESTD: {estdYear}</p>
+        <div className="inline-block px-6 py-1 bg-slate-100 border border-slate-300 rounded-full mt-2 font-black text-xs uppercase tracking-widest print:py-0 print:px-2 print:text-[9px] print:mt-0">
           {translations.receiptTitle}
         </div>
       </div>
@@ -70,7 +70,7 @@ const ReceiptBody = ({
       </div>
 
       {/* Student Details */}
-      <div className="space-y-2 print:space-y-0.5 text-[11px] print:text-[9px] font-bold text-slate-700">
+      <div className="space-y-3 print:space-y-0 text-[11px] print:text-[8.5px] font-bold text-slate-700">
         <div className="flex items-center gap-2">
           <span>{translations.studentName}:</span>
           <div className="border-b-2 border-dotted border-slate-400 flex-1 px-2">
@@ -86,7 +86,7 @@ const ReceiptBody = ({
             <span className="hidden print:inline">{formData.studentName}</span>
           </div>
         </div>
-        <div className="grid grid-cols-3 gap-4">
+        <div className="grid grid-cols-3 gap-4 print:gap-1">
           <div className="flex items-center gap-2">
             <span>{translations.rollNo}:</span>
             <div className="border-b-2 border-dotted border-slate-400 flex-1 px-1">
@@ -133,7 +133,7 @@ const ReceiptBody = ({
             </div>
           </div>
         </div>
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-2 gap-4 print:gap-1">
           <div className="flex items-center gap-2">
             <span>{translations.month}:</span>
             <div className="border-b-2 border-dotted border-slate-400 flex-1 px-2">
@@ -171,15 +171,15 @@ const ReceiptBody = ({
       <table className="w-full border-collapse border-y border-slate-800 text-[10px] print:text-[8.5px] font-bold mt-2 print:mt-1">
         <thead>
           <tr className="bg-slate-50 border-b border-slate-800 print:bg-transparent">
-            <th className="border-r border-slate-800 w-10 py-1 print:py-0.5">{translations.serialNo}</th>
-            <th className="border-r border-slate-800 px-4 py-1 print:py-0.5 text-left">{translations.particulars}</th>
-            <th className="w-24 py-1 print:py-0.5">{translations.amount}</th>
+            <th className="border-r border-slate-800 w-10 py-1.5 print:py-0">{translations.serialNo}</th>
+            <th className="border-r border-slate-800 px-4 py-1.5 print:py-0 text-left">{translations.particulars}</th>
+            <th className="w-24 py-1.5 print:py-0">{translations.amount}</th>
           </tr>
         </thead>
         <tbody>
           {fees.map((fee, idx) => (
-            <tr key={fee.id} className="border-b border-slate-200 print:border-slate-200 last:border-slate-800">
-              <td className="border-r border-slate-800 text-center py-1 print:py-0 bg-slate-50/50 print:bg-transparent">{fee.id}</td>
+            <tr key={fee.id} className="border-b border-slate-200 print:border-slate-100 last:border-slate-800 print:leading-none">
+              <td className="border-r border-slate-800 text-center py-1 print:py-0 bg-slate-50/50 print:bg-transparent h-4 print:h-3">{fee.id}</td>
               <td className="border-r border-slate-800 px-4 py-1 print:px-2 print:py-0">
                 {idx < 18 ? (
                   language === 'ne' ? fee.nameNe : fee.nameEn
@@ -209,25 +209,25 @@ const ReceiptBody = ({
             </tr>
           ))}
           {/* Total Row */}
-          <tr className="bg-slate-100/50 font-black text-xs print:text-[10px] print:bg-transparent">
-            <td colSpan={2} className="border-r border-slate-800 px-4 py-2 print:py-1 text-right">{translations.total}</td>
-            <td className="px-2 py-2 print:py-1 text-right font-mono">{calculateTotal().toFixed(2)}</td>
+          <tr className="bg-slate-100/50 font-black text-xs print:text-[9.5px] print:bg-transparent">
+            <td colSpan={2} className="border-r border-slate-800 px-4 py-2 print:py-0 text-right">{translations.total}</td>
+            <td className="px-2 py-2 print:py-0 text-right font-mono">{calculateTotal().toFixed(2)}</td>
           </tr>
         </tbody>
       </table>
 
       {/* Footer Area */}
-      <div className="pt-2 space-y-4 print:space-y-2">
-        <div className="flex items-center gap-2 text-[10px] font-bold">
+      <div className="pt-2 space-y-4 print:space-y-0 print:pt-1">
+        <div className="flex items-center gap-2 text-[10px] font-bold print:text-[8.5px]">
           <span>{translations.inWords}:</span>
-          <div className="border-b-2 border-dotted border-slate-400 flex-1 min-h-[20px] px-2 font-black text-slate-600 italic">
+          <div className="border-b-2 border-dotted border-slate-400 flex-1 min-h-[16px] print:min-h-0 px-2 font-black text-slate-600 italic">
             {numberToWords(calculateTotal())}
           </div>
         </div>
         
-        <div className="flex justify-end pt-4 print:pt-2">
+        <div className="flex justify-end pt-4 print:pt-1">
           <div className="text-center min-w-[120px]">
-            <div className="border-t border-slate-800 pt-1 text-[10px] font-black uppercase tracking-widest">
+            <div className="border-t border-slate-800 pt-1 text-[10px] font-black uppercase tracking-widest print:text-[8px]">
               {translations.receiverSign}
             </div>
           </div>
@@ -599,14 +599,27 @@ const StudentFees = () => {
       {/* Print Specific Styles */}
       <style dangerouslySetInnerHTML={{ __html: `
         @media print {
-          body { background: white !important; margin: 0 !important; padding: 0 !important; overflow: visible !important; }
+          body { background: white !important; margin: 0 !important; padding: 0 !important; overflow: visible !important; width: 297mm !important; }
           #root { height: auto !important; }
           .print\\:hidden { display: none !important; }
-          @page { size: landscape; margin: 2mm; }
+          @page { size: landscape; margin: 0; }
           .min-h-screen { min-height: 0 !important; height: auto !important; }
           .overflow-auto { overflow: visible !important; }
           .flex-1 { flex: none !important; }
-          .flex { display: flex !important; flex-direction: row !important; }
+          .flex { 
+            display: flex !important; 
+            flex-direction: row !important; 
+            flex-wrap: nowrap !important;
+            gap: 2mm !important; 
+            justify-content: center !important; 
+            align-items: flex-start !important;
+          }
+          /* Extreme scaling hack to fit A4 height */
+          .relative.border-2 { 
+            zoom: 0.88; 
+            margin-top: 2mm !important;
+            max-height: 200mm !important;
+          }
         }
       ` }} />
     </div>
