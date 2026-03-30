@@ -59,20 +59,8 @@ const StudentForm = ({ student, onClose, onSave }) => {
     motherName: '',
     guardianName: '',
     guardianContact: '',
-    permProvince: '',
-    permDistrict: '',
-    permLocalLevel: '',
-    permWardNo: '',
-    permTole: '',
-    tempProvince: '',
-    tempDistrict: '',
-    tempLocalLevel: '',
-    tempWardNo: '',
-    tempTole: '',
-    scholarshipType: 'None',
-    disabilityType: 'None',
-    guardianPhone: '',
     guardianEmail: '',
+    permProvince: '',
     studentPhoto: null,
     schoolId: sessionStorage.getItem('institutionId') || 1
   });
@@ -318,7 +306,7 @@ const StudentForm = ({ student, onClose, onSave }) => {
               <FormField label="Mother's Name" name="motherName" placeholder="Maternal Name" formData={formData} handleChange={handleChange} errors={errors} />
               <FormField label="Guardian's Name" name="guardianName" placeholder="Legal Guardian" formData={formData} handleChange={handleChange} errors={errors} />
               <FormField label="Parent's Phone" name="parentContact" required placeholder="Primary Contact" formData={formData} handleChange={handleChange} errors={errors} />
-              <FormField label="Guardian's Phone" name="guardianPhone" placeholder="Alternate Contact" formData={formData} handleChange={handleChange} errors={errors} />
+              <FormField label="Guardian's Phone" name="guardianContact" placeholder="Alternate Contact" formData={formData} handleChange={handleChange} errors={errors} />
               <FormField label="Guardian's Email" name="guardianEmail" placeholder="Optional" formData={formData} handleChange={handleChange} errors={errors} />
             </div>
           </section>
