@@ -24,7 +24,7 @@ const SubjectList = () => {
   const fetchSubjects = async () => {
     setLoading(true);
     try {
-      const response = await examService.getSubjects({ schoolId: 1, classGroup: selectedGroup });
+      const response = await examService.getSubjects({ schoolId: sessionStorage.getItem('institutionId'), classGroup: selectedGroup });
       setSubjects(response.data);
     } catch (error) {
       console.error('Error fetching subjects:', error);
@@ -43,7 +43,7 @@ const SubjectList = () => {
     try {
       const payload = {
         ...formData,
-        schoolId: 1,
+        schoolId: sessionStorage.getItem('institutionId'),
         classGroup: selectedGroup,
         id: editingSubject?.id
       };

@@ -18,7 +18,7 @@ const TeacherForm = ({ teacher, onClose, onSave }) => {
     teacherPassword: '',
     bankName: '',
     accountNumber: '',
-    schoolId: 1
+    schoolId: sessionStorage.getItem('institutionId')
   });
 
   useEffect(() => {

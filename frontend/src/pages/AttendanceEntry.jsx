@@ -25,7 +25,7 @@ const AttendanceEntry = () => {
 
   const fetchTeachers = async () => {
     try {
-      const resp = await teacherService.getAll({ schoolId: 1 });
+      const resp = await teacherService.getAll({ schoolId: sessionStorage.getItem('institutionId') });
       setTeachers(resp.data);
     } catch (err) {
       console.error(err);
@@ -47,12 +47,12 @@ const AttendanceEntry = () => {
   const fetchStudentsAndAttendance = async () => {
     try {
       // 1. Fetch Students in Class
-      const studentsResp = await studentService.getAll({ schoolId: 1, studentClass: setup.studentClass });
+      const studentsResp = await studentService.getAll({ schoolId: sessionStorage.getItem('institutionId'), studentClass: setup.studentClass });
       setStudents(studentsResp.data);
 
       // 2. Fetch Existing Attendance
       const attResp = await attendanceService.get({ 
-        schoolId: 1, 
+        schoolId: sessionStorage.getItem('institutionId'), 
         studentClass: setup.studentClass, 
         attendanceDate: setup.date, 
         session: setup.session 
@@ -82,7 +82,7 @@ const AttendanceEntry = () => {
   const handleSave = async (sendSms = false) => {
     try {
       const payload = Object.entries(attendance).map(([studentId, status]) => ({
-        schoolId: 1,
+        schoolId: sessionStorage.getItem('institutionId'),
         studentId: parseInt(studentId),
         studentClass: setup.studentClass,
         attendanceDate: setup.date,

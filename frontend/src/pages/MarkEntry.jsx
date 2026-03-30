@@ -43,8 +43,8 @@ const MarkEntry = () => {
         try {
             const group = getClassGroup(selectedClass);
             const [stdRes, subRes] = await Promise.all([
-                studentService.getAll({ schoolId: 1, studentClass: selectedClass }),
-                examService.getSubjects({ schoolId: 1, classGroup: group })
+                studentService.getAll({ schoolId: sessionStorage.getItem('institutionId'), studentClass: selectedClass }),
+                examService.getSubjects({ schoolId: sessionStorage.getItem('institutionId'), classGroup: group })
             ]);
             
             setStudents(stdRes.data);
@@ -52,7 +52,7 @@ const MarkEntry = () => {
             
             // Initialize/Fetch marks
             const markRequests = stdRes.data.map(s => 
-                examService.getMarks({ schoolId: 1, studentId: s.id, examType, year })
+                examService.getMarks({ schoolId: sessionStorage.getItem('institutionId'), studentId: s.id, examType, year })
             );
             const markResults = await Promise.all(markRequests);
             
@@ -95,7 +95,7 @@ const MarkEntry = () => {
                 Object.keys(subjectsForStudent).forEach(subjectName => {
                     payload.push({
                         ...subjectsForStudent[subjectName],
-                        schoolId: 1,
+                        schoolId: sessionStorage.getItem('institutionId'),
                         studentId: parseInt(studentId),
                         subject: subjectName,
                         examType,
