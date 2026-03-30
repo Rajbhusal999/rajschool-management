@@ -29,6 +29,14 @@ const mapToSnakeCase = (data) => {
             map['class'] = data[key];
             continue;
         }
+        if (key === 'totalDays') {
+            map['total_working_days'] = data[key];
+            continue;
+        }
+        if (key === 'presentDays') {
+            map['days_present'] = data[key];
+            continue;
+        }
         const snakeKey = key.replace(/[A-Z]/g, (letter) => `_${letter.toLowerCase()}`);
         map[snakeKey] = data[key];
     }
@@ -43,6 +51,14 @@ const mapToCamelCase = (data) => {
     for (const key in data) {
         if (key === 'class') {
             map['studentClass'] = data[key];
+            continue;
+        }
+        if (key === 'total_working_days') {
+            map['totalDays'] = data[key];
+            continue;
+        }
+        if (key === 'days_present') {
+            map['presentDays'] = data[key];
             continue;
         }
         const camelKey = key.replace(/([-_][a-z])/ig, ($1) => {
@@ -362,7 +378,7 @@ export const examService = {
         if (schoolId) query = query.eq('school_id', Number(schoolId));
         if (params.year) query = query.eq('year', Number(params.year));
         if (params.examType) query = query.eq('exam_type', params.examType);
-        if (params.studentClass || params.class) query = query.eq('student_class', params.studentClass || params.class);
+        if (params.studentClass || params.class) query = query.eq('class', params.studentClass || params.class);
         const { data, error } = await query;
         if (error) handleError(error, 'examService.getAttendance');
         return { data: mapToCamelCase(data) };
