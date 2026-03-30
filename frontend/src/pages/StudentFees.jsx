@@ -329,7 +329,7 @@ const StudentFees = () => {
           section: data.section || '',
           className: data.class || '',
           month: data.month || '',
-          guardianName: data.guardian_name || '',
+          guardian_name: data.guardian_name || '',
           date: data.date || ''
         });
 
@@ -489,7 +489,11 @@ const StudentFees = () => {
 
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col font-['Outfit',sans-serif]">
+<<<<<<< HEAD
       <div className="max-w-[1400px] mx-auto mt-6 mb-4 px-4 print:hidden no-print">
+=======
+      <div className="max-w-[1400px] mx-auto mt-6 mb-4 px-4 print:hidden nav-header">
+>>>>>>> 88b3f7253acf843a522be7f8fd35535b5c9e0da9
         <div className="bg-white rounded-[32px] border border-slate-100 shadow-xl shadow-slate-200/50 p-4 flex flex-wrap items-center justify-between gap-6">
           <div className="flex items-center gap-6">
             <button 
@@ -540,8 +544,8 @@ const StudentFees = () => {
         </div>
       </div>
 
-      <div className="flex-1 p-8 overflow-auto print:p-0">
-        <div className="flex flex-col md:flex-row gap-8 justify-center max-w-[1400px] mx-auto print:gap-1 print:max-w-none print:flex-row print:justify-center receipt-print-wrapper">
+      <div className="flex-1 p-8 overflow-auto print:p-0 receipt-page-container">
+        <div className="flex flex-col md:flex-row gap-8 justify-center max-w-[1400px] mx-auto print:gap-1 print:max-w-none print:flex-row print:justify-center">
             <ReceiptBody 
               type="school" schoolName={schoolName} schoolAddress={schoolAddress} estdYear={estdYear} 
               translations={translations} receiptNo={receiptNo} formData={formData} fees={fees} 
@@ -560,7 +564,7 @@ const StudentFees = () => {
             />
         </div>
 
-        <div className="max-w-[1400px] mx-auto mt-12 mb-20 flex justify-center print:hidden no-print">
+        <div className="max-w-[1400px] mx-auto mt-12 mb-20 flex justify-center print:hidden">
           <button 
             id="submit-btn" disabled={isSubmitting || loading} onClick={handleSaveAndPrint}
             className="group relative flex items-center gap-4 px-12 py-6 bg-indigo-600 text-white rounded-full font-black uppercase tracking-widest text-sm shadow-xl hover:bg-indigo-700 transition-all hover:scale-105 active:scale-95"
@@ -573,17 +577,29 @@ const StudentFees = () => {
       <style dangerouslySetInnerHTML={{ __html: `
         @media print {
           @page { size: landscape; margin: 0; }
-          .receipt-print-wrapper { 
-            display: flex !important; 
-            flex-direction: row !important;
-            justify-content: center !important;
-            gap: 12mm !important;
-            width: 297mm !important; 
-            margin: 0 !important;
+          body, html { 
+            background: white !important; 
+            margin: 0 !important; 
             padding: 0 !important;
-            padding-top: 10mm !important;
+            width: 297mm !important; 
+            height: 210mm !important; 
           }
-          .receipt-container { margin: 0 !important; padding: 0 !important; }
+          #root { height: auto !important; }
+          .print\\:hidden, .print-hide, .nav-header { display: none !important; }
+          .flex-1 { flex: none !important; }
+          .flex { 
+            display: flex !important; 
+            flex-direction: row !important; 
+            flex-wrap: nowrap !important;
+            gap: 12mm !important; 
+            justify-content: center !important; 
+            align-items: flex-start !important;
+            padding-top: 5mm !important;
+            width: 100% !important;
+            margin: 0 !important;
+          }
+          .receipt-page-container { margin: 0 !important; padding: 0 !important; }
+>>>>>>> 88b3f7253acf843a522be7f8fd35535b5c9e0da9
           .relative.border-2 { 
             zoom: 0.9; 
             width: 138mm !important; 
@@ -591,10 +607,22 @@ const StudentFees = () => {
             max-height: 190mm !important;
             border-color: #000 !important;
             border-width: 1.5pt !important;
+<<<<<<< HEAD
             box-shadow: none !important;
             page-break-inside: avoid !important;
           }
           table, th, td { border-color: #000 !important; border-width: 1pt !important; }
+=======
+            background: white !important;
+            box-shadow: none !important;
+            page-break-inside: avoid !important;
+            overflow: hidden !important;
+          }
+          table, th, td { border-color: #000 !important; border-width: 1pt !important; }
+          
+          /* Extra safety for nested headers */
+          header, [role="navigation"] { display: none !important; }
+>>>>>>> 88b3f7253acf843a522be7f8fd35535b5c9e0da9
         }
       ` }} />
     </div>
