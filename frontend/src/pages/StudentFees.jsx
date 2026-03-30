@@ -28,7 +28,7 @@ const ReceiptBody = ({
   calculateTotal,
   numberToWords
 }) => (
-  <div className="relative border-2 border-slate-300 p-6 pt-4 pb-8 bg-[#FDFCF8] shadow-sm max-w-[48%] flex-1 print:border-slate-800 print:shadow-none print:bg-white print:p-4 print:pb-4">
+  <div className="relative border-2 border-slate-300 p-6 pt-4 pb-8 bg-[#FDFCF8] shadow-sm max-w-[48%] flex-1 print:border-slate-800 print:shadow-none print:bg-white print:p-1 print:pb-1 print:max-h-[195mm] overflow-hidden print:text-[9px]">
     {/* Watermark */}
     <div className="absolute inset-0 flex items-center justify-center opacity-[0.06] pointer-events-none select-none z-0">
       <span className="text-4xl font-black rotate-[-45deg] whitespace-nowrap uppercase tracking-widest text-slate-900 border-4 border-slate-900 px-6 py-2">
@@ -39,9 +39,9 @@ const ReceiptBody = ({
     <div className="relative z-10 space-y-3 print:space-y-1">
       {/* Header */}
       <div className="text-center space-y-1">
-        <h2 className="text-2xl font-black text-slate-800 tracking-tight uppercase">{schoolName}</h2>
-        <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">{schoolAddress} | ESTD: {estdYear}</p>
-        <div className="inline-block px-6 py-1 bg-slate-100 border border-slate-300 rounded-full mt-2 font-black text-xs uppercase tracking-widest">
+        <h2 className="text-2xl font-black text-slate-800 tracking-tight uppercase print:text-base">{schoolName}</h2>
+        <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest print:text-[8px]">{schoolAddress} | ESTD: {estdYear}</p>
+        <div className="inline-block px-6 py-1 bg-slate-100 border border-slate-300 rounded-full mt-2 font-black text-xs uppercase tracking-widest print:py-0.5 print:text-[10px] print:mt-1">
           {translations.receiptTitle}
         </div>
       </div>
@@ -70,7 +70,7 @@ const ReceiptBody = ({
       </div>
 
       {/* Student Details */}
-      <div className="space-y-3 text-[11px] font-bold text-slate-700">
+      <div className="space-y-2 print:space-y-0.5 text-[11px] print:text-[9px] font-bold text-slate-700">
         <div className="flex items-center gap-2">
           <span>{translations.studentName}:</span>
           <div className="border-b-2 border-dotted border-slate-400 flex-1 px-2">
@@ -168,7 +168,7 @@ const ReceiptBody = ({
       </div>
 
       {/* Table */}
-      <table className="w-full border-collapse border-y border-slate-800 text-[10px] font-bold mt-2">
+      <table className="w-full border-collapse border-y border-slate-800 text-[10px] print:text-[8.5px] font-bold mt-2 print:mt-1">
         <thead>
           <tr className="bg-slate-50 border-b border-slate-800 print:bg-transparent">
             <th className="border-r border-slate-800 w-10 py-1 print:py-0.5">{translations.serialNo}</th>
@@ -179,8 +179,8 @@ const ReceiptBody = ({
         <tbody>
           {fees.map((fee, idx) => (
             <tr key={fee.id} className="border-b border-slate-200 print:border-slate-200 last:border-slate-800">
-              <td className="border-r border-slate-800 text-center py-0.5 print:py-0 bg-slate-50/50 print:bg-transparent">{fee.id}</td>
-              <td className="border-r border-slate-800 px-4 py-1">
+              <td className="border-r border-slate-800 text-center py-1 print:py-0 bg-slate-50/50 print:bg-transparent">{fee.id}</td>
+              <td className="border-r border-slate-800 px-4 py-1 print:px-2 print:py-0">
                 {idx < 18 ? (
                   language === 'ne' ? fee.nameNe : fee.nameEn
                 ) : (
@@ -209,9 +209,9 @@ const ReceiptBody = ({
             </tr>
           ))}
           {/* Total Row */}
-          <tr className="bg-slate-100/50 font-black text-xs print:bg-transparent">
-            <td colSpan={2} className="border-r border-slate-800 px-4 py-2 text-right">{translations.total}</td>
-            <td className="px-2 py-2 text-right font-mono">{calculateTotal().toFixed(2)}</td>
+          <tr className="bg-slate-100/50 font-black text-xs print:text-[10px] print:bg-transparent">
+            <td colSpan={2} className="border-r border-slate-800 px-4 py-2 print:py-1 text-right">{translations.total}</td>
+            <td className="px-2 py-2 print:py-1 text-right font-mono">{calculateTotal().toFixed(2)}</td>
           </tr>
         </tbody>
       </table>
@@ -599,11 +599,14 @@ const StudentFees = () => {
       {/* Print Specific Styles */}
       <style dangerouslySetInnerHTML={{ __html: `
         @media print {
-          body { background: white !important; margin: 0 !important; padding: 0 !important; }
+          body { background: white !important; margin: 0 !important; padding: 0 !important; overflow: visible !important; }
+          #root { height: auto !important; }
           .print\\:hidden { display: none !important; }
-          @page { size: landscape; margin: 5mm; }
-          .min-h-screen { min-height: 0 !important; }
+          @page { size: landscape; margin: 2mm; }
+          .min-h-screen { min-height: 0 !important; height: auto !important; }
           .overflow-auto { overflow: visible !important; }
+          .flex-1 { flex: none !important; }
+          .flex { display: flex !important; flex-direction: row !important; }
         }
       ` }} />
     </div>
