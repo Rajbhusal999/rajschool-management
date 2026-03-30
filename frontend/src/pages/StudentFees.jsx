@@ -29,7 +29,7 @@ const ReceiptBody = ({
   numberToWords,
   schoolLogo
 }) => (
-  <div className="relative border-2 border-slate-900 p-6 pt-4 pb-8 bg-white shadow-sm max-w-[48%] flex-1 print:shadow-none print:bg-white print:p-0 print:pb-0 print:max-h-[195mm] overflow-hidden print:w-[138mm] print:min-w-[138mm]">
+  <div className="relative border-2 border-slate-900 p-6 pt-4 pb-8 bg-white shadow-sm max-w-[48%] flex-1 print:shadow-none print:bg-white print:p-0 print:pb-0 print:max-h-[190mm] overflow-hidden print:w-[138mm] print:min-w-[138mm]">
     {/* Watermark */}
     <div className="absolute inset-0 flex items-center justify-center opacity-[0.04] pointer-events-none select-none z-0">
       <span className="text-4xl font-black rotate-[-45deg] whitespace-nowrap uppercase tracking-[0.3em] text-slate-900 border-8 border-slate-900 px-8 py-4">
@@ -37,10 +37,10 @@ const ReceiptBody = ({
       </span>
     </div>
 
-    <div className="relative z-10 space-y-4 print:space-y-1 print:p-4">
+    <div className="relative z-10 space-y-4 print:space-y-0.5 print:p-4">
       {/* Header */}
       <div className="flex items-center gap-4 border-b-2 border-slate-900 pb-3 print:pb-1">
-        <div className="w-20 h-20 bg-white border-2 border-slate-900 rounded-lg flex items-center justify-center print:w-16 print:h-16 overflow-hidden relative">
+        <div className="w-20 h-20 bg-white border-2 border-slate-900 rounded-lg flex items-center justify-center print:w-14 print:h-14 overflow-hidden relative">
           {schoolLogo ? (
             <img src={schoolLogo} alt="Logo" className="w-full h-full object-contain" />
           ) : (
@@ -83,7 +83,7 @@ const ReceiptBody = ({
       </div>
 
       {/* Student Details */}
-      <div className="space-y-3 print:space-y-1 text-xs print:text-[10.5px] font-bold text-slate-900">
+      <div className="space-y-3 print:space-y-0.5 text-xs print:text-[10.5px] font-bold text-slate-900">
         <div className="flex items-center gap-2 border-b border-dotted border-slate-500">
           <span className="whitespace-nowrap opacity-70 italic">{translations.studentName}:</span>
           <div className="flex-1">
@@ -186,14 +186,14 @@ const ReceiptBody = ({
       <table className="w-full border-collapse border-b-2 border-t-2 border-slate-900 text-xs print:text-[10px] font-bold mt-2">
         <thead>
           <tr className="bg-slate-100 border-b-2 border-slate-900 print:bg-transparent">
-            <th className="border-r border-slate-900 w-12 py-2 print:py-1">{translations.serialNo}</th>
-            <th className="border-r border-slate-900 px-4 py-2 print:py-1 text-left">{translations.particulars}</th>
-            <th className="w-28 py-2 print:py-1">{translations.amount}</th>
+            <th className="border-r border-slate-900 w-12 py-2 print:py-0.5">{translations.serialNo}</th>
+            <th className="border-r border-slate-900 px-4 py-2 print:py-0.5 text-left">{translations.particulars}</th>
+            <th className="w-28 py-2 print:py-0.5">{translations.amount}</th>
           </tr>
         </thead>
         <tbody>
           {fees.map((fee, idx) => (
-            <tr key={fee.id} className="border-b border-slate-200 last:border-none h-8 print:h-6 leading-none">
+            <tr key={fee.id} className="border-b border-slate-200 last:border-none h-8 print:h-5 leading-none">
               <td className="border-r border-slate-900 text-center py-0 font-mono opacity-60">{fee.id}</td>
               <td className="border-r border-slate-900 px-4 py-0 print:px-3">
                 {idx < 15 ? (
@@ -224,7 +224,7 @@ const ReceiptBody = ({
             </tr>
           ))}
           {/* Total Row */}
-          <tr className="bg-slate-50 font-black text-sm print:text-[11px] print:bg-transparent border-t-2 border-slate-900 h-9 print:h-7">
+          <tr className="bg-slate-50 font-black text-sm print:text-[11px] print:bg-transparent border-t-2 border-slate-900 h-9 print:h-6">
             <td colSpan={2} className="border-r border-slate-900 px-6 text-right uppercase tracking-[0.1em]">{translations.total}</td>
             <td className="px-3 text-right font-mono bg-slate-900 text-white print:bg-white print:text-black">{calculateTotal().toFixed(2)}</td>
           </tr>
@@ -232,7 +232,7 @@ const ReceiptBody = ({
       </table>
 
       {/* Footer Area */}
-      <div className="pt-2 space-y-6 print:space-y-4">
+      <div className="pt-2 space-y-6 print:space-y-2">
         <div className="flex items-center gap-3 text-[11px] font-black print:text-[10px]">
           <span className="opacity-70 italic">{translations.inWords}:</span>
           <div className="border-b border-dotted border-slate-600 flex-1 min-h-[20px] px-2 text-slate-800 italic uppercase">
@@ -240,8 +240,8 @@ const ReceiptBody = ({
           </div>
         </div>
         
-        <div className="flex justify-end pt-6 print:pt-4">
-          <div className="text-center min-w-[1400px]">
+        <div className="flex justify-end pt-6 print:pt-2">
+          <div className="text-center min-w-[140px]">
             <div className="border-t-2 border-slate-900 pt-1.5 text-[11px] font-black uppercase tracking-[0.2em]">
               {translations.receiverSign}
             </div>
@@ -586,18 +586,19 @@ const StudentFees = () => {
             gap: 12mm !important; 
             justify-content: center !important; 
             align-items: flex-start !important;
-            padding-top: 10mm !important;
+            padding-top: 5mm !important;
             width: 100% !important;
           }
           .relative.border-2 { 
-            zoom: 0.95; 
+            zoom: 0.9; 
             width: 138mm !important; 
             min-width: 138mm !important;
-            max-height: 195mm !important;
+            max-height: 190mm !important;
             border-color: #000 !important;
             border-width: 1.5pt !important;
             background: white !important;
             box-shadow: none !important;
+            page-break-inside: avoid !important;
           }
           table, th, td { border-color: #000 !important; border-width: 1pt !important; }
         }
