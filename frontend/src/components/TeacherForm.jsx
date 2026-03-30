@@ -28,7 +28,24 @@ const TeacherForm = ({ teacher, onClose, onSave }) => {
   }, [teacher]);
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
+    let { name, value } = e.target;
+
+    // Auto-format Attendance Date (BS) to YYYY/MM/DD
+    if (name === 'attendanceDateNepali') {
+      const digits = value.replace(/\D/g, '');
+      let formatted = '';
+      if (digits.length > 0) {
+        formatted += digits.substring(0, 4);
+        if (digits.length >= 5) {
+          formatted += '/' + digits.substring(4, 6);
+        }
+        if (digits.length >= 7) {
+          formatted += '/' + digits.substring(6, 8);
+        }
+      }
+      value = formatted;
+    }
+
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
