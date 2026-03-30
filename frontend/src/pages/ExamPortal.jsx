@@ -20,7 +20,7 @@ const ExamPortal = () => {
       description: "Record student presence specifically during the examination period.",
       icon: CalendarCheck,
       color: "bg-teal-50 text-teal-500",
-      link: "/attendance/entry",
+      link: "/exams/attendance",
       linkText: "Track Now"
     },
     {

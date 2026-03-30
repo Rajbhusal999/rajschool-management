@@ -12,6 +12,7 @@ import SubjectList from "./pages/SubjectList";
 import MarkEntry from "./pages/MarkEntry";
 import ResultSheets from "./pages/ResultSheets";
 import GradeSheetPrint from "./pages/GradeSheetPrint";
+import ExamAttendance from "./pages/ExamAttendance";
 import ExamPortal from "./pages/ExamPortal";
 import Register from "./pages/Register";
 import AdminDashboard from "./pages/AdminDashboard";
@@ -110,6 +111,7 @@ const Layout = () => {
 
             <Route path="/teachers" element={<TeacherList />} />
             <Route path="/attendance/entry" element={<AttendanceEntry />} />
+            <Route path="/exams/attendance" element={<ExamAttendance />} />
             <Route path="/attendance/reports" element={<AttendanceReports />} />
             <Route path="/curriculum" element={<SubjectList />} />
             <Route path="/exams" element={<ExamPortal />} />

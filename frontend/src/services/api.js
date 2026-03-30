@@ -354,21 +354,24 @@ export const examService = {
         return { error };
     },
     getLedger: async (params) => {
-         return await examService.getMarks(params);
+        return await examService.getMarks(params);
     },
     getAttendance: async (params) => {
         let query = supabase.from('exam_attendance').select('*');
         const schoolId = params.schoolId || sessionStorage.getItem('institutionId');
         if (schoolId) query = query.eq('school_id', Number(schoolId));
+        if (params.year) query = query.eq('year', Number(params.year));
+        if (params.examType) query = query.eq('exam_type', params.examType);
+        if (params.studentClass || params.class) query = query.eq('student_class', params.studentClass || params.class);
         const { data, error } = await query;
         if (error) handleError(error, 'examService.getAttendance');
         return { data: mapToCamelCase(data) };
     },
-    saveAttendance: async (dataSpec) => {
-        const schoolId = dataSpec.schoolId || sessionStorage.getItem('institutionId');
-        const mappedData = mapToSnakeCase({ ...dataSpec, schoolId: Number(schoolId) });
-        const { error } = await supabase.from('exam_attendance').insert([mappedData]);
-        if (error) handleError(error, 'examService.saveAttendance');
+    saveAttendanceBulk: async (dataSpec) => {
+        const schoolId = sessionStorage.getItem('institutionId');
+        const mappedData = dataSpec.map(item => mapToSnakeCase({ ...item, schoolId: Number(schoolId) }));
+        const { error } = await supabase.from('exam_attendance').upsert(mappedData);
+        if (error) handleError(error, 'examService.saveAttendanceBulk');
         return { error };
     }
 };
