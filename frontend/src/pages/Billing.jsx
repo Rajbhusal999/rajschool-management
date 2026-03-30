@@ -7,7 +7,8 @@ import {
   ArrowRight,
   ShieldCheck,
   CreditCard,
-  Zap
+  Zap,
+  History
 } from 'lucide-react';
 
 const Billing = () => {
@@ -38,11 +39,21 @@ const Billing = () => {
       id: 'my-subscription',
       title: 'My Subscription',
       description: 'Review your service plan, Manage billing cycles, and upgrade institute features.',
-      icon: Zap, // Using Zap as a substitute for the "premium" feel
+      icon: Zap,
       iconBg: 'bg-orange-50 text-orange-600',
       buttonText: 'Manage Plan',
       buttonClass: 'bg-slate-100 text-slate-600 hover:bg-slate-200 shadow-none',
       path: '/subscription'
+    },
+    {
+      id: 'billing-history',
+      title: 'Billing History',
+      description: 'Access complete transaction logs, search past receipts, and perform re-prints.',
+      icon: History,
+      iconBg: 'bg-rose-50 text-rose-600',
+      buttonText: 'View History',
+      buttonClass: 'bg-rose-500 text-white hover:bg-rose-600 shadow-rose-200',
+      path: '/billing/history'
     }
   ];
 
