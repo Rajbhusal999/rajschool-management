@@ -163,17 +163,17 @@ const AdmitCardPrint = () => {
                     }
                 }
                 .admit-card-container {
-                    height: 138mm;
+                    min-height: 140mm;
                     width: 200mm;
                     margin: 0 auto;
                     padding: 5mm;
                     position: relative;
-                    overflow: hidden;
                     box-sizing: border-box;
                     display: flex;
                     flex-direction: column;
-                }
-                .card-border-outer {
+                    background: white;
+                    page-break-inside: avoid;
+                }.card-border-outer {
                     border: 1px solid #000;
                     height: 100%;
                     width: 100%;
@@ -256,9 +256,9 @@ const AdmitCard = ({ student, institution, schedule, examType, year, isLastInPag
                         />
                         
                         <div className="text-center flex-1 mx-4">
-                            <h1 className="text-3xl font-black uppercase leading-tight tracking-tighter">{institution?.schoolName || 'YOUR SCHOOL NAME'}</h1>
+                            <h1 className="text-2xl font-black uppercase leading-tight tracking-tighter">{institution?.schoolName || 'YOUR SCHOOL NAME'}</h1>
                             <p className="text-[10px] font-bold text-slate-700 uppercase tracking-wide">{institution?.address || 'School Address Line'}</p>
-                            <h2 className="text-md font-black text-rose-600 mt-2 border-t border-slate-200 pt-1 inline-block uppercase tracking-widest leading-none">
+                            <h2 className="text-[12px] font-black text-rose-600 mt-1 border-t border-slate-200 pt-1 inline-block uppercase tracking-widest leading-none">
                                 {examType?.replace(/_/g, ' ')} EXAMINATION - {year}
                             </h2>
                         </div>
@@ -279,18 +279,18 @@ const AdmitCard = ({ student, institution, schedule, examType, year, isLastInPag
                     </div>
 
                     {/* Info Section */}
-                    <div className="grid grid-cols-12 gap-4 mt-6 border border-black rounded p-3 bg-white/40 backdrop-blur-sm relative z-10 font-bold text-xs">
-                        <div className="col-span-8 space-y-2">
+                    <div className="grid grid-cols-12 gap-4 mt-3 border border-black rounded p-2 bg-white/40 backdrop-blur-sm relative z-10 font-bold text-xs">
+                        <div className="col-span-8 space-y-1">
                             <div className="flex items-end border-b border-dotted border-black/30 pb-0.5">
-                                <span className="text-[9px] uppercase tracking-wider text-slate-500 w-32 font-black">Student Name:</span>
-                                <span className="flex-1 uppercase font-black text-black">{student.fullName || student.full_name}</span>
+                                <span className="text-[9px] uppercase tracking-wider text-slate-500 w-28 font-black">Student Name:</span>
+                                <span className="flex-1 uppercase font-black text-black">{student.fullName || student.full_name || student.name || "N/A"}</span>
                             </div>
                             <div className="flex items-end border-b border-dotted border-black/30 pb-0.5">
-                                <span className="text-[9px] uppercase tracking-wider text-slate-500 w-32 font-black">Symbol / Roll:</span>
-                                <span className="flex-1 font-black text-black">{student.symbolNo || student.symbol_no || student.rollNo || student.roll_no}</span>
+                                <span className="text-[9px] uppercase tracking-wider text-slate-500 w-28 font-black">Symbol / Roll:</span>
+                                <span className="flex-1 font-black text-black">{student.symbolNo || student.symbol_no || student.rollNo || student.roll_no || "N/A"}</span>
                             </div>
                         </div>
-                        <div className="col-span-4 border-l border-black/20 pl-4 space-y-2">
+                        <div className="col-span-4 border-l border-black/20 pl-3 space-y-1">
                             <div className="flex justify-between items-end border-b border-dotted border-black/30 pb-0.5">
                                 <span className="text-[9px] uppercase tracking-wider text-slate-500 font-black">Class:</span>
                                 <span className="text-black font-bold">{student.class || student.studentClass || "7"}</span>
@@ -301,7 +301,7 @@ const AdmitCard = ({ student, institution, schedule, examType, year, isLastInPag
                             </div>
                             <div className="flex justify-between items-end border-b border-dotted border-black/30 pb-0.5">
                                 <span className="text-[9px] uppercase tracking-wider text-slate-500 font-black">Time:</span>
-                                <span className="whitespace-nowrap text-black font-bold">{scheduleData.examTime || scheduleData.exam_time || '10:00 - 01:00'}</span>
+                                <span className="whitespace-nowrap text-black font-bold text-[10px]">{scheduleData.examTime || scheduleData.exam_time || '10:00 - 01:00'}</span>
                             </div>
                         </div>
                     </div>
@@ -321,12 +321,12 @@ const AdmitCard = ({ student, institution, schedule, examType, year, isLastInPag
                             </thead>
                             <tbody>
                                 {tableRows.map((row, idx) => (
-                                    <tr key={idx} className="h-7">
+                                    <tr key={idx} className="h-6">
                                         <td className="border border-black px-2 text-center font-bold">{row.left?.date || '/ /'}</td>
-                                        <td className="border border-black px-2 uppercase font-black">{row.left?.subject || ''}</td>
+                                        <td className="border border-black px-2 uppercase font-black overflow-hidden">{row.left?.subject || ''}</td>
                                         <td className="border border-black"></td>
                                         <td className="border border-black px-2 text-center font-bold">{row.right?.date || '/ /'}</td>
-                                        <td className="border border-black px-2 uppercase font-black">{row.right?.subject || ''}</td>
+                                        <td className="border border-black px-2 uppercase font-black overflow-hidden">{row.right?.subject || ''}</td>
                                         <td className="border border-black"></td>
                                     </tr>
                                 ))}
