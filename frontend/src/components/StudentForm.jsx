@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { studentService } from '../services/api';
-import { X, User, Users, MapPin, Info } from 'lucide-react';
+import { X, User, Users, MapPin, Info, ChevronRight } from 'lucide-react';
+import { nepalAddressData } from '../utils/nepal_address_data';
 
 const StudentForm = ({ student, onClose, onSave }) => {
   const [formData, setFormData] = useState({
@@ -35,6 +36,23 @@ const StudentForm = ({ student, onClose, onSave }) => {
     schoolId: sessionStorage.getItem('institutionId') || 1
   });
 
+  // Derived Address Options
+  const getProvinceData = (provinceName) => nepalAddressData.find(p => p.province === provinceName);
+  const getDistrictData = (provinceName, districtName) => {
+    const pData = getProvinceData(provinceName);
+    return pData ? pData.districts.find(d => d.name === districtName) : null;
+  };
+
+  const permProvinceData = getProvinceData(formData.permProvince);
+  const permDistricts = permProvinceData ? permProvinceData.districts.map(d => ({ label: d.name, value: d.name })) : [];
+  const permDistrictData = getDistrictData(formData.permProvince, formData.permDistrict);
+  const permLocalLevels = permDistrictData ? permDistrictData.local_levels.map(l => ({ label: l, value: l })) : [];
+
+  const tempProvinceData = getProvinceData(formData.tempProvince);
+  const tempDistricts = tempProvinceData ? tempProvinceData.districts.map(d => ({ label: d.name, value: d.name })) : [];
+  const tempDistrictData = getDistrictData(formData.tempProvince, formData.tempDistrict);
+  const tempLocalLevels = tempDistrictData ? tempDistrictData.local_levels.map(l => ({ label: l, value: l })) : [];
+
   const [sameAsPerm, setSameAsPerm] = useState(false);
 
   useEffect(() => {
@@ -45,7 +63,30 @@ const StudentForm = ({ student, onClose, onSave }) => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setFormData(prev => {
+        const newData = { ...prev, [name]: value };
+        
+        // Cascading Resets
+        if (name === 'permProvince') {
+            newData.permDistrict = '';
+            newData.permLocalLevel = '';
+        } else if (name === 'permDistrict') {
+            newData.permLocalLevel = '';
+        } else if (name === 'tempProvince') {
+            newData.tempDistrict = '';
+            newData.tempLocalLevel = '';
+        } else if (name === 'tempDistrict') {
+            newData.tempLocalLevel = '';
+        }
+
+        // Apply "Same as Perm" logic in real-time if enabled
+        if (sameAsPerm && name.startsWith('perm')) {
+            const tempName = name.replace('perm', 'temp');
+            newData[tempName] = newData[name];
+        }
+
+        return newData;
+    });
   };
 
   const handleSameAsPerm = (e) => {
@@ -111,21 +152,27 @@ const StudentForm = ({ student, onClose, onSave }) => {
     </div>
   );
 
-  const FormField = ({ label, name, required, placeholder, type = "text", options }) => (
+  const FormField = ({ label, name, required, placeholder, type = "text", options, disabled }) => (
     <div className="space-y-2">
       <label className="block text-sm font-bold text-slate-600 ml-1">
         {label} {required && <span className="text-rose-500">*</span>}
       </label>
       {type === "select" ? (
-        <select 
-          name={name} 
-          required={required}
-          className={`w-full h-12 px-5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-4 focus:ring-indigo-100 outline-none transition font-semibold text-slate-700 appearance-none ${errors[name] ? 'border-rose-300 ring-4 ring-rose-50' : ''}`}
-          value={formData[name]} 
-          onChange={handleChange}
-        >
-          {options.map(opt => <option key={opt.value} value={opt.value}>{opt.label}</option>)}
-        </select>
+        <div className="relative group/select">
+          <select 
+            name={name} 
+            required={required}
+            disabled={disabled}
+            className={`w-full h-12 px-5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-4 focus:ring-indigo-100 outline-none transition font-semibold text-slate-700 appearance-none disabled:opacity-50 disabled:cursor-not-allowed ${errors[name] ? 'border-rose-300 ring-4 ring-rose-50' : ''}`}
+            value={formData[name]} 
+            onChange={handleChange}
+          >
+            {options.map(opt => <option key={opt.value} value={opt.value}>{opt.label}</option>)}
+          </select>
+          <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400 group-hover/select:text-indigo-500 transition-colors">
+            <ChevronRight size={18} className="rotate-90" />
+          </div>
+        </div>
       ) : (
         <input 
           type={type} 
@@ -252,31 +299,35 @@ const StudentForm = ({ student, onClose, onSave }) => {
           <section>
             <SectionTitle title="Permanent Address" />
             <div className="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-8">
-              <FormField label="Province" name="permProvince" type="select" options={[
-                  { label: "Select Province", value: "" },
-                  { label: "Koshi Province", value: "1" },
-                  { label: "Madhesh Province", value: "2" },
-                  { label: "Bagmati Province", value: "3" },
-                  { label: "Gandaki Province", value: "4" },
-                  { label: "Lumbini Province", value: "5" },
-                  { label: "Karnali Province", value: "6" },
-                  { label: "Sudurpashchim Province", value: "7" }
-              ]} />
-              <FormField label="District" name="permDistrict" type="select" options={[
-                  { label: "Select District", value: "" },
-                  { label: "Kathmandu", value: "Kathmandu" },
-                  { label: "Lalitpur", value: "Lalitpur" },
-                  { label: "Bhaktapur", value: "Bhaktapur" },
-                  { label: "Chitwan", value: "Chitwan" },
-                  { label: "Kaski", value: "Kaski" }
-              ]} />
-              <FormField label="Local Level" name="permLocalLevel" type="select" options={[
-                  { label: "Select Local Level", value: "" },
-                  { label: "Metropolitan", value: "Metropolitan" },
-                  { label: "Sub-Metropolitan", value: "Sub-Metropolitan" },
-                  { label: "Municipality", value: "Municipality" },
-                  { label: "Rural Municipality", value: "Rural Municipality" }
-              ]} />
+              <FormField 
+                label="Province" 
+                name="permProvince" 
+                type="select" 
+                options={[
+                  { label: "-- Select Province --", value: "" },
+                  ...nepalAddressData.map(p => ({ label: p.province, value: p.province }))
+                ]} 
+              />
+              <FormField 
+                label="District" 
+                name="permDistrict" 
+                type="select" 
+                disabled={!formData.permProvince}
+                options={[
+                  { label: formData.permProvince ? "-- Select District --" : "-- Choose Province First --", value: "" },
+                  ...permDistricts
+                ]} 
+              />
+              <FormField 
+                label="Local Level" 
+                name="permLocalLevel" 
+                type="select" 
+                disabled={!formData.permDistrict}
+                options={[
+                  { label: formData.permDistrict ? "-- Select Local Level --" : "-- Choose District First --", value: "" },
+                  ...permLocalLevels
+                ]} 
+              />
               <FormField label="Ward No" name="permWardNo" placeholder="e.g. 04" />
               <FormField label="Tole" name="permTole" placeholder="Neighborhood Name" />
             </div>
@@ -299,28 +350,37 @@ const StudentForm = ({ student, onClose, onSave }) => {
 
             {!sameAsPerm && (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-8 animate-in slide-in-from-top-4 duration-300">
-                <FormField label="Province" name="tempProvince" type="select" options={[
-                    { label: "Select Province", value: "" },
-                    { label: "Koshi Province", value: "1" },
-                    { label: "Madhesh Province", value: "2" },
-                    { label: "Bagmati Province", value: "3" },
-                    { label: "Gandaki Province", value: "4" },
-                    { label: "Lumbini Province", value: "5" },
-                    { label: "Karnali Province", value: "6" },
-                    { label: "Sudurpashchim Province", value: "7" }
-                ]} />
-                <FormField label="District" name="tempDistrict" type="select" options={[
-                    { label: "Select District", value: "" },
-                    { label: "Chitwan", value: "Chitwan" },
-                    { label: "Kaski", value: "Kaski" }
-                ]} />
-                <FormField label="Local Level" name="tempLocalLevel" type="select" options={[
-                    { label: "Select Local Level", value: "" },
-                    { label: "Metropolitan", value: "Metropolitan" },
-                    { label: "Sub-Metropolitan", value: "Sub-Metropolitan" }
-                ]} />
-                <FormField label="Ward No" name="tempWardNo" />
-                <FormField label="Tole" name="tempTole" />
+                <FormField 
+                  label="Province" 
+                  name="tempProvince" 
+                  type="select" 
+                  options={[
+                    { label: "-- Select Province --", value: "" },
+                    ...nepalAddressData.map(p => ({ label: p.province, value: p.province }))
+                  ]} 
+                />
+                <FormField 
+                  label="District" 
+                  name="tempDistrict" 
+                  type="select" 
+                  disabled={!formData.tempProvince}
+                  options={[
+                    { label: formData.tempProvince ? "-- Select District --" : "-- Choose Province First --", value: "" },
+                    ...tempDistricts
+                  ]} 
+                />
+                <FormField 
+                  label="Local Level" 
+                  name="tempLocalLevel" 
+                  type="select" 
+                  disabled={!formData.tempDistrict}
+                  options={[
+                    { label: formData.tempDistrict ? "-- Select Local Level --" : "-- Choose District First --", value: "" },
+                    ...tempLocalLevels
+                  ]} 
+                />
+                <FormField label="Ward No" name="tempWardNo" placeholder="e.g. 02" />
+                <FormField label="Tole" name="tempTole" placeholder="Neighborhood Name" />
               </div>
             )}
           </section>
