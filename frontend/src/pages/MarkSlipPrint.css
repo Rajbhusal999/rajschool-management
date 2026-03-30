@@ -38,6 +38,9 @@ body {
     box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
     position: relative;
     border-radius: 4px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
 }
 
 @media print {
@@ -49,6 +52,31 @@ body {
         box-shadow: none;
         border-radius: 0;
     }
+    .ms-watermark {
+        opacity: 0.08 !important;
+    }
+}
+
+/* Watermark */
+.ms-watermark {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(-30deg);
+    width: 400px;
+    height: 400px;
+    opacity: 0.05;
+    z-index: 0;
+    pointer-events: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.ms-watermark img {
+    max-width: 100%;
+    max-height: 100%;
+    filter: grayscale(100%);
 }
 
 /* Header Styles */
