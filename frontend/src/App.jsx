@@ -108,11 +108,37 @@ const Layout = () => {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col font-['Outfit',sans-serif]">
-      <TopNav />
+    <div className="min-h-screen bg-slate-50 flex flex-col font-['Outfit',sans-serif] app-layout-root">
+      <style dangerouslySetInnerHTML={{ __html: `
+        @media print {
+          .no-print, .print\\:hidden, nav, header, .app-layout-root > nav, .app-layout-root > .BackButton { 
+            display: none !important; 
+          }
+          .min-h-screen, .app-layout-root { 
+            min-height: 0 !important; 
+            height: auto !important; 
+            display: block !important;
+            background: white !important;
+          }
+          main { 
+            padding: 0 !important; 
+            margin: 0 !important; 
+            display: block !important;
+            width: 100% !important;
+            max-width: none !important;
+          }
+          .flex-1 { 
+            flex: none !important; 
+            display: block !important;
+          }
+        }
+      ` }} />
+      <TopNav className="no-print" />
       <div className="flex-1 flex flex-col min-w-0">
         <main className="flex-1 p-4 md:p-8 max-w-[1600px] mx-auto w-full">
-          <BackButton />
+          <div className="no-print">
+            <BackButton />
+          </div>
           <Routes>
             <Route path="/dashboard" element={<SchoolDashboard />} />
             <Route path="/students" element={<StudentList />} />
