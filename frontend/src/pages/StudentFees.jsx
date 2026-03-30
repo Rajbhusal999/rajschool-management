@@ -28,7 +28,7 @@ const ReceiptBody = ({
   calculateTotal,
   numberToWords
 }) => (
-  <div className="relative border-2 border-slate-300 p-8 pt-4 pb-20 bg-[#FDFCF8] shadow-sm max-w-[500px] flex-1 print:border-slate-800 print:shadow-none print:bg-white min-h-[850px]">
+  <div className="relative border-2 border-slate-300 p-6 pt-4 pb-8 bg-[#FDFCF8] shadow-sm max-w-[48%] flex-1 print:border-slate-800 print:shadow-none print:bg-white print:p-4 print:pb-4">
     {/* Watermark */}
     <div className="absolute inset-0 flex items-center justify-center opacity-[0.06] pointer-events-none select-none z-0">
       <span className="text-4xl font-black rotate-[-45deg] whitespace-nowrap uppercase tracking-widest text-slate-900 border-4 border-slate-900 px-6 py-2">
@@ -36,7 +36,7 @@ const ReceiptBody = ({
       </span>
     </div>
 
-    <div className="relative z-10 space-y-6">
+    <div className="relative z-10 space-y-3 print:space-y-1">
       {/* Header */}
       <div className="text-center space-y-1">
         <h2 className="text-2xl font-black text-slate-800 tracking-tight uppercase">{schoolName}</h2>
@@ -168,18 +168,18 @@ const ReceiptBody = ({
       </div>
 
       {/* Table */}
-      <table className="w-full border-collapse border-y border-slate-800 text-[10px] font-bold mt-4">
+      <table className="w-full border-collapse border-y border-slate-800 text-[10px] font-bold mt-2">
         <thead>
           <tr className="bg-slate-50 border-b border-slate-800 print:bg-transparent">
-            <th className="border-r border-slate-800 w-10 py-1.5">{translations.serialNo}</th>
-            <th className="border-r border-slate-800 px-4 py-1.5 text-left">{translations.particulars}</th>
-            <th className="w-24 py-1.5">{translations.amount}</th>
+            <th className="border-r border-slate-800 w-10 py-1 print:py-0.5">{translations.serialNo}</th>
+            <th className="border-r border-slate-800 px-4 py-1 print:py-0.5 text-left">{translations.particulars}</th>
+            <th className="w-24 py-1 print:py-0.5">{translations.amount}</th>
           </tr>
         </thead>
         <tbody>
           {fees.map((fee, idx) => (
-            <tr key={fee.id} className="border-b border-slate-300 print:border-slate-300 last:border-slate-800">
-              <td className="border-r border-slate-800 text-center py-1 bg-slate-50/50 print:bg-transparent">{fee.id}</td>
+            <tr key={fee.id} className="border-b border-slate-200 print:border-slate-200 last:border-slate-800">
+              <td className="border-r border-slate-800 text-center py-0.5 print:py-0 bg-slate-50/50 print:bg-transparent">{fee.id}</td>
               <td className="border-r border-slate-800 px-4 py-1">
                 {idx < 18 ? (
                   language === 'ne' ? fee.nameNe : fee.nameEn
@@ -217,7 +217,7 @@ const ReceiptBody = ({
       </table>
 
       {/* Footer Area */}
-      <div className="pt-4 space-y-6">
+      <div className="pt-2 space-y-4 print:space-y-2">
         <div className="flex items-center gap-2 text-[10px] font-bold">
           <span>{translations.inWords}:</span>
           <div className="border-b-2 border-dotted border-slate-400 flex-1 min-h-[20px] px-2 font-black text-slate-600 italic">
@@ -225,7 +225,7 @@ const ReceiptBody = ({
           </div>
         </div>
         
-        <div className="flex justify-end pt-8">
+        <div className="flex justify-end pt-4 print:pt-2">
           <div className="text-center min-w-[120px]">
             <div className="border-t border-slate-800 pt-1 text-[10px] font-black uppercase tracking-widest">
               {translations.receiverSign}
