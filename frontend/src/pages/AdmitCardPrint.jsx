@@ -163,16 +163,17 @@ const AdmitCardPrint = () => {
                     }
                 }
                 .admit-card-container {
-                    min-height: 140mm;
+                    height: 128mm;
                     width: 200mm;
                     margin: 0 auto;
-                    padding: 5mm;
+                    padding: 4mm;
                     position: relative;
                     box-sizing: border-box;
                     display: flex;
                     flex-direction: column;
                     background: white;
                     page-break-inside: avoid;
+                    border: 1px solid #eee;
                 }.card-border-outer {
                     border: 1px solid #000;
                     height: 100%;
@@ -278,37 +279,37 @@ const AdmitCard = ({ student, institution, schedule, examType, year, isLastInPag
                         </div>
                     </div>
 
-                    {/* Info Section */}
-                    <div className="grid grid-cols-12 gap-4 mt-3 border border-black rounded p-2 bg-white/40 backdrop-blur-sm relative z-10 font-bold text-xs">
-                        <div className="col-span-8 space-y-1">
-                            <div className="flex items-end border-b border-dotted border-black/30 pb-0.5">
-                                <span className="text-[9px] uppercase tracking-wider text-slate-500 w-28 font-black">Student Name:</span>
-                                <span className="flex-1 uppercase font-black text-black">{student.fullName || student.full_name || student.name || "N/A"}</span>
+                    {/* Info Section - HARD VISIBILITY FIX */}
+                    <div className="grid grid-cols-12 gap-3 mt-2 border-2 border-black rounded-sm p-2 bg-white relative z-10 font-bold text-[11px]">
+                        <div className="col-span-8 space-y-1.5">
+                            <div className="flex items-end border-b border-black/20 pb-0.5">
+                                <span className="text-[10px] uppercase w-28 font-black text-black">Student Name:</span>
+                                <span className="flex-1 uppercase font-black text-black">{student.fullName || student.full_name || student.student_name || student.name || student.name_en || "...................."}</span>
                             </div>
-                            <div className="flex items-end border-b border-dotted border-black/30 pb-0.5">
-                                <span className="text-[9px] uppercase tracking-wider text-slate-500 w-28 font-black">Symbol / Roll:</span>
-                                <span className="flex-1 font-black text-black">{student.symbolNo || student.symbol_no || student.rollNo || student.roll_no || "N/A"}</span>
+                            <div className="flex items-end border-b border-black/20 pb-0.5">
+                                <span className="text-[10px] uppercase w-28 font-black text-black">Symbol / Roll:</span>
+                                <span className="flex-1 font-black text-black">{student.symbolNo || student.symbol_no || student.rollNo || student.roll_no || student.id || "................"}</span>
                             </div>
                         </div>
-                        <div className="col-span-4 border-l border-black/20 pl-3 space-y-1">
-                            <div className="flex justify-between items-end border-b border-dotted border-black/30 pb-0.5">
-                                <span className="text-[9px] uppercase tracking-wider text-slate-500 font-black">Class:</span>
-                                <span className="text-black font-bold">{student.class || student.studentClass || "7"}</span>
+                        <div className="col-span-4 border-l-2 border-black/10 pl-3 space-y-1.5">
+                            <div className="flex justify-between items-end border-b border-black/20 pb-0.5">
+                                <span className="text-[9px] uppercase font-black text-black">Class:</span>
+                                <span className="text-black font-black">{student.class || student.studentClass || "7"}</span>
                             </div>
-                            <div className="flex justify-between items-end border-b border-dotted border-black/30 pb-0.5">
-                                <span className="text-[9px] uppercase tracking-wider text-slate-500 font-black">Shift:</span>
-                                <span className="uppercase text-black font-bold">{scheduleData.shift || "DAY"}</span>
+                            <div className="flex justify-between items-end border-b border-black/20 pb-0.5">
+                                <span className="text-[9px] uppercase font-black text-black">Shift:</span>
+                                <span className="uppercase text-black font-black">{(scheduleData.shift || "DAY").substring(0, 8)}</span>
                             </div>
-                            <div className="flex justify-between items-end border-b border-dotted border-black/30 pb-0.5">
-                                <span className="text-[9px] uppercase tracking-wider text-slate-500 font-black">Time:</span>
-                                <span className="whitespace-nowrap text-black font-bold text-[10px]">{scheduleData.examTime || scheduleData.exam_time || '10:00 - 01:00'}</span>
+                            <div className="flex justify-between items-end border-b border-black/20 pb-0.5">
+                                <span className="text-[9px] uppercase font-black text-black">Time:</span>
+                                <span className="whitespace-nowrap text-black font-black text-[9px]">{scheduleData.examTime || scheduleData.exam_time || '10:00 - 01:00'}</span>
                             </div>
                         </div>
                     </div>
 
                     {/* Subjects Table */}
-                    <div className="mt-5 flex-1 relative z-10">
-                        <table className="w-full border-collapse border-2 border-black text-[10px]">
+                    <div className="mt-3 relative z-10">
+                        <table className="w-full border-collapse border-2 border-black text-[9px] font-bold">
                             <thead>
                                 <tr className="bg-slate-100 uppercase font-black">
                                     <th className="border border-black p-1 w-[18%]">Date</th>
