@@ -360,44 +360,43 @@ const StudentForm = ({ student, onClose, onSave }) => {
                 </label>
             </div>
 
-            {!sameAsPerm && (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-8 animate-in slide-in-from-top-4 duration-300">
-                <FormField 
-                  label="Province" 
-                  name="tempProvince" 
-                  type="select" 
-                  options={[
-                    { label: "-- Select Province --", value: "" },
-                    ...nepalAddressData.map(p => ({ label: p.province, value: p.province }))
-                  ]} 
-                  formData={formData} handleChange={handleChange} errors={errors}
-                />
-                <FormField 
-                  label="District" 
-                  name="tempDistrict" 
-                  type="select" 
-                  disabled={!formData.tempProvince}
-                  options={[
-                    { label: formData.tempProvince ? "-- Select District --" : "-- Choose Province First --", value: "" },
-                    ...tempDistricts
-                  ]} 
-                  formData={formData} handleChange={handleChange} errors={errors}
-                />
-                <FormField 
-                  label="Local Level" 
-                  name="tempLocalLevel" 
-                  type="select" 
-                  disabled={!formData.tempDistrict}
-                  options={[
-                    { label: formData.tempDistrict ? "-- Select Local Level --" : "-- Choose District First --", value: "" },
-                    ...tempLocalLevels
-                  ]} 
-                  formData={formData} handleChange={handleChange} errors={errors}
-                />
-                <FormField label="Ward No" name="tempWardNo" placeholder="e.g. 02" formData={formData} handleChange={handleChange} errors={errors} />
-                <FormField label="Tole" name="tempTole" placeholder="Neighborhood Name" formData={formData} handleChange={handleChange} errors={errors} />
-              </div>
-            )}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-8 animate-in slide-in-from-top-4 duration-300">
+              <FormField 
+                label="Province" 
+                name="tempProvince" 
+                type="select" 
+                disabled={sameAsPerm}
+                options={[
+                  { label: "-- Select Province --", value: "" },
+                  ...nepalAddressData.map(p => ({ label: p.province, value: p.province }))
+                ]} 
+                formData={formData} handleChange={handleChange} errors={errors}
+              />
+              <FormField 
+                label="District" 
+                name="tempDistrict" 
+                type="select" 
+                disabled={sameAsPerm || !formData.tempProvince}
+                options={[
+                  { label: formData.tempProvince ? "-- Select District --" : "-- Choose Province First --", value: "" },
+                  ...tempDistricts
+                ]} 
+                formData={formData} handleChange={handleChange} errors={errors}
+              />
+              <FormField 
+                label="Local Level" 
+                name="tempLocalLevel" 
+                type="select" 
+                disabled={sameAsPerm || !formData.tempDistrict}
+                options={[
+                  { label: formData.tempDistrict ? "-- Select Local Level --" : "-- Choose District First --", value: "" },
+                  ...tempLocalLevels
+                ]} 
+                formData={formData} handleChange={handleChange} errors={errors}
+              />
+              <FormField label="Ward No" name="tempWardNo" placeholder="e.g. 02" disabled={sameAsPerm} formData={formData} handleChange={handleChange} errors={errors} />
+              <FormField label="Tole" name="tempTole" placeholder="Neighborhood Name" disabled={sameAsPerm} formData={formData} handleChange={handleChange} errors={errors} />
+            </div>
           </section>
 
           {/* Additional Info */}
