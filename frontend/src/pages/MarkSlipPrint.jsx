@@ -138,16 +138,18 @@ const MarkSlipPrint = () => {
                         {students.map((student) => {
                             const m = marks[student.id];
                             const att = attendance[student.id];
-                            const rw = m?.terminal || 0;
-                            const ls = m?.practical || 0;
-                            const total = rw + ls;
+                            // WR (Written/Reading) mapped to practical in entry
+                            const wr = m?.practical || 0;
+                            // OR (Oral/Speaking) mapped to terminal in entry
+                            const oral = m?.terminal || 0;
+                            const total = Number(wr) + Number(oral);
                             
                             return (
                                 <tr key={student.id}>
                                     <td className="text-center">{student.symbolNo || '-'}</td>
                                     <td>{student.fullName}</td>
-                                    <td className="text-center">{m ? rw : ''}</td>
-                                    <td className="text-center">{m ? ls : ''}</td>
+                                    <td className="text-center">{m ? wr : ''}</td>
+                                    <td className="text-center">{m ? oral : ''}</td>
                                     <td className="text-center font-bold">{m ? total : ''}</td>
                                     <td className="text-center">{att?.presentDays || ''}</td>
                                 </tr>
