@@ -134,19 +134,28 @@ const AdmitCardPrint = () => {
                 @media print {
                     @page { 
                         size: A4 portrait; 
-                        margin: 0; 
+                        margin: 5mm; 
                     }
-                    /* Aggressively hide all non-print elements */
-                    nav, header, footer, .nav-container, .top-nav, button.back-button, .print-hidden {
+                    /* Ultra-aggressive hide all site layout elements */
+                    nav, header, footer, aside, .top-nav, .nav-container, .sidebar, 
+                    .back-button, button.back-button, .print-hidden, [class*="TopNav"], [class*="Sidebar"] {
                         display: none !important;
+                        opacity: 0 !important;
+                        visibility: hidden !important;
+                        height: 0 !important;
+                        width: 0 !important;
+                        position: absolute !important;
+                        pointer-events: none !important;
                     }
-                    /* Reset global layout containers */
-                    body, html, #root, .min-h-screen, main {
+                    /* Reset global layout containers to take full width */
+                    body, html, #root, .min-h-screen, main, [class*="layout"], [class*="wrapper"] {
                         margin: 0 !important;
                         padding: 0 !important;
                         background: white !important;
                         min-height: 0 !important;
                         max-width: none !important;
+                        width: 100% !important;
+                        display: block !important;
                     }
                     .admit-card-page {
                         page-break-after: always !important;
@@ -282,7 +291,7 @@ const AdmitCard = ({ student, institution, schedule, examType, year, isLastInPag
                         <div className="col-span-4 border-l border-black/20 pl-4 space-y-2">
                             <div className="flex justify-between items-end border-b border-dotted border-black/30 pb-0.5">
                                 <span className="text-[9px] uppercase tracking-wider text-slate-400 font-black">Class:</span>
-                                <span>{student.studentClass}</span>
+                                <span>{student.class}</span>
                             </div>
                             <div className="flex justify-between items-end border-b border-dotted border-black/30 pb-0.5">
                                 <span className="text-[9px] uppercase tracking-wider text-slate-400 font-black">Shift:</span>

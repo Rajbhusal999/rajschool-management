@@ -1,5 +1,15 @@
 import { supabase } from '../supabaseClient';
 
+const getInstitutionId = () => {
+    try {
+        const userJson = localStorage.getItem('user');
+        const user = userJson ? JSON.parse(userJson) : null;
+        return sessionStorage.getItem('institutionId') || localStorage.getItem('institutionId') || localStorage.getItem('schoolId') || user?.id;
+    } catch (e) {
+        return sessionStorage.getItem('institutionId') || localStorage.getItem('institutionId');
+    }
+};
+
 // Class Prefix Mapping for Symbol Numbers
 const CLASS_PREFIXES = {
     'Nursery': 'NU',
@@ -374,7 +384,7 @@ export const examService = {
     },
     getAttendance: async (params) => {
         let query = supabase.from('exam_attendance').select('*');
-        const schoolId = params.schoolId || sessionStorage.getItem('institutionId');
+        const schoolId = getInstitutionId();
         if (schoolId) query = query.eq('school_id', Number(schoolId));
         if (params.year) query = query.eq('year', Number(params.year));
         if (params.examType) query = query.eq('exam_type', params.examType);
@@ -384,7 +394,7 @@ export const examService = {
         return { data: mapToCamelCase(data) };
     },
     saveAttendanceBulk: async (dataSpec) => {
-        const schoolId = sessionStorage.getItem('institutionId');
+        const schoolId = getInstitutionId();
         const mappedData = dataSpec.map(item => mapToSnakeCase({ ...item, schoolId: Number(schoolId) }));
         const { error } = await supabase.from('exam_attendance').upsert(mappedData);
         if (error) handleError(error, 'examService.saveAttendanceBulk');
@@ -392,7 +402,7 @@ export const examService = {
     },
     getSchedule: async (params) => {
         let query = supabase.from('exam_schedules').select('*');
-        const schoolId = sessionStorage.getItem('institutionId');
+        const schoolId = getInstitutionId();
         if (schoolId) query = query.eq('school_id', Number(schoolId));
         if (params.year) query = query.eq('year', Number(params.year));
         if (params.examType) query = query.eq('exam_type', params.examType);
@@ -402,7 +412,7 @@ export const examService = {
         return { data: mapToCamelCase(data) };
     },
     saveSchedule: async (dataSpec) => {
-        const schoolId = sessionStorage.getItem('institutionId');
+        const schoolId = getInstitutionId();
         const mappedData = mapToSnakeCase({ ...dataSpec, schoolId: Number(schoolId) });
         const { error } = await supabase.from('exam_schedules').upsert(mappedData);
         if (error) handleError(error, 'examService.saveSchedule');
@@ -412,7 +422,7 @@ export const examService = {
 
 export const institutionService = {
     get: async () => {
-        const id = sessionStorage.getItem('institutionId');
+        const id = getInstitutionId();
         if (!id) return { data: null };
         const { data, error } = await supabase.from('institutions').select('*').eq('id', Number(id)).single();
         if (error) handleError(error, 'institutionService.get');

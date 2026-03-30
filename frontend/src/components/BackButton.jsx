@@ -6,8 +6,8 @@ const BackButton = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Hide the back button on the main dashboard
-  if (location.pathname === '/dashboard' || location.pathname === '/') {
+  // Hide the back button on the main dashboard or the print view
+  if (location.pathname === '/dashboard' || location.pathname === '/' || location.pathname === '/exams/admit-cards/print') {
     return null;
   }
 
