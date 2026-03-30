@@ -23,6 +23,7 @@ import Payment from "./pages/Payment";
 import About from "./pages/About";
 
 import { GraduationCap, ShieldAlert } from "lucide-react";
+import BackButton from "./components/BackButton";
 
 // Error Boundary Component
 class ErrorBoundary extends React.Component {
@@ -102,6 +103,7 @@ const Layout = () => {
       <TopNav />
       <div className="flex-1 flex flex-col min-w-0">
         <main className="flex-1 p-4 md:p-8 max-w-[1600px] mx-auto w-full">
+          <BackButton />
           <Routes>
             <Route path="/dashboard" element={<SchoolDashboard />} />
             <Route path="/students" element={<StudentList />} />
