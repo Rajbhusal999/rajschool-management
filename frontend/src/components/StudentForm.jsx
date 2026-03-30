@@ -228,7 +228,7 @@ const StudentForm = ({ student, onClose, onSave }) => {
                 type="select"
                 options={[
                   { label: "-- Select Class --", value: "" },
-                  ...['Nursery', 'LKG', 'UKG', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'].map(c => ({ label: c, value: c }))
+                  ...['PG', 'Nursery', 'LKG', 'UKG', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'].map(c => ({ label: c, value: c }))
                 ]}
                 formData={formData} handleChange={handleChange} errors={errors}
               />

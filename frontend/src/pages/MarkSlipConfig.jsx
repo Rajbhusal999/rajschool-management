@@ -23,12 +23,12 @@ const MarkSlipConfig = () => {
         selectedSubject: ''
     });
 
-    const classes = ['PG', 'NURSERY', 'LKG', 'UKG', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'];
+    const classes = ['PG', 'Nursery', 'LKG', 'UKG', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'];
     const examTypes = ['First Terminal', 'Second Terminal', 'Third Terminal', 'Final Examination', 'Monthly Test'];
 
     const getClassGroup = (cls) => {
         if (!cls) return '';
-        if (['PG', 'NURSERY', 'LKG', 'UKG'].includes(cls)) return cls;
+        if (['PG', 'Nursery', 'LKG', 'UKG'].includes(cls)) return cls;
         const n = parseInt(cls);
         if (n >= 1 && n <= 3) return '1-3';
         if (n >= 4 && n <= 5) return '4-5';
