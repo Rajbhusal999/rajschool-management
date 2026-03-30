@@ -24,7 +24,7 @@ const mapToSnakeCase = (data) => {
     if (!data) return data;
     const map = {};
     for (const key in data) {
-        if (key === 'studentPhoto' || key === 'teacherPhoto') continue;
+        if (key === 'studentPhoto' || key === 'teacherPhoto' || key === 'citizenshipFront' || key === 'citizenshipBack') continue;
         if (key === 'studentClass') {
             map['class'] = data[key];
             continue;
@@ -232,14 +232,57 @@ export const teacherService = {
     },
     create: async (dataSpec) => {
         const schoolId = dataSpec.schoolId || sessionStorage.getItem('institutionId');
+        
+        // Handle all three potential photo uploads
+        const uploadFile = async (file, prefix) => {
+            if (!(file instanceof File)) return null;
+            const fileExt = file.name.split('.').pop();
+            const fileName = `${prefix}_${schoolId}_${Date.now()}.${fileExt}`;
+            const { error: uploadError } = await supabase.storage.from('teachers').upload(fileName, file);
+            if (uploadError) handleError(uploadError, `teacherService.upload(${prefix})`);
+            const { data: publicUrlData } = supabase.storage.from('teachers').getPublicUrl(fileName);
+            return publicUrlData.publicUrl;
+        };
+
+        const [teacherPhotoUrl, frontUrl, backUrl] = await Promise.all([
+            uploadFile(dataSpec.teacherPhoto, 'portrait'),
+            uploadFile(dataSpec.citizenshipFront, 'front'),
+            uploadFile(dataSpec.citizenshipBack, 'back')
+        ]);
+
         const mappedData = mapToSnakeCase({ ...dataSpec, schoolId: Number(schoolId) });
+        if (teacherPhotoUrl) mappedData.teacher_photo = teacherPhotoUrl;
+        if (frontUrl) mappedData.citizenship_front = frontUrl;
+        if (backUrl) mappedData.citizenship_back = backUrl;
+
         const { data: insertedData, error } = await supabase.from('teachers').insert([mappedData]).select();
         if (error) handleError(error, 'teacherService.create');
         return { data: mapToCamelCase(insertedData[0]) };
     },
     update: async (id, dataSpec) => {
         const schoolId = dataSpec.schoolId || sessionStorage.getItem('institutionId');
+        
+        const uploadFile = async (file, prefix) => {
+            if (!(file instanceof File)) return typeof file === 'string' ? file : null;
+            const fileExt = file.name.split('.').pop();
+            const fileName = `${prefix}_${schoolId}_${Date.now()}.${fileExt}`;
+            const { error: uploadError } = await supabase.storage.from('teachers').upload(fileName, file);
+            if (uploadError) handleError(uploadError, `teacherService.updateUpload(${prefix})`);
+            const { data: publicUrlData } = supabase.storage.from('teachers').getPublicUrl(fileName);
+            return publicUrlData.publicUrl;
+        };
+
+        const [teacherPhotoUrl, frontUrl, backUrl] = await Promise.all([
+            uploadFile(dataSpec.teacherPhoto, 'portrait'),
+            uploadFile(dataSpec.citizenshipFront, 'front'),
+            uploadFile(dataSpec.citizenshipBack, 'back')
+        ]);
+
         const mappedData = mapToSnakeCase({ ...dataSpec, schoolId: Number(schoolId) });
+        if (teacherPhotoUrl) mappedData.teacher_photo = teacherPhotoUrl;
+        if (frontUrl) mappedData.citizenship_front = frontUrl;
+        if (backUrl) mappedData.citizenship_back = backUrl;
+
         const { data: updatedData, error } = await supabase.from('teachers').update(mappedData).eq('id', id).select();
         if (error) handleError(error, 'teacherService.update');
         return { data: mapToCamelCase(updatedData[0]) };

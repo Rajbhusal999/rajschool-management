@@ -129,10 +129,9 @@ const TeacherForm = ({ teacher, onClose, onSave }) => {
               <div className="relative">
                 <input 
                   type="file" 
+                  name="teacherPhoto"
                   className="w-full px-5 py-3.5 bg-white border border-slate-200 rounded-[18px] outline-none file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 cursor-pointer"
-                  onChange={(e) => {
-                    // Logic for photo upload could be added here
-                  }}
+                  onChange={(e) => setFormData(prev => ({ ...prev, teacherPhoto: e.target.files[0] }))}
                 />
               </div>
             </div>
@@ -239,10 +238,9 @@ const TeacherForm = ({ teacher, onClose, onSave }) => {
                 <div className="relative group">
                   <input 
                     type="file" 
+                    name="citizenshipFront"
                     className="w-full px-5 py-3.5 bg-slate-50 border border-dashed border-slate-300 rounded-[18px] outline-none file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-600 file:text-white hover:file:bg-indigo-700 cursor-pointer transition-all hover:border-indigo-300"
-                    onChange={(e) => {
-                      // Handle file selection
-                    }}
+                    onChange={(e) => setFormData(prev => ({ ...prev, citizenshipFront: e.target.files[0] }))}
                   />
                 </div>
               </div>
@@ -255,10 +253,9 @@ const TeacherForm = ({ teacher, onClose, onSave }) => {
                 <div className="relative group">
                   <input 
                     type="file" 
+                    name="citizenshipBack"
                     className="w-full px-5 py-3.5 bg-slate-50 border border-dashed border-slate-300 rounded-[18px] outline-none file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-600 file:text-white hover:file:bg-indigo-700 cursor-pointer transition-all hover:border-indigo-300"
-                    onChange={(e) => {
-                      // Handle file selection
-                    }}
+                    onChange={(e) => setFormData(prev => ({ ...prev, citizenshipBack: e.target.files[0] }))}
                   />
                 </div>
               </div>
