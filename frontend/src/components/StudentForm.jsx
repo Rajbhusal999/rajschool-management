@@ -103,7 +103,26 @@ const StudentForm = ({ student, onClose, onSave }) => {
   }, [student]);
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
+    let { name, value } = e.target;
+    
+    // Auto-format for dobNepali (YYYY/MM/DD)
+    if (name === 'dobNepali') {
+        // Remove all non-numeric characters for processing
+        const digits = value.replace(/\D/g, '');
+        const prevDigits = formData.dobNepali.replace(/\D/g, '');
+        
+        // If user is adding characters
+        if (digits.length > prevDigits.length) {
+            if (digits.length <= 4) {
+                value = digits;
+            } else if (digits.length <= 6) {
+                value = `${digits.slice(0, 4)}/${digits.slice(4)}`;
+            } else {
+                value = `${digits.slice(0, 4)}/${digits.slice(4, 6)}/${digits.slice(6, 8)}`;
+            }
+        }
+    }
+
     setFormData(prev => {
         const newData = { ...prev, [name]: value };
         
