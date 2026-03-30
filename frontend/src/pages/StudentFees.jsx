@@ -39,8 +39,8 @@ const ReceiptBody = ({
 
     <div className="relative z-10 space-y-4 print:space-y-0.5 print:p-4">
       {/* Header */}
-      <div className="flex items-center gap-4 border-b-2 border-slate-900 pb-3 print:pb-1">
-        <div className="w-20 h-20 bg-white border-2 border-slate-900 rounded-lg flex items-center justify-center print:w-14 print:h-14 overflow-hidden relative">
+      <div className="relative border-b-2 border-slate-900 pb-3 print:pb-1 min-h-[80px] print:min-h-[60px] flex items-center justify-center">
+        <div className="absolute left-0 top-1/2 -translate-y-1/2 w-20 h-20 bg-white border-2 border-slate-900 rounded-lg flex items-center justify-center print:w-14 print:h-14 overflow-hidden shadow-sm">
           {schoolLogo ? (
             <img src={schoolLogo} alt="Logo" className="w-full h-full object-contain" />
           ) : (
@@ -49,11 +49,11 @@ const ReceiptBody = ({
             </div>
           )}
         </div>
-        <div className="flex-1 text-center pr-16 print:pr-14">
+        <div className="text-center px-20">
           <h2 className="text-3xl font-black text-slate-900 tracking-tighter uppercase print:text-2xl leading-none">{schoolName}</h2>
-          <p className="text-[11px] font-black text-slate-700 uppercase tracking-widest print:text-[9px] mt-1">{schoolAddress}</p>
-          <p className="text-[10px] font-bold text-slate-500 print:text-[8px] leading-none mb-1">ESTD: {estdYear}</p>
-          <div className="inline-block px-6 py-1 bg-slate-900 text-white rounded-full mt-2 font-black text-xs uppercase tracking-[0.2em] print:text-[11px] print:mt-1 shadow-sm">
+          <p className="text-[11px] font-black text-slate-700 uppercase tracking-widest print:text-[8px] mt-1 mb-0.5">{schoolAddress}</p>
+          <p className="text-[10px] font-bold text-slate-500 print:text-[7px] leading-none mb-1">ESTD: {estdYear}</p>
+          <div className="inline-block px-6 py-1 bg-slate-900 text-white rounded-full mt-1.5 font-black text-xs uppercase tracking-[0.2em] print:text-[10px] print:mt-0.5 shadow-sm">
             {translations.receiptTitle}
           </div>
         </div>
@@ -83,7 +83,7 @@ const ReceiptBody = ({
       </div>
 
       {/* Student Details */}
-      <div className="space-y-3 print:space-y-0.5 text-xs print:text-[10.5px] font-bold text-slate-900">
+      <div className="space-y-2.5 print:space-y-0 text-xs print:text-[10px] font-bold text-slate-900">
         <div className="flex items-center gap-2 border-b border-dotted border-slate-500">
           <span className="whitespace-nowrap opacity-70 italic">{translations.studentName}:</span>
           <div className="flex-1">
@@ -96,11 +96,11 @@ const ReceiptBody = ({
               onChange={(e) => setFormData({...formData, studentName: e.target.value})}
               onKeyDown={(e) => handleKeyDown(e, 'rollNo')}
             />
-            <span className="hidden print:inline font-black uppercase">{formData.studentName}</span>
+            <span className="hidden print:inline font-black uppercase leading-tight">{formData.studentName}</span>
           </div>
         </div>
         
-        <div className="grid grid-cols-3 gap-4 border-b border-dotted border-slate-500 pb-1">
+        <div className="grid grid-cols-3 gap-4 border-b border-dotted border-slate-500 pb-0.5 print:pb-0">
           <div className="flex items-center gap-2">
             <span className="whitespace-nowrap opacity-70 italic">{translations.rollNo}:</span>
             <div className="flex-1">
@@ -113,7 +113,7 @@ const ReceiptBody = ({
                 onChange={(e) => setFormData({...formData, rollNo: e.target.value})}
                 onKeyDown={(e) => handleKeyDown(e, 'section')}
               />
-              <span className="hidden print:inline font-black">{formData.rollNo}</span>
+              <span className="hidden print:inline font-black leading-tight">{formData.rollNo}</span>
             </div>
           </div>
           <div className="flex items-center gap-2 border-l border-dotted border-slate-400 px-3">
@@ -128,7 +128,7 @@ const ReceiptBody = ({
                 onChange={(e) => setFormData({...formData, section: e.target.value})}
                 onKeyDown={(e) => handleKeyDown(e, 'className')}
               />
-              <span className="hidden print:inline font-black uppercase">{formData.section}</span>
+              <span className="hidden print:inline font-black uppercase leading-tight">{formData.section}</span>
             </div>
           </div>
           <div className="flex items-center gap-2 border-l border-dotted border-slate-400 pl-3">
@@ -143,12 +143,12 @@ const ReceiptBody = ({
                 onChange={(e) => setFormData({...formData, className: e.target.value})}
                 onKeyDown={(e) => handleKeyDown(e, 'month')}
               />
-              <span className="hidden print:inline font-black uppercase text-lg print:text-xs">{formData.className}</span>
+              <span className="hidden print:inline font-black uppercase text-lg print:text-xs leading-tight">{formData.className}</span>
             </div>
           </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-4 border-b border-dotted border-slate-500 pb-1">
+        <div className="grid grid-cols-2 gap-4 border-b border-dotted border-slate-500 pb-0.5 print:pb-0">
           <div className="flex items-center gap-2">
             <span className="whitespace-nowrap opacity-70 italic">{translations.month}:</span>
             <div className="flex-1">
@@ -161,7 +161,7 @@ const ReceiptBody = ({
                 onChange={(e) => setFormData({...formData, month: e.target.value})}
                 onKeyDown={(e) => handleKeyDown(e, 'guardianName')}
               />
-              <span className="hidden print:inline font-black uppercase">{formData.month}</span>
+              <span className="hidden print:inline font-black uppercase leading-tight">{formData.month}</span>
             </div>
           </div>
           <div className="flex items-center gap-2 border-l border-dotted border-slate-400 pl-3">
@@ -176,7 +176,7 @@ const ReceiptBody = ({
                 onChange={(e) => setFormData({...formData, guardianName: e.target.value})}
                 onKeyDown={(e) => handleKeyDown(e, 'date')}
               />
-              <span className="hidden print:inline font-black uppercase">{formData.guardianName}</span>
+              <span className="hidden print:inline font-black uppercase leading-tight">{formData.guardianName}</span>
             </div>
           </div>
         </div>
@@ -196,17 +196,19 @@ const ReceiptBody = ({
             <tr key={fee.id} className="border-b border-slate-200 last:border-none h-8 print:h-[4.8mm] leading-none">
               <td className="border-r border-slate-900 text-center py-0 font-mono opacity-60">{fee.id}</td>
               <td className="border-r border-slate-900 px-4 py-0 print:px-3">
-                {idx < 15 ? (
-                  language === 'ne' ? fee.nameNe : fee.nameEn
-                ) : (
-                  <input 
-                    type="text" 
-                    placeholder="..."
-                    className="w-full bg-transparent outline-none border-none print:hidden h-4"
-                    value={language === 'ne' ? fee.nameNe : fee.nameEn}
-                    onChange={(e) => handleCustomLabelChange(idx, e.target.value)}
-                  />
-                )}
+                <div className="print:hidden">
+                  {idx < 15 ? (
+                    language === 'ne' ? fee.nameNe : fee.nameEn
+                  ) : (
+                    <input 
+                      type="text" 
+                      placeholder="..."
+                      className="w-full bg-transparent outline-none border-none h-4"
+                      value={language === 'ne' ? fee.nameNe : fee.nameEn}
+                      onChange={(e) => handleCustomLabelChange(idx, e.target.value)}
+                    />
+                  )}
+                </div>
                 <span className="hidden print:inline">{language === 'ne' ? fee.nameNe : fee.nameEn}</span>
               </td>
               <td className="py-0 px-0 relative">
@@ -487,7 +489,7 @@ const StudentFees = () => {
 
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col font-['Outfit',sans-serif]">
-      <div className="max-w-[1400px] mx-auto mt-6 mb-4 px-4 print:hidden">
+      <div className="max-w-[1400px] mx-auto mt-6 mb-4 px-4 print:hidden nav-header">
         <div className="bg-white rounded-[32px] border border-slate-100 shadow-xl shadow-slate-200/50 p-4 flex flex-wrap items-center justify-between gap-6">
           <div className="flex items-center gap-6">
             <button 
@@ -538,7 +540,7 @@ const StudentFees = () => {
         </div>
       </div>
 
-      <div className="flex-1 p-8 overflow-auto print:p-0">
+      <div className="flex-1 p-8 overflow-auto print:p-0 receipt-page-container">
         <div className="flex flex-col md:flex-row gap-8 justify-center max-w-[1400px] mx-auto print:gap-1 print:max-w-none print:flex-row print:justify-center">
             <ReceiptBody 
               type="school" schoolName={schoolName} schoolAddress={schoolAddress} estdYear={estdYear} 
@@ -571,7 +573,7 @@ const StudentFees = () => {
       <style dangerouslySetInnerHTML={{ __html: `
         @media print {
           @page { size: landscape; margin: 0; }
-          body { 
+          body, html { 
             background: white !important; 
             margin: 0 !important; 
             padding: 0 !important;
@@ -579,7 +581,7 @@ const StudentFees = () => {
             height: 210mm !important; 
           }
           #root { height: auto !important; }
-          .print\\:hidden { display: none !important; }
+          .print\\:hidden, .print-hide, .nav-header { display: none !important; }
           .flex-1 { flex: none !important; }
           .flex { 
             display: flex !important; 
@@ -590,7 +592,9 @@ const StudentFees = () => {
             align-items: flex-start !important;
             padding-top: 5mm !important;
             width: 100% !important;
+            margin: 0 !important;
           }
+          .receipt-page-container { margin: 0 !important; padding: 0 !important; }
           .relative.border-2 { 
             zoom: 0.9; 
             width: 138mm !important; 
@@ -601,8 +605,12 @@ const StudentFees = () => {
             background: white !important;
             box-shadow: none !important;
             page-break-inside: avoid !important;
+            overflow: hidden !important;
           }
           table, th, td { border-color: #000 !important; border-width: 1pt !important; }
+          
+          /* Extra safety for nested headers */
+          header, [role="navigation"] { display: none !important; }
         }
       ` }} />
     </div>
