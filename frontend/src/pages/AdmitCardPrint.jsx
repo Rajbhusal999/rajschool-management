@@ -236,10 +236,10 @@ const AdmitCard = ({ student, institution, schedule, examType, year, isLastInPag
                         </div>
 
                         <img 
-                            src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Saraswati_veena.svg/512px-Saraswati_veena.svg.png" 
+                            src="/saraswati.png" 
                             alt="Saraswati" 
                             className="saraswati-top-left"
-                            onError={(e) => { e.target.onerror = null; e.target.src="https://cdn-icons-png.flaticon.com/512/2969/2969695.png"}}
+                            onError={(e) => { e.target.onerror = null; e.target.src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Saraswati_veena.svg/512px-Saraswati_veena.svg.png"}}
                         />
                     </div>
 
