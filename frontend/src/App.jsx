@@ -15,6 +15,7 @@ import GradeSheetPrint from "./pages/GradeSheetPrint";
 import ExamAttendance from "./pages/ExamAttendance";
 import AdmitCard from "./pages/AdmitCard";
 import AdmitCardConfig from "./pages/AdmitCardConfig";
+import AdmitCardPrint from "./pages/AdmitCardPrint";
 import ExamPortal from "./pages/ExamPortal";
 import Register from "./pages/Register";
 import AdminDashboard from "./pages/AdminDashboard";
@@ -116,6 +117,7 @@ const Layout = () => {
             <Route path="/exams/attendance" element={<ExamAttendance />} />
             <Route path="/exams/admit-cards" element={<AdmitCard />} />
             <Route path="/exams/admit-cards/configure" element={<AdmitCardConfig />} />
+            <Route path="/exams/admit-cards/print" element={<AdmitCardPrint />} />
             <Route path="/attendance/reports" element={<AttendanceReports />} />
             <Route path="/curriculum" element={<SubjectList />} />
             <Route path="/exams" element={<ExamPortal />} />

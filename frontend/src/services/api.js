@@ -410,4 +410,14 @@ export const examService = {
     }
 };
 
+export const institutionService = {
+    get: async () => {
+        const id = sessionStorage.getItem('institutionId');
+        if (!id) return { data: null };
+        const { data, error } = await supabase.from('institutions').select('*').eq('id', Number(id)).single();
+        if (error) handleError(error, 'institutionService.get');
+        return { data: mapToCamelCase(data) };
+    }
+};
+
 export default supabase;
