@@ -11,9 +11,9 @@ import {
   Printer, 
   ChevronLeft, 
   Clock, 
-  CheckCircle2
+  CheckCircle2,
+  ChevronDown
 } from 'lucide-react';
-import BackButton from '../components/BackButton';
 
 const AdmitCardConfig = () => {
     const [searchParams] = useSearchParams();
@@ -73,7 +73,24 @@ const AdmitCardConfig = () => {
 
     const handleSubjectChange = (index, field, value) => {
         const newData = [...subjectData];
-        newData[index][field] = value;
+        if (field === 'date') {
+            const prevValue = subjectData[index].date;
+            // If deleting, don't auto-format
+            if (value.length < prevValue.length) {
+                newData[index].date = value;
+            } else {
+                let formatted = value.replace(/\D/g, '');
+                if (formatted.length > 4) {
+                    formatted = formatted.slice(0, 4) + '/' + formatted.slice(4);
+                }
+                if (formatted.length > 7) {
+                    formatted = formatted.slice(0, 7) + '/' + formatted.slice(7);
+                }
+                newData[index].date = formatted.slice(0, 10);
+            }
+        } else {
+            newData[index][field] = value;
+        }
         setSubjectData(newData);
     };
 
@@ -136,7 +153,6 @@ const AdmitCardConfig = () => {
                         <span className="mx-2 text-slate-200">/</span>
                         <span className="text-slate-400">Configure Details</span>
                     </div>
-                    <BackButton />
                 </div>
                 
                 <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
@@ -165,13 +181,18 @@ const AdmitCardConfig = () => {
                         {/* Global Settings */}
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div className="space-y-2">
-                                <label className="text-[10px] font-black uppercase text-slate-400 tracking-widest ml-1">Shift (e.g. DAY / MORNING)</label>
-                                <input 
-                                    value={shift}
-                                    onChange={(e) => setShift(e.target.value.toUpperCase())}
-                                    className="w-full px-6 py-4 bg-slate-50 border-none rounded-2xl font-bold focus:ring-2 focus:ring-rose-500 text-slate-700"
-                                    placeholder="DAY"
-                                />
+                                <label className="text-[10px] font-black uppercase text-slate-400 tracking-widest ml-1">Shift Selection</label>
+                                <div className="relative">
+                                    <select 
+                                        value={shift}
+                                        onChange={(e) => setShift(e.target.value)}
+                                        className="w-full px-6 py-4 bg-slate-50 border-none rounded-2xl font-bold focus:ring-2 focus:ring-rose-500 text-slate-700 appearance-none cursor-pointer"
+                                    >
+                                        <option value="DAY">DAY SHIFT</option>
+                                        <option value="MORNING">MORNING SHIFT</option>
+                                    </select>
+                                    <ChevronDown className="absolute right-6 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" size={18} />
+                                </div>
                             </div>
                             <div className="space-y-2">
                                 <label className="text-[10px] font-black uppercase text-slate-400 tracking-widest ml-1">Exam Time (e.g. 10:00 - 01:00)</label>
