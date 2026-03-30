@@ -8,12 +8,20 @@ import {
 const ExamPortal = () => {
   const portalItems = [
     {
-      title: "Mark Entry",
-      description: "Fast and efficient interface for entering student scores across all exams.",
-      icon: Pencil,
+      title: "Subjects Config",
+      description: "Configure your academic curriculum, assign weights, and manage credit hours.",
+      icon: Layers,
       color: "bg-indigo-50 text-indigo-500",
-      link: "/exams/entry",
-      linkText: "Go to Entry"
+      link: "/curriculum",
+      linkText: "Settings"
+    },
+    {
+      title: "Attendance Tracking",
+      description: "Record student presence specifically during the examination period.",
+      icon: CalendarCheck,
+      color: "bg-teal-50 text-teal-500",
+      link: "/attendance/entry",
+      linkText: "Track Now"
     },
     {
       title: "Admit Cards",
@@ -32,12 +40,12 @@ const ExamPortal = () => {
       linkText: "Generate Slips"
     },
     {
-      title: "Grade Sheets",
-      description: "Prepare official terminal and annual grade sheets in high-resolution print format.",
-      icon: Award,
-      color: "bg-amber-50 text-amber-500",
-      link: "/exams/print",
-      linkText: "Prepare Sheets"
+      title: "Mark Entry",
+      description: "Fast and efficient interface for entering student scores across all exams.",
+      icon: Pencil,
+      color: "bg-indigo-50 text-indigo-500",
+      link: "/exams/entry",
+      linkText: "Go to Entry"
     },
     {
       title: "Consolidated Ledger",
@@ -48,20 +56,12 @@ const ExamPortal = () => {
       linkText: "View Ledger"
     },
     {
-      title: "Attendance Tracking",
-      description: "Record student presence specifically during the examination period.",
-      icon: CalendarCheck,
-      color: "bg-teal-50 text-teal-500",
-      link: "/attendance/entry",
-      linkText: "Track Now"
-    },
-    {
-      title: "Subjects Config",
-      description: "Configure your academic curriculum, assign weights, and manage credit hours.",
-      icon: Layers,
-      color: "bg-indigo-50 text-indigo-500",
-      link: "/curriculum",
-      linkText: "Settings"
+      title: "Grade Sheets",
+      description: "Prepare official terminal and annual grade sheets in high-resolution print format.",
+      icon: Award,
+      color: "bg-amber-50 text-amber-500",
+      link: "/exams/print",
+      linkText: "Prepare Sheets"
     }
   ];
 
