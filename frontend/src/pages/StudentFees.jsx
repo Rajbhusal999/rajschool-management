@@ -156,6 +156,17 @@ const StudentFees = () => {
     }
   };
 
+  const handleKeyDown = (e, nextFieldId) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      const nextField = document.getElementById(nextFieldId);
+      if (nextField) {
+        nextField.focus();
+        if (nextField.select) nextField.select();
+      }
+    }
+  };
+
   const translations = {
     receiptTitle: language === 'ne' ? 'नगदी रसिद' : 'CASH RECEIPT',
     receiptNo: language === 'ne' ? 'र. नं.' : 'Receipt No.',
@@ -206,10 +217,13 @@ const StudentFees = () => {
             <span>{translations.date}:</span>
             <div className="border-b-2 border-dotted border-slate-400 px-2 min-w-[100px]">
               <input 
+                id="date"
                 type="text" 
-                className="w-full bg-transparent outline-none border-none print:hidden h-4 text-right"
+                autoComplete="off"
+                className="w-full bg-transparent outline-none border-none print:hidden h-4 text-right focus:bg-slate-50 transition-colors px-1 rounded"
                 value={formData.date}
                 onChange={(e) => setFormData({...formData, date: e.target.value})}
+                onKeyDown={(e) => handleKeyDown(e, 'fee-1')}
               />
               <span className="hidden print:inline">{formData.date}</span>
             </div>
@@ -222,10 +236,13 @@ const StudentFees = () => {
             <span>{translations.studentName}:</span>
             <div className="border-b-2 border-dotted border-slate-400 flex-1 px-2">
               <input 
+                id="studentName"
                 type="text" 
-                className="w-full bg-transparent outline-none border-none print:hidden h-4"
+                autoComplete="off"
+                className="w-full bg-transparent outline-none border-none print:hidden h-4 focus:bg-slate-50 transition-colors px-1 rounded"
                 value={formData.studentName}
                 onChange={(e) => setFormData({...formData, studentName: e.target.value})}
+                onKeyDown={(e) => handleKeyDown(e, 'rollNo')}
               />
               <span className="hidden print:inline">{formData.studentName}</span>
             </div>
@@ -235,10 +252,13 @@ const StudentFees = () => {
               <span>{translations.rollNo}:</span>
               <div className="border-b-2 border-dotted border-slate-400 flex-1 px-1">
                 <input 
+                  id="rollNo"
                   type="text" 
-                  className="w-full bg-transparent outline-none border-none print:hidden h-4 text-center"
+                  autoComplete="off"
+                  className="w-full bg-transparent outline-none border-none print:hidden h-4 text-center focus:bg-slate-50 transition-colors rounded"
                   value={formData.rollNo}
                   onChange={(e) => setFormData({...formData, rollNo: e.target.value})}
+                  onKeyDown={(e) => handleKeyDown(e, 'section')}
                 />
                 <span className="hidden print:inline">{formData.rollNo}</span>
               </div>
@@ -247,10 +267,13 @@ const StudentFees = () => {
               <span>{translations.section}:</span>
               <div className="border-b-2 border-dotted border-slate-400 flex-1 px-1">
                 <input 
+                  id="section"
                   type="text" 
-                  className="w-full bg-transparent outline-none border-none print:hidden h-4 text-center"
+                  autoComplete="off"
+                  className="w-full bg-transparent outline-none border-none print:hidden h-4 text-center focus:bg-slate-50 transition-colors rounded"
                   value={formData.section}
                   onChange={(e) => setFormData({...formData, section: e.target.value})}
+                  onKeyDown={(e) => handleKeyDown(e, 'className')}
                 />
                 <span className="hidden print:inline">{formData.section}</span>
               </div>
@@ -259,10 +282,13 @@ const StudentFees = () => {
               <span>{translations.class}:</span>
               <div className="border-b-2 border-dotted border-slate-400 flex-1 px-1">
                 <input 
+                  id="className"
                   type="text" 
-                  className="w-full bg-transparent outline-none border-none print:hidden h-4 text-center"
+                  autoComplete="off"
+                  className="w-full bg-transparent outline-none border-none print:hidden h-4 text-center focus:bg-slate-50 transition-colors rounded"
                   value={formData.className}
                   onChange={(e) => setFormData({...formData, className: e.target.value})}
+                  onKeyDown={(e) => handleKeyDown(e, 'month')}
                 />
                 <span className="hidden print:inline">{formData.className}</span>
               </div>
@@ -273,10 +299,13 @@ const StudentFees = () => {
               <span>{translations.month}:</span>
               <div className="border-b-2 border-dotted border-slate-400 flex-1 px-2">
                 <input 
+                  id="month"
                   type="text" 
-                  className="w-full bg-transparent outline-none border-none print:hidden h-4"
+                  autoComplete="off"
+                  className="w-full bg-transparent outline-none border-none print:hidden h-4 focus:bg-slate-50 transition-colors px-1 rounded"
                   value={formData.month}
                   onChange={(e) => setFormData({...formData, month: e.target.value})}
+                  onKeyDown={(e) => handleKeyDown(e, 'guardianName')}
                 />
                 <span className="hidden print:inline">{formData.month}</span>
               </div>
@@ -285,10 +314,13 @@ const StudentFees = () => {
               <span>{translations.guardianName}:</span>
               <div className="border-b-2 border-dotted border-slate-400 flex-1 px-2">
                 <input 
+                  id="guardianName"
                   type="text" 
-                  className="w-full bg-transparent outline-none border-none print:hidden h-4"
+                  autoComplete="off"
+                  className="w-full bg-transparent outline-none border-none print:hidden h-4 focus:bg-slate-50 transition-colors px-1 rounded"
                   value={formData.guardianName}
                   onChange={(e) => setFormData({...formData, guardianName: e.target.value})}
+                  onKeyDown={(e) => handleKeyDown(e, 'date')}
                 />
                 <span className="hidden print:inline">{formData.guardianName}</span>
               </div>
@@ -325,10 +357,13 @@ const StudentFees = () => {
                 </td>
                 <td className="py-0 px-0 relative">
                   <input 
+                    id={`fee-${idx + 1}`}
                     type="number" 
-                    className="w-full h-full bg-transparent outline-none border-none text-right px-2 font-mono print:hidden [-moz-appearance:_textfield] [&::-webkit-inner-spin-button]:m-0 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:m-0 [&::-webkit-outer-spin-button]:appearance-none"
+                    autoComplete="off"
+                    className="w-full h-full bg-transparent outline-none border-none text-right px-2 font-mono print:hidden [-moz-appearance:_textfield] [&::-webkit-inner-spin-button]:m-0 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:m-0 [&::-webkit-outer-spin-button]:appearance-none focus:bg-slate-50 transition-colors"
                     value={fee.amount}
                     onChange={(e) => handleFeeChange(idx, e.target.value)}
+                    onKeyDown={(e) => handleKeyDown(e, idx < fees.length - 1 ? `fee-${idx + 2}` : 'submit-btn')}
                   />
                   <span className="hidden print:block text-right px-2 font-mono">{fee.amount ? parseFloat(fee.amount).toFixed(2) : ''}</span>
                 </td>
@@ -423,9 +458,10 @@ const StudentFees = () => {
         {/* Submission Button - Hidden on Print */}
         <div className="max-w-[1200px] mx-auto mt-12 mb-20 flex justify-center print:hidden">
           <button 
+            id="submit-btn"
             disabled={isSubmitting || loading}
             onClick={handleSaveAndPrint}
-            className="group relative flex items-center gap-4 px-12 py-6 bg-rose-500 text-white rounded-[32px] font-black uppercase tracking-[0.2em] text-sm shadow-[0_20px_40px_rgba(244,63,94,0.3)] hover:bg-rose-600 hover:translate-y-[-4px] active:translate-y-0 transition-all disabled:opacity-50 disabled:translate-y-0"
+            className="group relative flex items-center gap-4 px-12 py-6 bg-rose-500 text-white rounded-[32px] font-black uppercase tracking-[0.2em] text-sm shadow-[0_20px_40px_rgba(244,63,94,0.3)] hover:bg-rose-600 hover:translate-y-[-4px] active:translate-y-0 transition-all disabled:opacity-50 disabled:translate-y-0 focus:ring-4 focus:ring-rose-200"
           >
             <Printer size={24} className="group-hover:rotate-12 transition-transform" />
             {isSubmitting ? 'Syncing Vault...' : translations.saveAndPrint}
