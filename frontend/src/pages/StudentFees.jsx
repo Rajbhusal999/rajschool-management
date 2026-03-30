@@ -26,7 +26,8 @@ const ReceiptBody = ({
   handleCustomLabelChange, 
   handleKeyDown, 
   calculateTotal,
-  numberToWords
+  numberToWords,
+  schoolLogo
 }) => (
   <div className="relative border-2 border-slate-900 p-6 pt-4 pb-8 bg-white shadow-sm max-w-[48%] flex-1 print:shadow-none print:bg-white print:p-0 print:pb-0 print:max-h-[195mm] overflow-hidden print:w-[138mm] print:min-w-[138mm]">
     {/* Watermark */}
@@ -40,8 +41,13 @@ const ReceiptBody = ({
       {/* Header */}
       <div className="flex items-center gap-4 border-b-2 border-slate-900 pb-3 print:pb-1">
         <div className="w-20 h-20 bg-white border-2 border-slate-900 rounded-lg flex items-center justify-center print:w-16 print:h-16 overflow-hidden relative">
-          <img src="/logo.png" alt="Logo" className="max-w-[85%] max-h-[85%] object-contain" onError={(e) => e.target.style.display = 'none'} />
-          <span className="text-[10px] text-slate-300 font-bold print:hidden">LOGO</span>
+          {schoolLogo ? (
+            <img src={schoolLogo} alt="Logo" className="w-full h-full object-contain" />
+          ) : (
+            <div className="flex flex-col items-center">
+              <span className="text-[10px] text-slate-300 font-bold print:hidden italic">NO LOGO</span>
+            </div>
+          )}
         </div>
         <div className="flex-1 text-center pr-16 print:pr-14">
           <h2 className="text-3xl font-black text-slate-900 tracking-tighter uppercase print:text-2xl leading-none">{schoolName}</h2>
@@ -235,7 +241,7 @@ const ReceiptBody = ({
         </div>
         
         <div className="flex justify-end pt-6 print:pt-4">
-          <div className="text-center min-w-[140px]">
+          <div className="text-center min-w-[1400px]">
             <div className="border-t-2 border-slate-900 pt-1.5 text-[11px] font-black uppercase tracking-[0.2em]">
               {translations.receiverSign}
             </div>
@@ -287,7 +293,10 @@ const StudentFees = () => {
   const schoolName = sessionStorage.getItem('schoolName') || 'RAJ SCHOOL';
   const schoolAddress = sessionStorage.getItem('schoolAddress') || 'Bharatpur-11, Chitwan';
   const estdYear = sessionStorage.getItem('estdYear') || '2050';
+  const schoolLogo = sessionStorage.getItem('schoolLogo');
   const institutionId = sessionStorage.getItem('institutionId');
+  
+  const [lastIssued, setLastIssued] = useState({ no: null, date: null });
 
   useEffect(() => {
     if (id) {
@@ -316,7 +325,7 @@ const StudentFees = () => {
           section: data.section || '',
           className: data.class || '',
           month: data.month || '',
-          guardianName: data.guardian_name || '',
+          guardian_name: data.guardian_name || '',
           date: data.date || ''
         });
 
@@ -339,7 +348,7 @@ const StudentFees = () => {
     try {
       const { data, error } = await supabase
         .from('fee_receipts')
-        .select('receipt_no')
+        .select('receipt_no, date')
         .eq('institution_id', institutionId)
         .order('receipt_no', { ascending: false })
         .limit(1);
@@ -347,8 +356,10 @@ const StudentFees = () => {
       if (error) throw error;
       if (data && data.length > 0) {
         setReceiptNo(data[0].receipt_no + 1);
+        setLastIssued({ no: data[0].receipt_no, date: data[0].date });
       } else {
         setReceiptNo(100);
+        setLastIssued({ no: 'N/A', date: '--' });
       }
     } catch (err) {
       console.error('Error fetching receipt no:', err);
@@ -474,17 +485,54 @@ const StudentFees = () => {
 
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col font-['Outfit',sans-serif]">
-      <div className="sticky top-0 z-50 bg-white border-b border-slate-200 px-8 py-4 flex items-center justify-between shadow-sm print:hidden">
-        <div className="flex items-center gap-6">
-          <button onClick={() => navigate('/billing/history')} className="flex items-center gap-2 p-2 hover:bg-slate-100 rounded-xl transition-all font-black text-slate-600 uppercase text-xs">
-            <ArrowLeft size={18} /> {translations.back}
-          </button>
-          <h1 className="text-2xl font-black text-slate-800 tracking-tighter">Student Fees</h1>
-        </div>
-        <div className="flex items-center gap-4">
-          <button onClick={() => setLanguage(language === 'en' ? 'ne' : 'en')} className="px-6 py-2.5 bg-slate-100 border border-slate-200 rounded-2xl flex items-center gap-2 text-xs font-black text-slate-600 hover:bg-slate-200 transition-all uppercase tracking-widest">
-            <Languages size={18} className="text-indigo-500" /> {language === 'en' ? 'Nepali' : 'English'}
-          </button>
+      <div className="max-w-[1400px] mx-auto mt-6 mb-4 px-4 print:hidden">
+        <div className="bg-white rounded-[32px] border border-slate-100 shadow-xl shadow-slate-200/50 p-4 flex flex-wrap items-center justify-between gap-6">
+          <div className="flex items-center gap-6">
+            <button 
+              onClick={() => navigate('/billing')} 
+              className="flex items-center gap-2 px-4 py-2 hover:bg-slate-50 rounded-2xl transition-all font-black text-slate-500 uppercase text-xs"
+            >
+              <ArrowLeft size={18} /> {translations.back}
+            </button>
+            
+            <div className="h-8 w-px bg-slate-100"></div>
+
+            <h1 className="text-3xl font-[1000] text-slate-900 tracking-tighter">New Receipt</h1>
+            
+            <button 
+              onClick={() => navigate('/billing/history')} 
+              className="flex items-center gap-2 px-6 py-2.5 bg-sky-500 text-white rounded-2xl text-xs font-black uppercase tracking-[0.1em] hover:bg-sky-600 transition-all shadow-lg shadow-sky-500/20"
+            >
+              <History size={16} /> {translations.viewHistory}
+            </button>
+          </div>
+
+          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-4 px-6 py-3 bg-sky-50 border border-sky-100 rounded-2xl shadow-sm">
+              <div className="flex items-center gap-3 text-sky-800">
+                <History size={16} className="text-sky-500" strokeWidth={2.5} />
+                <div className="flex items-center gap-2">
+                  <span className="text-[10px] font-black uppercase tracking-widest opacity-60">Last Issued:</span>
+                  <span className="text-sm font-[1000] tracking-tighter text-sky-900 font-mono">#{lastIssued.no}</span>
+                  <span className="text-[10px] font-bold opacity-60">({lastIssued.date})</span>
+                </div>
+              </div>
+              
+              <div className="h-4 w-[2px] bg-sky-200"></div>
+              
+              <div className="flex items-center gap-2 text-sky-900">
+                <span className="text-[10px] font-black uppercase tracking-widest opacity-60">Next:</span>
+                <span className="text-sm font-[1000] tracking-tighter text-sky-600 font-mono">#{receiptNo}</span>
+              </div>
+            </div>
+
+            <button 
+              onClick={() => setLanguage(language === 'en' ? 'ne' : 'en')} 
+              className="px-5 py-3 bg-white border border-slate-200 rounded-2xl flex items-center gap-2 text-[10px] font-[1000] text-slate-500 hover:bg-slate-50 transition-all uppercase tracking-widest shadow-sm"
+            >
+              <Languages size={16} className="text-indigo-500" /> {language === 'en' ? 'Nepali' : 'English'}
+            </button>
+          </div>
         </div>
       </div>
 
@@ -496,6 +544,7 @@ const StudentFees = () => {
               language={language} setFormData={setFormData} handleFeeChange={handleFeeChange} 
               handleCustomLabelChange={handleCustomLabelChange} handleKeyDown={handleKeyDown} 
               calculateTotal={calculateTotal} numberToWords={numberToWords}
+              schoolLogo={schoolLogo}
             />
             <ReceiptBody 
               type="student" schoolName={schoolName} schoolAddress={schoolAddress} estdYear={estdYear} 
@@ -503,6 +552,7 @@ const StudentFees = () => {
               language={language} setFormData={setFormData} handleFeeChange={handleFeeChange} 
               handleCustomLabelChange={handleCustomLabelChange} handleKeyDown={handleKeyDown} 
               calculateTotal={calculateTotal} numberToWords={numberToWords}
+              schoolLogo={schoolLogo}
             />
         </div>
 
