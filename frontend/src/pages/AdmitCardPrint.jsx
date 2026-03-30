@@ -110,7 +110,7 @@ const AdmitCardPrint = () => {
             <div className="p-0 md:p-10 print:p-0">
                 <div className="max-w-[210mm] mx-auto space-y-0 print:space-y-0">
                     {studentPairs.map((pair, pageIdx) => (
-                        <div key={pageIdx} className="bg-white p-0 print:p-0 min-h-[297mm] print:min-h-[297mm] flex flex-col shadow-2xl print:shadow-none mb-12 print:mb-0 relative overflow-hidden">
+                        <div key={pageIdx} className="admit-card-page bg-white p-0 print:p-0 min-h-[297mm] print:min-h-[297mm] flex flex-col shadow-2xl print:shadow-none mb-12 print:mb-0 relative overflow-hidden">
                             {/* Visual Divider in UI, Hidden in Print */}
                             <div className="absolute top-[50%] left-0 right-0 border-t border-dashed border-slate-200 z-50 print:hidden pointer-events-none"></div>
 
@@ -132,12 +132,29 @@ const AdmitCardPrint = () => {
 
             <style dangerouslySetInnerHTML={{ __html: `
                 @media print {
-                    @page { size: A4; margin: 0; }
-                    body { background: white !important; }
-                    .print-hidden { display: none !important; }
+                    @page { 
+                        size: A4 portrait; 
+                        margin: 0; 
+                    }
+                    /* Aggressively hide all non-print elements */
+                    nav, header, footer, .nav-container, .top-nav, button.back-button, .print-hidden {
+                        display: none !important;
+                    }
+                    /* Reset global layout containers */
+                    body, html, #root, .min-h-screen, main {
+                        margin: 0 !important;
+                        padding: 0 !important;
+                        background: white !important;
+                        min-height: 0 !important;
+                        max-width: none !important;
+                    }
+                    .admit-card-page {
+                        page-break-after: always !important;
+                        break-after: page !important;
+                    }
                 }
                 .admit-card-container {
-                    height: 148.5mm;
+                    height: 147mm;
                     width: 210mm;
                     padding: 8mm;
                     position: relative;
