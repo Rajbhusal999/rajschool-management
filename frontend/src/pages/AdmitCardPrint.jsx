@@ -197,16 +197,13 @@ const AdmitCardPrint = () => {
                 }
                 .watermark-box {
                     position: absolute;
-                    top: 55%;
+                    top: 50%;
                     left: 50%;
                     transform: translate(-50%, -50%);
-                    width: 250px;
-                    height: 250px;
-                    opacity: 0.08;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    z-index: 0;
+                    width: 60%;
+                    height: 50%;
+                    opacity: 0.15;
+                    z-index: 5;
                     pointer-events: none;
                 }
                 .saraswati-top-left {
@@ -241,18 +238,24 @@ const AdmitCard = ({ student, institution, schedule, examType, year, isLastInPag
             <div className="card-border-outer">
                 <div className="card-border-inner">
                     {/* Background Watermark */}
-                    {institution?.logoUrl && (
+                    {(institution?.logoUrl || institution?.logo_url) && (
                         <div className="watermark-box">
-                            <img src={institution.logoUrl} alt="" className="w-full h-full object-contain" />
+                            <img 
+                                src={institution.logoUrl || institution.logo_url} 
+                                alt="Watermark" 
+                                className="w-full h-full object-contain"
+                                crossOrigin="anonymous"
+                            />
                         </div>
                     )}
 
                     {/* Header: Logo | Institution Info | Saraswati */}
                     <div className="flex items-center justify-between border-b-2 border-black pb-3 relative z-10">
                         <img 
-                            src={institution?.logoUrl || 'https://cdn-icons-png.flaticon.com/512/5327/5327041.png'} 
+                            src={institution?.logoUrl || institution?.logo_url || 'https://cdn-icons-png.flaticon.com/512/5327/5327041.png'} 
                             alt="Logo" 
                             className="institution-logo-top" 
+                            crossOrigin="anonymous"
                             onError={(e) => { e.target.onerror = null; e.target.src="https://cdn-icons-png.flaticon.com/512/5327/5327041.png"}}
                         />
                         
@@ -280,7 +283,7 @@ const AdmitCard = ({ student, institution, schedule, examType, year, isLastInPag
                     </div>
 
                     {/* Info Section - HARD VISIBILITY FIX */}
-                    <div className="grid grid-cols-12 gap-3 mt-2 border-2 border-black rounded-sm p-2 bg-white relative z-10 font-bold text-[11px]">
+                    <div className="grid grid-cols-12 gap-3 mt-2 border-2 border-black rounded-sm p-2 bg-transparent relative z-10 font-bold text-[11px]">
                         <div className="col-span-8 space-y-1.5">
                             <div className="flex items-end border-b border-black/20 pb-0.5">
                                 <span className="text-[10px] uppercase w-28 font-black text-black">Student Name:</span>
