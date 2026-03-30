@@ -10,7 +10,8 @@ import {
   Calendar,
   User,
   Hash,
-  ArrowRight
+  ArrowRight,
+  History
 } from 'lucide-react';
 
 const BillingHistory = () => {
