@@ -1,6 +1,8 @@
 @import "tailwindcss";
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100;200;300;400;500;600;700;800;900&display=swap');
 
+@custom-variant print (@media print);
+
 @theme {
   --color-brand-dark: #0f172a;
   --color-brand-indigo: #6366f1;
@@ -69,8 +71,13 @@ body {
 
 /* Global Print Rules */
 @media print {
-  .no-print, .print-hide, .print\:hidden, nav, header, aside, .nav-header { 
+  #top-nav-bar, #global-back-btn, #submit-btn, .no-print, .print-hide, .print\:hidden, nav, header, aside, .nav-header { 
     display: none !important; 
+    visibility: hidden !important;
+    opacity: 0 !important;
+    height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
   }
   
   body, html {

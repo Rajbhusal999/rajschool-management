@@ -564,7 +564,7 @@ const StudentFees = () => {
             />
         </div>
 
-        <div className="max-w-[1400px] mx-auto mt-12 mb-20 flex justify-center print:hidden">
+        <div className="max-w-[1400px] mx-auto mt-12 mb-20 flex justify-center print:hidden no-print">
           <button 
             id="submit-btn" disabled={isSubmitting || loading} onClick={handleSaveAndPrint}
             className="group relative flex items-center gap-4 px-12 py-6 bg-indigo-600 text-white rounded-full font-black uppercase tracking-widest text-sm shadow-xl hover:bg-indigo-700 transition-all hover:scale-105 active:scale-95"
