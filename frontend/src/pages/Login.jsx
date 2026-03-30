@@ -41,7 +41,7 @@ const Login = () => {
                 throw new Error('Invalid EMIS code or password. Please verify your credentials.');
             }
 
-            // Store session info
+            // Store session info and always redirect to dashboard
             sessionStorage.setItem('institutionId', data.id);
             sessionStorage.setItem('schoolName', data.school_name);
             if (data.address) sessionStorage.setItem('schoolAddress', data.address);
@@ -49,21 +49,7 @@ const Login = () => {
             if (data.logo_url) sessionStorage.setItem('schoolLogo', data.logo_url);
             if (data.background_url) sessionStorage.setItem('schoolBackground', data.background_url);
             
-            // Redirection logic based on subscription
-            const now = new Date();
-            const expiryDate = data.expiry_date ? new Date(data.expiry_date) : null;
-            
-            // Access Plan: 
-            // 1. ACTIVE and not expired -> Dashboard
-            // 2. PENDING (Verification) -> Dashboard (Banner will show)
-            // 3. UNPAID / Others        -> Subscription
-            const hasValidAccess = (data.status === 'ACTIVE' && expiryDate && expiryDate > now) || data.status === 'PENDING';
-            
-            if (hasValidAccess) {
-                navigate('/dashboard');
-            } else {
-                navigate('/subscription');
-            }
+            navigate('/dashboard');
         } catch (err) {
             setError(err.message);
         } finally {

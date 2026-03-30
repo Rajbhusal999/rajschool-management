@@ -84,15 +84,9 @@ const SchoolDashboard = () => {
                     setSchoolBackground(instData.background_url);
                 }
 
-                // Subscription validation: Must be ACTIVE (not expired) or PENDING verification
+                // Subscription metadata
                 const now = new Date();
                 const expiryDate = instData.expiry_date ? new Date(instData.expiry_date) : null;
-                const hasValidAccess = (instData.status === 'ACTIVE' && (!expiryDate || expiryDate > now)) || instData.status === 'PENDING';
-
-                if (!hasValidAccess) {
-                    navigate('/subscription');
-                    return;
-                }
 
                 let diffDays = 0;
                 if (expiryDate) {
@@ -142,6 +136,27 @@ const SchoolDashboard = () => {
             )}
 
             <div className="relative z-10 space-y-10">
+                {/* Unpaid Initial Access Banner */}
+                {(!stats.status || stats.status === 'UNPAID') && (
+                    <div className="bg-indigo-50 border-2 border-indigo-200 rounded-[40px] p-8 flex flex-col lg:flex-row items-center justify-between gap-8 shadow-sm group hover:border-indigo-300 transition-all mb-10">
+                        <div className="flex items-center gap-6">
+                            <div className="w-20 h-20 bg-indigo-600 rounded-[30px] flex items-center justify-center text-white shadow-xl shadow-indigo-200 shrink-0 group-hover:scale-105 transition-transform">
+                                <Rocket size={36} className="animate-bounce" strokeWidth={2.5} />
+                            </div>
+                            <div className="space-y-1">
+                                <h3 className="text-2xl font-[1000] text-indigo-900 tracking-tight uppercase">Ready to Launch?</h3>
+                                <p className="text-indigo-600/70 text-sm font-bold max-w-xl">Your institutional portal is initialized. Finalize your subscription to unlock persistence, unlimited students, and official certification tools.</p>
+                            </div>
+                        </div>
+                        <button 
+                            onClick={() => navigate('/subscription')}
+                            className="w-full lg:w-auto px-10 py-5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-[24px] font-black text-sm uppercase tracking-widest shadow-xl shadow-indigo-200 transition-all flex items-center justify-center gap-3 group/btn"
+                        >
+                            Select Plan <ChevronRight size={18} className="group-hover/btn:translate-x-1 transition-transform" />
+                        </button>
+                    </div>
+                )}
+
                 {/* Verification Pending Banner */}
             {stats.status === 'PENDING' && (
                 <div className="bg-amber-50 border-2 border-amber-200 rounded-[32px] p-6 flex flex-col md:flex-row items-center justify-between gap-6 shadow-sm border-dashed">
