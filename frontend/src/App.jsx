@@ -126,7 +126,6 @@ const Layout = () => {
             <Route path="/exams/entry" element={<MarkEntry />} />
             <Route path="/exams/results" element={<ResultSheets />} />
             <Route path="/exams/print" element={<GradeSheetPrint />} />
-            <Route path="/exams/admit-cards" element={<div className="p-12 min-h-[400px] flex items-center justify-center bg-white rounded-[32px] border border-slate-100 shadow-sm text-slate-400 font-black uppercase tracking-widest text-sm">Admit Card Module Coming Soon</div>} />
             <Route path="/exams/subject-slips" element={<MarkSlipConfig />} />
             <Route path="/exams/subject-slips/view" element={<MarkSlipPrint />} />
           </Routes>
