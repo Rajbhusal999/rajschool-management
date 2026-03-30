@@ -25,6 +25,7 @@ import AdminLogin from "./pages/AdminLogin";
 import Subscription from "./pages/Subscription";
 import Payment from "./pages/Payment";
 import MarkSlipConfig from "./pages/MarkSlipConfig";
+import MarkSlipPrint from "./pages/MarkSlipPrint";
 import About from "./pages/About";
 
 import { GraduationCap, ShieldAlert } from "lucide-react";
@@ -127,6 +128,7 @@ const Layout = () => {
             <Route path="/exams/print" element={<GradeSheetPrint />} />
             <Route path="/exams/admit-cards" element={<div className="p-12 min-h-[400px] flex items-center justify-center bg-white rounded-[32px] border border-slate-100 shadow-sm text-slate-400 font-black uppercase tracking-widest text-sm">Admit Card Module Coming Soon</div>} />
             <Route path="/exams/subject-slips" element={<MarkSlipConfig />} />
+            <Route path="/exams/subject-slips/view" element={<MarkSlipPrint />} />
           </Routes>
         </main>
       </div>

@@ -72,8 +72,8 @@ const MarkSlipConfig = () => {
         
         const params = new URLSearchParams({
             year: formData.year,
-            exam: formData.examType,
-            className: formData.selectedClass,
+            examType: formData.examType,
+            class: formData.selectedClass,
             subject: formData.selectedSubject
         });
         

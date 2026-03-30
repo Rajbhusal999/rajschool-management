@@ -367,9 +367,22 @@ export const examService = {
         const schoolId = params.schoolId || sessionStorage.getItem('institutionId');
         if (schoolId) query = query.eq('school_id', Number(schoolId));
         if (params.examType) query = query.eq('exam_type', params.examType);
+        if (params.year) query = query.eq('year', Number(params.year));
         if (params.studentClass || params.class) query = query.eq('class', params.studentClass || params.class);
+        if (params.subject) query = query.eq('subject', params.subject);
         const { data, error } = await query;
         if (error) handleError(error, 'examService.getMarks');
+        return { data: mapToCamelCase(data) };
+    },
+    getExamAttendance: async (params) => {
+        let query = supabase.from('exam_attendance').select('*');
+        const schoolId = params.schoolId || sessionStorage.getItem('institutionId');
+        if (schoolId) query = query.eq('school_id', Number(schoolId));
+        if (params.examType) query = query.eq('exam_type', params.examType);
+        if (params.year) query = query.eq('year', Number(params.year));
+        if (params.studentClass || params.class) query = query.eq('class', params.studentClass || params.class);
+        const { data, error } = await query;
+        if (error) handleError(error, 'examService.getExamAttendance');
         return { data: mapToCamelCase(data) };
     },
     saveMarksBulk: async (dataSpec) => {
