@@ -218,17 +218,16 @@ const AdmitCard = ({ student, institution, schedule, examType, year, isLastInPag
                         </div>
                     )}
 
-                    {/* Header: Saraswati | Institution Info | Logo */}
+                    {/* Header: Logo | Institution Info | Saraswati */}
                     <div className="flex items-center justify-between border-b-2 border-black pb-3 relative z-10">
                         <img 
-                            src="https://zofkwhxscwskisajonql.supabase.co/storage/v1/object/public/system-assets/saraswati_bw.png" 
-                            alt="Saraswati" 
-                            className="saraswati-top-left"
-                            onError={(e) => { e.target.onerror = null; e.target.src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Saraswati_veena.svg/512px-Saraswati_veena.svg.png"}}
+                            src={institution?.schoolLogo || 'https://icons.iconarchive.com/icons/paomedia/small-n-flat/1024/school-icon.png'} 
+                            alt="Logo" 
+                            className="institution-logo-top" 
                         />
                         
-                        <div className="text-center flex-1">
-                            <h1 className="text-2xl font-black uppercase leading-tight tracking-tighter">{institution?.schoolName || 'YOUR SCHOOL NAME'}</h1>
+                        <div className="text-center flex-1 mx-4">
+                            <h1 className="text-3xl font-black uppercase leading-tight tracking-tighter">{institution?.schoolName || 'YOUR SCHOOL NAME'}</h1>
                             <p className="text-[10px] font-bold text-slate-700 uppercase tracking-wide">{institution?.address || 'School Address Line'}</p>
                             <h2 className="text-md font-black text-rose-600 mt-2 border-t border-slate-200 pt-1 inline-block uppercase tracking-widest leading-none">
                                 {examType?.replace(/_/g, ' ')} EXAMINATION - {year}
@@ -236,9 +235,10 @@ const AdmitCard = ({ student, institution, schedule, examType, year, isLastInPag
                         </div>
 
                         <img 
-                            src={institution?.schoolLogo || 'https://icons.iconarchive.com/icons/paomedia/small-n-flat/1024/school-icon.png'} 
-                            alt="Logo" 
-                            className="institution-logo-top" 
+                            src="https://zofkwhxscwskisajonql.supabase.co/storage/v1/object/public/system-assets/saraswati_bw.png" 
+                            alt="Saraswati" 
+                            className="saraswati-top-left"
+                            onError={(e) => { e.target.onerror = null; e.target.src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Saraswati_veena.svg/512px-Saraswati_veena.svg.png"}}
                         />
                     </div>
 
