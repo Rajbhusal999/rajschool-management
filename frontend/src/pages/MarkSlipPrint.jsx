@@ -63,11 +63,7 @@ const MarkSlipPrint = () => {
                 attendance: attMap,
                 schoolInfo: schoolRes.data
             });
-            
-            // Auto-trigger print after data is loaded and rendered
-            setTimeout(() => {
-                window.print();
-            }, 1500);
+            /* Removed auto-trigger print to allow user manual control via button */
         } catch (error) {
             console.error('Error fetching mark slip data:', error);
         } finally {
@@ -88,7 +84,28 @@ const MarkSlipPrint = () => {
     const { schoolInfo, students, marks, attendance } = data;
 
     return (
-        <div className="markslip-print-wrapper">
+        <div className="markslip-print-wrapper pb-20">
+            {/* Top Toolbar - Hidden during print */}
+            <div className="ms-top-toolbar no-print">
+                <div className="toolbar-content">
+                    <button 
+                        onClick={() => navigate(-1)} 
+                        className="ms-btn-secondary"
+                    >
+                        ← Back to Config
+                    </button>
+                    <div className="toolbar-info">
+                        Print Preview: {subject} - {studentClass}
+                    </div>
+                    <button 
+                        onClick={() => window.print()} 
+                        className="ms-btn-primary"
+                    >
+                        Print Mark Slip
+                    </button>
+                </div>
+            </div>
+
             <div className="print-page portrait A4">
                 {/* Watermark Logo */}
                 {schoolInfo?.logo && (
