@@ -489,7 +489,7 @@ const StudentFees = () => {
 
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col font-['Outfit',sans-serif]">
-      <div className="max-w-[1400px] mx-auto mt-6 mb-4 px-4 print:hidden">
+      <div className="max-w-[1400px] mx-auto mt-6 mb-4 px-4 print:hidden no-print">
         <div className="bg-white rounded-[32px] border border-slate-100 shadow-xl shadow-slate-200/50 p-4 flex flex-wrap items-center justify-between gap-6">
           <div className="flex items-center gap-6">
             <button 
@@ -560,7 +560,7 @@ const StudentFees = () => {
             />
         </div>
 
-        <div className="max-w-[1400px] mx-auto mt-12 mb-20 flex justify-center print:hidden">
+        <div className="max-w-[1400px] mx-auto mt-12 mb-20 flex justify-center print:hidden no-print">
           <button 
             id="submit-btn" disabled={isSubmitting || loading} onClick={handleSaveAndPrint}
             className="group relative flex items-center gap-4 px-12 py-6 bg-indigo-600 text-white rounded-full font-black uppercase tracking-widest text-sm shadow-xl hover:bg-indigo-700 transition-all hover:scale-105 active:scale-95"
@@ -573,28 +573,15 @@ const StudentFees = () => {
       <style dangerouslySetInnerHTML={{ __html: `
         @media print {
           @page { size: landscape; margin: 0; }
-          body, html { 
-            background: white !important; 
-            margin: 0 !important; 
-            padding: 0 !important;
-            width: 297mm !important; 
-            height: 210mm !important; 
-            overflow: hidden !important; /* Prevent extra pages */
-          }
-          #root { height: 100% !important; overflow: hidden !important; }
-          .min-h-screen { min-height: 0 !important; }
-          main { padding: 0 !important; margin: 0 !important; }
-          .print\\:hidden, .print-hide, .nav-header { display: none !important; }
-          .flex-1 { flex: none !important; padding: 0 !important; margin: 0 !important; }
           .receipt-print-wrapper { 
             display: flex !important; 
             flex-direction: row !important;
             justify-content: center !important;
             gap: 12mm !important;
-            width: 100% !important;
+            width: 297mm !important; 
             margin: 0 !important;
             padding: 0 !important;
-            padding-top: 10mm !important; /* Top margin for printer margins */
+            padding-top: 10mm !important;
           }
           .receipt-container { margin: 0 !important; padding: 0 !important; }
           .relative.border-2 { 
@@ -604,15 +591,10 @@ const StudentFees = () => {
             max-height: 190mm !important;
             border-color: #000 !important;
             border-width: 1.5pt !important;
-            background: white !important;
             box-shadow: none !important;
             page-break-inside: avoid !important;
-            overflow: hidden !important;
           }
           table, th, td { border-color: #000 !important; border-width: 1pt !important; }
-          
-          /* Extra safety for nested headers */
-          header, [role="navigation"] { display: none !important; }
         }
       ` }} />
     </div>

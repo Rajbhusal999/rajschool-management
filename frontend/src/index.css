@@ -66,3 +66,32 @@ body {
   margin: 0;
   font-family: 'Outfit', sans-serif;
 }
+
+/* Global Print Rules */
+@media print {
+  .no-print, .print-hide, .print\:hidden, nav, header, aside, .nav-header { 
+    display: none !important; 
+  }
+  
+  body, html {
+    background-color: white !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 297mm !important;
+    height: 210mm !important;
+    overflow: hidden !important;
+  }
+  
+  .min-h-screen, #root, main {
+    min-height: 0 !important;
+    height: auto !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    overflow: visible !important;
+  }
+  
+  /* Reset layout shells */
+  .flex-col, .flex-row {
+    display: block !important;
+  }
+}
