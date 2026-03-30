@@ -123,7 +123,7 @@ const ReceiptBody = ({
             <tr key={fee.id} className="leading-tight h-[4.8mm]">
               <td className="border-slate-900 border text-[10px] md:text-xs font-bold text-center py-0">{index + 1}</td>
               <td className="border-slate-900 border text-[10px] md:text-xs font-black uppercase text-slate-800 pl-3 py-0">
-                {index < 13 ? (
+                {index < 18 ? (
                     language === 'ne' ? fee.ne : fee.en
                 ) : (
                     <input 
@@ -215,10 +215,13 @@ const StudentFees = () => {
         { id: 11, en: 'ID Card Fee', ne: 'परिचय पत्र', amount: '' },
         { id: 12, en: 'Educational Tour Fee', ne: 'शैक्षिक भ्रमण', amount: '' },
         { id: 13, en: 'Red Cross Fee', ne: 'रेडक्रस', amount: '' },
-        { id: 14, en: 'Library Fee', ne: 'पुस्तकालय', amount: '' },
-        { id: 15, en: 'Insurance Fee', ne: 'बीमा', amount: '' },
-        { id: 16, en: '', ne: '', amount: '' },
-        { id: 17, en: '', ne: '', amount: '' }
+        { id: 14, en: 'Sifaris', ne: 'सिफारिस', amount: '' },
+        { id: 15, ne: 'विविध', en: 'Miscellaneous', amount: '' },
+        { id: 16, ne: 'सहयोग', en: 'Support', amount: '' },
+        { id: 17, ne: 'वि. डायरी', en: 'School Diary', amount: '' },
+        { id: 18, ne: 'अन्य', en: 'Other', amount: '' },
+        { id: 19, ne: '', en: '', amount: '' },
+        { id: 20, ne: '', en: '', amount: '' }
     ]);
 
     useEffect(() => {
@@ -228,11 +231,40 @@ const StudentFees = () => {
     const loadInitialData = async () => {
         setLoading(true);
         try {
-            const storedSchool = JSON.parse(sessionStorage.getItem('registrationData') || '{}');
-            setSchoolName(storedSchool.school_name || 'Your School Name');
-            setSchoolAddress(storedSchool.address || 'Your Address');
-            setEstdYear(storedSchool.estd_year || '---');
-            setSchoolLogo(storedSchool.logo_url);
+            // Read individual keys as set in Login.jsx
+            // Try reading from sessionStorage first
+            let name = sessionStorage.getItem('schoolName');
+            let address = sessionStorage.getItem('schoolAddress');
+            let estd = sessionStorage.getItem('estdYear');
+            let logo = sessionStorage.getItem('schoolLogo');
+            const instId = sessionStorage.getItem('institutionId');
+
+            // Fallback: If session data is missing but we have an ID, fetch from DB
+            if (!name && instId) {
+                const { data: inst } = await supabase
+                    .from('institutions')
+                    .select('school_name, address, establishment, logo_url')
+                    .eq('id', instId)
+                    .single();
+                
+                if (inst) {
+                    name = inst.school_name;
+                    address = inst.address;
+                    estd = inst.establishment;
+                    logo = inst.logo_url;
+                    
+                    // Sync back to session for next time
+                    sessionStorage.setItem('schoolName', name);
+                    if (address) sessionStorage.setItem('schoolAddress', address);
+                    if (estd) sessionStorage.setItem('estdYear', estd);
+                    if (logo) sessionStorage.setItem('schoolLogo', logo);
+                }
+            }
+
+            setSchoolName(name || 'Your School Name');
+            setSchoolAddress(address || 'Your Address');
+            setEstdYear(estd || '---');
+            setSchoolLogo(logo);
 
             const { data: lastReceipt } = await supabase
                 .from('fee_receipts')
