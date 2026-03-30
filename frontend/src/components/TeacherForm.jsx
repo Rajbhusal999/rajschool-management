@@ -306,20 +306,22 @@ const TeacherForm = ({ teacher, onClose, onSave }) => {
               </select>
             </div>
 
-            <div className="md:col-span-2 space-y-2">
-              <label className="block text-sm font-bold text-slate-700 ml-1">Password *</label>
-              <input 
-                type="password" 
-                name="teacherPassword" 
-                placeholder="Set login password"
-                className="w-full px-5 py-4 bg-white border border-slate-200 rounded-[18px] outline-none focus:ring-4 focus:ring-indigo-50 transition-all font-medium text-slate-800" 
-                value={formData.teacherPassword} 
-                onChange={handleChange} 
-              />
-              <span className="block text-[10px] text-slate-400 mt-1 ml-1 font-medium italic">
-                Min 8 chars: upper, lower, num, special (@$!%*?&amp;)
-              </span>
-            </div>
+            {formData.staffRole === 'Teacher' && (
+              <div className="md:col-span-2 space-y-2">
+                <label className="block text-sm font-bold text-slate-700 ml-1">Password *</label>
+                <input 
+                  type="password" 
+                  name="teacherPassword" 
+                  placeholder="Set login password"
+                  className="w-full px-5 py-4 bg-white border border-slate-200 rounded-[18px] outline-none focus:ring-4 focus:ring-indigo-50 transition-all font-medium text-slate-800" 
+                  value={formData.teacherPassword} 
+                  onChange={handleChange} 
+                />
+                <span className="block text-[10px] text-slate-400 mt-1 ml-1 font-medium italic">
+                  Min 8 chars: upper, lower, num, special (@$!%*?&amp;)
+                </span>
+              </div>
+            )}
 
             <div className="md:col-span-2 space-y-2">
               <label className="block text-sm font-bold text-slate-700 ml-1">Address</label>
