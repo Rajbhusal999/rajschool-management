@@ -72,10 +72,10 @@ const resequenceClassSymbolNumbers = async (schoolId, className) => {
     const sId = Number(schoolId);
     
     try {
-        // 1. Fetch current class members
+        // 1. Fetch current class members with all details to satisfy NOT NULL constraints during upsert
         const { data: students, error: fetchError } = await supabase
             .from('students')
-            .select('id, full_name')
+            .select('*')
             .eq('school_id', sId)
             .eq('class', className);
         
@@ -88,9 +88,9 @@ const resequenceClassSymbolNumbers = async (schoolId, className) => {
         const prefix = CLASS_PREFIXES[className] || 'REG';
         
         // 3. Stage 1: Clear existing symbol_nos in the class to a temporary unique value
-        // Use a shorter string (CLR-) to avoid possible varchar(20) or similar limits
+        // Include all original fields to satisfy database NOT NULL constraints during the merge
         const clearUpdates = students.map(s => ({
-            id: s.id,
+            ...s,
             symbol_no: `CLR-${s.id}-${Date.now().toString().slice(-6)}`
         }));
         
@@ -99,7 +99,7 @@ const resequenceClassSymbolNumbers = async (schoolId, className) => {
 
         // 4. Stage 2: Assign final sequential numbers
         const finalUpdates = students.map((s, index) => ({
-            id: s.id,
+            ...s,
             symbol_no: `${prefix}${(index + 1).toString().padStart(3, '0')}`
         }));
 

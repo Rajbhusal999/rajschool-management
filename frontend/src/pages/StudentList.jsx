@@ -192,17 +192,17 @@ const StudentList = () => {
           <div className="flex flex-wrap gap-4">
             <button 
               onClick={async () => {
-                if (classFilter && window.confirm(`Fix alphabetical symbol numbers for Class ${classFilter}?`)) {
+                if (classFilter && window.confirm(`Generate alphabetical symbol numbers for Class ${classFilter} students?`)) {
                   await studentService.resequenceClass(classFilter);
                   fetchStudents();
                 } else if (!classFilter) {
-                  alert('Please select a specific class to fix sequences.');
+                  alert('Please select a specific class to generate symbol numbers.');
                 }
               }}
               className="bg-amber-500 hover:bg-amber-600 text-white px-8 py-4 rounded-2xl font-black text-sm uppercase tracking-widest flex items-center justify-center gap-3 transition-all shadow-xl shadow-amber-100"
             >
               <ShieldCheck size={20} />
-              Fix Sequences
+              Generate Symbol Nos
             </button>
             <button 
               onClick={exportToCSV}
