@@ -389,6 +389,24 @@ export const examService = {
         const { error } = await supabase.from('exam_attendance').upsert(mappedData);
         if (error) handleError(error, 'examService.saveAttendanceBulk');
         return { error };
+    },
+    getSchedule: async (params) => {
+        let query = supabase.from('exam_schedules').select('*');
+        const schoolId = sessionStorage.getItem('institutionId');
+        if (schoolId) query = query.eq('school_id', Number(schoolId));
+        if (params.year) query = query.eq('year', Number(params.year));
+        if (params.examType) query = query.eq('exam_type', params.examType);
+        if (params.class) query = query.eq('class', params.class);
+        const { data, error } = await query.single();
+        if (error && error.code !== 'PGRST116') handleError(error, 'examService.getSchedule');
+        return { data: mapToCamelCase(data) };
+    },
+    saveSchedule: async (dataSpec) => {
+        const schoolId = sessionStorage.getItem('institutionId');
+        const mappedData = mapToSnakeCase({ ...dataSpec, schoolId: Number(schoolId) });
+        const { error } = await supabase.from('exam_schedules').upsert(mappedData);
+        if (error) handleError(error, 'examService.saveSchedule');
+        return { error };
     }
 };
 
