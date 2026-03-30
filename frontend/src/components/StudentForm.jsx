@@ -3,6 +3,48 @@ import { studentService } from '../services/api';
 import { X, User, Users, MapPin, Info, ChevronRight } from 'lucide-react';
 import { nepalAddressData } from '../utils/nepal_address_data';
 
+const SectionTitle = ({ title }) => (
+  <div className="pb-4 border-b border-slate-100 mb-6 mt-10 first:mt-0">
+    <h3 className="font-extrabold text-slate-800 tracking-tight text-lg">{title}</h3>
+  </div>
+);
+
+const FormField = ({ label, name, required, placeholder, type = "text", options, disabled, formData, handleChange, errors }) => (
+  <div className="space-y-2">
+    <label className="block text-sm font-bold text-slate-600 ml-1">
+      {label} {required && <span className="text-rose-500">*</span>}
+    </label>
+    {type === "select" ? (
+      <div className="relative group/select">
+        <select 
+          name={name} 
+          required={required}
+          disabled={disabled}
+          className={`w-full h-12 px-5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-4 focus:ring-indigo-100 outline-none transition font-semibold text-slate-700 appearance-none disabled:opacity-50 disabled:cursor-not-allowed ${errors[name] ? 'border-rose-300 ring-4 ring-rose-50' : ''}`}
+          value={formData[name] || ''} 
+          onChange={handleChange}
+        >
+          {options.map(opt => <option key={opt.value} value={opt.value}>{opt.label}</option>)}
+        </select>
+        <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400 group-hover/select:text-indigo-500 transition-colors">
+          <ChevronRight size={18} className="rotate-90" />
+        </div>
+      </div>
+    ) : (
+      <input 
+        type={type} 
+        name={name} 
+        required={required}
+        placeholder={placeholder}
+        className={`w-full h-12 px-5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-4 focus:ring-indigo-100 outline-none transition font-semibold text-slate-700 placeholder:text-slate-300 ${errors[name] ? 'border-rose-300 ring-4 ring-rose-50' : ''}`}
+        value={formData[name] || ''} 
+        onChange={handleChange} 
+      />
+    )}
+    {errors[name] && <p className="text-[10px] font-bold text-rose-500 ml-2 animate-in slide-in-from-top-1 duration-200">{errors[name]}</p>}
+  </div>
+);
+
 const StudentForm = ({ student, onClose, onSave }) => {
   const [formData, setFormData] = useState({
     fullName: '',
@@ -17,7 +59,6 @@ const StudentForm = ({ student, onClose, onSave }) => {
     motherName: '',
     guardianName: '',
     guardianContact: '',
-    guardianEmail: '',
     permProvince: '',
     permDistrict: '',
     permLocalLevel: '',
@@ -146,47 +187,6 @@ const StudentForm = ({ student, onClose, onSave }) => {
     }
   };
 
-  const SectionTitle = ({ title }) => (
-    <div className="pb-4 border-b border-slate-100 mb-6 mt-10 first:mt-0">
-      <h3 className="font-extrabold text-slate-800 tracking-tight text-lg">{title}</h3>
-    </div>
-  );
-
-  const FormField = ({ label, name, required, placeholder, type = "text", options, disabled }) => (
-    <div className="space-y-2">
-      <label className="block text-sm font-bold text-slate-600 ml-1">
-        {label} {required && <span className="text-rose-500">*</span>}
-      </label>
-      {type === "select" ? (
-        <div className="relative group/select">
-          <select 
-            name={name} 
-            required={required}
-            disabled={disabled}
-            className={`w-full h-12 px-5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-4 focus:ring-indigo-100 outline-none transition font-semibold text-slate-700 appearance-none disabled:opacity-50 disabled:cursor-not-allowed ${errors[name] ? 'border-rose-300 ring-4 ring-rose-50' : ''}`}
-            value={formData[name]} 
-            onChange={handleChange}
-          >
-            {options.map(opt => <option key={opt.value} value={opt.value}>{opt.label}</option>)}
-          </select>
-          <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400 group-hover/select:text-indigo-500 transition-colors">
-            <ChevronRight size={18} className="rotate-90" />
-          </div>
-        </div>
-      ) : (
-        <input 
-          type={type} 
-          name={name} 
-          required={required}
-          placeholder={placeholder}
-          className={`w-full h-12 px-5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-4 focus:ring-indigo-100 outline-none transition font-semibold text-slate-700 placeholder:text-slate-300 ${errors[name] ? 'border-rose-300 ring-4 ring-rose-50' : ''}`}
-          value={formData[name]} 
-          onChange={handleChange} 
-        />
-      )}
-      {errors[name] && <p className="text-[10px] font-bold text-rose-500 ml-2 animate-in slide-in-from-top-1 duration-200">{errors[name]}</p>}
-    </div>
-  );
 
   return (
     <div className="fixed inset-0 z-[60] flex items-center justify-center bg-slate-900/60 backdrop-blur-md p-4 overflow-y-auto font-['Outfit',sans-serif]">
@@ -212,6 +212,7 @@ const StudentForm = ({ student, onClose, onSave }) => {
                 name="fullName" 
                 required 
                 placeholder="Institutional Title" 
+                formData={formData} handleChange={handleChange} errors={errors}
               />
               <FormField 
                 label="Select Class" 
@@ -222,17 +223,20 @@ const StudentForm = ({ student, onClose, onSave }) => {
                   { label: "-- Select Class --", value: "" },
                   ...['Nursery', 'LKG', 'UKG', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'].map(c => ({ label: c, value: c }))
                 ]}
+                formData={formData} handleChange={handleChange} errors={errors}
               />
               <FormField 
                 label="Roll No (Class Roll)" 
                 name="rollNo" 
                 placeholder="Optional (Auto-filled if empty)" 
+                formData={formData} handleChange={handleChange} errors={errors}
               />
               <FormField 
                 label="Date of Birth (BS)" 
                 name="dobNepali" 
                 required 
                 placeholder="YYYY/MM/DD" 
+                formData={formData} handleChange={handleChange} errors={errors}
               />
               <FormField 
                 label="Gender" 
@@ -244,11 +248,13 @@ const StudentForm = ({ student, onClose, onSave }) => {
                   { label: "Female", value: "Female" },
                   { label: "Other", value: "Other" }
                 ]}
+                formData={formData} handleChange={handleChange} errors={errors}
               />
               <FormField 
                 label="EMIS No (Optional)" 
                 name="emisNo" 
                 placeholder="EMIS Identifier" 
+                formData={formData} handleChange={handleChange} errors={errors}
               />
               <div className="space-y-2">
                 <label className="block text-sm font-bold text-slate-600 ml-1">Student Photo (Max 2MB, JPG/PNG)</label>
@@ -260,11 +266,13 @@ const StudentForm = ({ student, onClose, onSave }) => {
                       onChange={(e) => {
                           const file = e.target.files[0];
                           if (file && file.size > 2 * 1024 * 1024) {
-                              setErrors({...errors, studentPhoto: 'File must be under 2MB'});
+                              setErrors(prev => ({ ...prev, studentPhoto: 'File must be under 2MB' }));
                           } else {
-                              setFormData({...formData, studentPhoto: file});
-                              const { studentPhoto: _, ...rest } = errors;
-                              setErrors(rest);
+                              setFormData(prev => ({ ...prev, studentPhoto: file }));
+                              setErrors(prev => {
+                                  const { studentPhoto: _, ...rest } = prev;
+                                  return rest;
+                              });
                           }
                       }}
                     />
@@ -275,6 +283,7 @@ const StudentForm = ({ student, onClose, onSave }) => {
                 label="Caste" 
                 name="caste" 
                 placeholder="Enter Caste" 
+                formData={formData} handleChange={handleChange} errors={errors}
               />
             </div>
             <p className="mt-8 text-xs font-bold text-slate-400 italic">
@@ -286,12 +295,12 @@ const StudentForm = ({ student, onClose, onSave }) => {
           <section>
             <SectionTitle title="Parent / Guardian Details" />
             <div className="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-8">
-              <FormField label="Father's Name" name="fatherName" placeholder="Paternal Name" />
-              <FormField label="Mother's Name" name="motherName" placeholder="Maternal Name" />
-              <FormField label="Guardian's Name" name="guardianName" placeholder="Legal Guardian" />
-              <FormField label="Parent's Phone" name="parentContact" required placeholder="Primary Contact" />
-              <FormField label="Guardian's Phone" name="guardianPhone" placeholder="Alternate Contact" />
-              <FormField label="Guardian's Email" name="guardianEmail" placeholder="Optional" />
+              <FormField label="Father's Name" name="fatherName" placeholder="Paternal Name" formData={formData} handleChange={handleChange} errors={errors} />
+              <FormField label="Mother's Name" name="motherName" placeholder="Maternal Name" formData={formData} handleChange={handleChange} errors={errors} />
+              <FormField label="Guardian's Name" name="guardianName" placeholder="Legal Guardian" formData={formData} handleChange={handleChange} errors={errors} />
+              <FormField label="Parent's Phone" name="parentContact" required placeholder="Primary Contact" formData={formData} handleChange={handleChange} errors={errors} />
+              <FormField label="Guardian's Phone" name="guardianPhone" placeholder="Alternate Contact" formData={formData} handleChange={handleChange} errors={errors} />
+              <FormField label="Guardian's Email" name="guardianEmail" placeholder="Optional" formData={formData} handleChange={handleChange} errors={errors} />
             </div>
           </section>
 
@@ -307,6 +316,7 @@ const StudentForm = ({ student, onClose, onSave }) => {
                   { label: "-- Select Province --", value: "" },
                   ...nepalAddressData.map(p => ({ label: p.province, value: p.province }))
                 ]} 
+                formData={formData} handleChange={handleChange} errors={errors}
               />
               <FormField 
                 label="District" 
@@ -317,6 +327,7 @@ const StudentForm = ({ student, onClose, onSave }) => {
                   { label: formData.permProvince ? "-- Select District --" : "-- Choose Province First --", value: "" },
                   ...permDistricts
                 ]} 
+                formData={formData} handleChange={handleChange} errors={errors}
               />
               <FormField 
                 label="Local Level" 
@@ -327,9 +338,10 @@ const StudentForm = ({ student, onClose, onSave }) => {
                   { label: formData.permDistrict ? "-- Select Local Level --" : "-- Choose District First --", value: "" },
                   ...permLocalLevels
                 ]} 
+                formData={formData} handleChange={handleChange} errors={errors}
               />
-              <FormField label="Ward No" name="permWardNo" placeholder="e.g. 04" />
-              <FormField label="Tole" name="permTole" placeholder="Neighborhood Name" />
+              <FormField label="Ward No" name="permWardNo" placeholder="e.g. 04" formData={formData} handleChange={handleChange} errors={errors} />
+              <FormField label="Tole" name="permTole" placeholder="Neighborhood Name" formData={formData} handleChange={handleChange} errors={errors} />
             </div>
           </section>
 
@@ -358,6 +370,7 @@ const StudentForm = ({ student, onClose, onSave }) => {
                     { label: "-- Select Province --", value: "" },
                     ...nepalAddressData.map(p => ({ label: p.province, value: p.province }))
                   ]} 
+                  formData={formData} handleChange={handleChange} errors={errors}
                 />
                 <FormField 
                   label="District" 
@@ -368,6 +381,7 @@ const StudentForm = ({ student, onClose, onSave }) => {
                     { label: formData.tempProvince ? "-- Select District --" : "-- Choose Province First --", value: "" },
                     ...tempDistricts
                   ]} 
+                  formData={formData} handleChange={handleChange} errors={errors}
                 />
                 <FormField 
                   label="Local Level" 
@@ -378,9 +392,10 @@ const StudentForm = ({ student, onClose, onSave }) => {
                     { label: formData.tempDistrict ? "-- Select Local Level --" : "-- Choose District First --", value: "" },
                     ...tempLocalLevels
                   ]} 
+                  formData={formData} handleChange={handleChange} errors={errors}
                 />
-                <FormField label="Ward No" name="tempWardNo" placeholder="e.g. 02" />
-                <FormField label="Tole" name="tempTole" placeholder="Neighborhood Name" />
+                <FormField label="Ward No" name="tempWardNo" placeholder="e.g. 02" formData={formData} handleChange={handleChange} errors={errors} />
+                <FormField label="Tole" name="tempTole" placeholder="Neighborhood Name" formData={formData} handleChange={handleChange} errors={errors} />
               </div>
             )}
           </section>
@@ -399,6 +414,7 @@ const StudentForm = ({ student, onClose, onSave }) => {
                   { label: "Marginalised", value: "Marginalised" },
                   { label: "Other", value: "Other" }
                 ]} 
+                formData={formData} handleChange={handleChange} errors={errors}
               />
               <FormField 
                 label="Disability" 
@@ -410,6 +426,7 @@ const StudentForm = ({ student, onClose, onSave }) => {
                   { label: "Mental", value: "Mental" },
                   { label: "Other", value: "Other" }
                 ]} 
+                formData={formData} handleChange={handleChange} errors={errors}
               />
             </div>
           </section>
