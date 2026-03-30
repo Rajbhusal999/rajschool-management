@@ -22,7 +22,7 @@ const Billing = () => {
       iconBg: 'bg-indigo-50 text-indigo-600',
       buttonText: 'Select Module',
       buttonClass: 'bg-indigo-600 text-white hover:bg-indigo-700 shadow-indigo-200',
-      path: '/fees' // Placeholder path
+      path: '/billing/student-fees'
     },
     {
       id: 'donors-grants',
