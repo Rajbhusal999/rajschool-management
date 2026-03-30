@@ -29,6 +29,7 @@ import MarkSlipPrint from "./pages/MarkSlipPrint";
 import About from "./pages/About";
 import Billing from "./pages/Billing";
 import StudentFees from "./pages/StudentFees";
+import BillingHistory from "./pages/BillingHistory";
 
 import { GraduationCap, ShieldAlert } from "lucide-react";
 import BackButton from "./components/BackButton";
@@ -131,7 +132,8 @@ const Layout = () => {
             <Route path="/exams/subject-slips" element={<MarkSlipConfig />} />
             <Route path="/exams/subject-slips/view" element={<MarkSlipPrint />} />
             <Route path="/billing" element={<Billing />} />
-            <Route path="/billing/student-fees" element={<StudentFees />} />
+            <Route path="/billing/student-fees/:id?" element={<StudentFees />} />
+            <Route path="/billing/history" element={<BillingHistory />} />
           </Routes>
         </main>
       </div>

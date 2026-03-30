@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { supabase } from '../supabaseClient';
 import { 
   ArrowLeft, 
@@ -239,11 +239,13 @@ const ReceiptBody = ({
 
 const StudentFees = () => {
   const navigate = useNavigate();
-  const [language, setLanguage] = useState('ne'); // 'en' or 'ne'
+  const { id } = useParams();
+  const [language, setLanguage] = useState('ne');
   const [receiptNo, setReceiptNo] = useState(100);
   const [loading, setLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [message, setMessage] = useState({ type: '', text: '' });
+  const [isReprintMode, setIsReprintMode] = useState(false);
   
   const [formData, setFormData] = useState({
     studentName: '',
@@ -285,8 +287,52 @@ const StudentFees = () => {
   const institutionId = sessionStorage.getItem('institutionId');
 
   useEffect(() => {
-    fetchLatestReceiptNo();
-  }, []);
+    if (id) {
+      loadReceiptForReprint();
+    } else {
+      fetchLatestReceiptNo();
+    }
+  }, [id]);
+
+  const loadReceiptForReprint = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('fee_receipts')
+        .select('*')
+        .eq('id', id)
+        .single();
+
+      if (error) throw error;
+      if (data) {
+        setIsReprintMode(true);
+        setReceiptNo(data.receipt_no);
+        setLanguage(data.language || 'ne');
+        setFormData({
+          studentName: data.student_name || '',
+          rollNo: data.roll_no || '',
+          section: data.section || '',
+          className: data.class || '',
+          month: data.month || '',
+          guardianName: data.guardian_name || '',
+          date: data.date || ''
+        });
+
+        // Sync fees table
+        if (data.items && Array.isArray(data.items)) {
+          const updatedFees = fees.map(f => {
+            const item = data.items.find(it => it.id === f.id);
+            return item ? { ...f, amount: item.amount } : { ...f, amount: '' };
+          });
+          setFees(updatedFees);
+        }
+      }
+    } catch (err) {
+      console.error('Error loading receipt:', err);
+      setMessage({ type: 'error', text: 'Error loading receipt data' });
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const fetchLatestReceiptNo = async () => {
     try {
@@ -333,6 +379,11 @@ const StudentFees = () => {
   const handleSaveAndPrint = async () => {
     if (!formData.studentName) {
       setMessage({ type: 'error', text: 'Student name is required' });
+      return;
+    }
+
+    if (isReprintMode) {
+      window.print();
       return;
     }
 
@@ -430,7 +481,9 @@ const StudentFees = () => {
     total: language === 'ne' ? 'जम्मा' : 'Total',
     inWords: language === 'ne' ? 'अक्षरेपी' : 'In Words',
     receiverSign: language === 'ne' ? 'बुझिलिनेको सही' : 'Receiver\'s Sign',
-    saveAndPrint: language === 'ne' ? 'बचत र प्रिन्ट रसिद' : 'Save & Print Receipt',
+    saveAndPrint: language === 'ne' 
+      ? (isReprintMode ? 'रसिद पुन: मुद्रण गर्नुहोस्' : 'बचत र प्रिन्ट रसिद') 
+      : (isReprintMode ? 'Reprint Receipt' : 'Save & Print Receipt'),
     viewHistory: language === 'ne' ? 'इतिहास हेर्नुहोस्' : 'View History',
     back: language === 'ne' ? 'फिर्ता' : 'Back',
   };
@@ -441,12 +494,14 @@ const StudentFees = () => {
       <div className="sticky top-0 z-50 bg-white border-b border-slate-200 px-8 py-4 flex items-center justify-between shadow-sm print:hidden">
         <div className="flex items-center gap-6">
           <button 
-            onClick={() => navigate('/billing')} 
+            onClick={() => isReprintMode ? navigate('/billing/history') : navigate('/billing')} 
             className="flex items-center gap-2 p-2 hover:bg-slate-100 rounded-xl transition-all font-black text-slate-600 uppercase text-xs tracking-widest"
           >
             <ArrowLeft size={18} /> {translations.back}
           </button>
-          <h1 className="text-2xl font-black text-slate-800 tracking-tighter">New Receipt</h1>
+          <h1 className="text-2xl font-black text-slate-800 tracking-tighter">
+            {isReprintMode ? 'View/Reprint Receipt' : 'New Receipt'}
+          </h1>
         </div>
 
         <div className="flex items-center gap-4">
