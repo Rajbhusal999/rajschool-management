@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { attendanceService, studentService } from '../services/api';
+import { attendanceService, studentService, institutionService } from '../services/api';
 import { Calendar, FileBarChart, Download, ChevronLeft, ChevronRight, User, Fingerprint, Lock } from 'lucide-react';
 
 const AttendanceReports = () => {
@@ -11,22 +11,46 @@ const AttendanceReports = () => {
     studentClass: ''
   });
   const [reportData, setReportData] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const [view, setView] = useState('LOADING'); // LOADING, SETUP, LOGIN, REPORT
+  const [passwords, setPasswords] = useState({ new: '', confirm: '' });
+  const [inst, setInst] = useState(null);
 
-  const classes = ['Nursery', 'LKG', 'UKG', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'];
-  const months = [
-    { id: 1, name: 'Baishakh' }, { id: 2, name: 'Jestha' }, { id: 3, name: 'Ashadh' },
-    { id: 4, name: 'Shrawan' }, { id: 5, name: 'Bhadra' }, { id: 6, name: 'Ashwin' },
-    { id: 7, name: 'Kartik' }, { id: 8, name: 'Mangsir' }, { id: 9, name: 'Poush' },
-    { id: 10, name: 'Magh' }, { id: 11, name: 'Falgun' }, { id: 12, name: 'Chaitra' }
-  ];
+  useEffect(() => {
+    checkGateway();
+  }, []);
+
+  const checkGateway = async () => {
+    try {
+      const { data } = await institutionService.get();
+      setInst(data);
+      if (!data.principalPassword) setView('SETUP');
+      else setView('LOGIN');
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const handleEstablish = async (e) => {
+    e.preventDefault();
+    if (passwords.new !== passwords.confirm) return alert('Passwords do not match!');
+    if (passwords.new.length < 6) return alert('Security perimeter requires at least 6 characters.');
+
+    try {
+      await institutionService.updateSmsConfig({ principalPassword: passwords.new });
+      alert('Security established. Please login to continue.');
+      setView('LOGIN');
+      setPassword('');
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   const handleLogin = (e) => {
     e.preventDefault();
-    if (password === 'admin123') { // Simple simulation
-      setIsLocked(false);
+    if (password === inst.principalPassword) {
+      setView('REPORT');
     } else {
-      alert('Invalid Principal Password!');
+      alert('Invalid Principal Security Key!');
     }
   };
 
@@ -68,7 +92,6 @@ const AttendanceReports = () => {
   };
 
   const exportCSV = () => {
-    // Basic CSV implementation
     const headers = ['Symbol No', 'Name', ...Array.from({length: 32}, (_, i) => i + 1), 'Total'];
     const rows = reportData.students.map(s => {
       let total = 0;
@@ -91,32 +114,94 @@ const AttendanceReports = () => {
     link.click();
   };
 
-  if (isLocked) {
+  if (view === 'LOADING') return <div className="flex items-center justify-center h-screen font-black text-slate-300 uppercase tracking-widest text-xs">Initializing Secure Perimeter...</div>;
+
+  if (view === 'SETUP') {
     return (
-      <div className="max-w-md mx-auto mt-20">
-        <div className="bg-white p-10 rounded-[40px] shadow-2xl border border-slate-100 flex flex-col items-center">
-          <div className="w-20 h-20 bg-rose-50 rounded-3xl flex items-center justify-center text-rose-500 mb-8 border-4 border-rose-100 shadow-inner">
-            <Lock size={40} />
-          </div>
-          <h2 className="text-3xl font-black text-slate-900 mb-2">Secure Ledger</h2>
-          <p className="text-slate-500 font-bold uppercase text-[10px] tracking-widest mb-10 text-center leading-relaxed">Identity verification required for institutional analytics.</p>
-          
-          <form onSubmit={handleLogin} className="w-full space-y-6">
-            <div className="space-y-2">
-              <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Principal Credentials</label>
-              <input 
-                type="password" 
-                placeholder="••••••••" 
-                className="w-full px-6 py-4 bg-slate-50 border border-slate-100 rounded-2xl outline-none focus:ring-2 focus:ring-rose-500 font-bold transition"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required 
-              />
+      <div className="max-w-md mx-auto mt-20 animate-in fade-in zoom-in-95 duration-500">
+        <div className="bg-white p-12 rounded-[48px] shadow-2xl border border-slate-100 flex flex-col items-center text-center">
+            <div className="w-20 h-20 bg-indigo-600 rounded-[32px] flex items-center justify-center text-white mb-10 shadow-2xl shadow-indigo-200 rotate-12 transition-transform hover:rotate-0">
+                <Fingerprint size={42} />
             </div>
-            <button type="submit" className="w-full py-4 bg-slate-900 text-white rounded-2xl font-black shadow-xl hover:bg-slate-800 transition active:scale-95">
-              Unlock Terminal
-            </button>
-          </form>
+            
+            <h2 className="text-4xl font-[1000] text-slate-900 tracking-tighter mb-4">Principal Verification</h2>
+            <p className="text-sm font-bold text-slate-400 leading-relaxed mb-10 px-4">
+                Establish a secure analytical perimeter. Set your principal access credentials.
+            </p>
+
+            <form onSubmit={handleEstablish} className="w-full space-y-8">
+                <div className="space-y-3 text-left">
+                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-2">New Password</label>
+                    <input 
+                        type="password" 
+                        className="w-full px-8 py-5 bg-slate-50 border-2 border-transparent rounded-[24px] outline-none focus:border-indigo-500 focus:bg-white font-black transition-all"
+                        placeholder="••••••••"
+                        value={passwords.new}
+                        onChange={(e) => setPasswords({...passwords, new: e.target.value})}
+                        required 
+                    />
+                </div>
+                <div className="space-y-3 text-left">
+                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-2">Confirm Password</label>
+                    <input 
+                        type="password" 
+                        className="w-full px-8 py-5 bg-slate-50 border-2 border-transparent rounded-[24px] outline-none focus:border-indigo-500 focus:bg-white font-black transition-all"
+                        placeholder="••••••••"
+                        value={passwords.confirm}
+                        onChange={(e) => setPasswords({...passwords, confirm: e.target.value})}
+                        required 
+                    />
+                </div>
+
+                <button type="submit" className="w-full py-6 bg-indigo-600 text-white rounded-[28px] font-black text-lg shadow-2xl shadow-indigo-100 transform active:scale-95 transition-all hover:bg-indigo-700">
+                    Establish Security
+                </button>
+
+                <div className="pt-4">
+                    <button type="button" onClick={() => window.history.back()} className="text-[10px] font-black text-slate-400 uppercase tracking-widest hover:text-indigo-600 transition flex items-center justify-center gap-2 mx-auto">
+                        <ChevronLeft size={14} /> Return to Command Center
+                    </button>
+                </div>
+            </form>
+        </div>
+      </div>
+    );
+  }
+
+  if (view === 'LOGIN') {
+    return (
+      <div className="max-w-md mx-auto mt-20 animate-in fade-in zoom-in-95 duration-500">
+        <div className="bg-white p-12 rounded-[48px] shadow-2xl border border-slate-100 flex flex-col items-center text-center">
+            <div className="w-20 h-20 bg-rose-600 rounded-[32px] flex items-center justify-center text-white mb-10 shadow-2xl shadow-rose-200">
+                <Lock size={42} />
+            </div>
+            
+            <h2 className="text-4xl font-[1000] text-slate-900 tracking-tighter mb-4">Secure Ledger</h2>
+            <p className="text-sm font-bold text-slate-400 leading-relaxed mb-10 px-4 uppercase tracking-[0.2em]">Identity verification required</p>
+
+            <form onSubmit={handleLogin} className="w-full space-y-8">
+                <div className="space-y-3 text-left">
+                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-2">Principal Security Key</label>
+                    <input 
+                        type="password" 
+                        className="w-full px-8 py-5 bg-slate-50 border-2 border-transparent rounded-[24px] outline-none focus:border-rose-500 focus:bg-white font-black transition-all"
+                        placeholder="••••••••"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        required 
+                    />
+                </div>
+
+                <button type="submit" className="w-full py-6 bg-slate-900 text-white rounded-[28px] font-black text-lg shadow-2xl shadow-slate-100 transform active:scale-95 transition-all hover:bg-slate-800">
+                    Unlock Analytical Matrix
+                </button>
+
+                <div className="pt-4">
+                    <button type="button" onClick={() => window.history.back()} className="text-[10px] font-black text-slate-400 uppercase tracking-widest hover:text-indigo-600 transition flex items-center justify-center gap-2 mx-auto">
+                        <ChevronLeft size={14} /> Back to Dashboard
+                    </button>
+                </div>
+            </form>
         </div>
       </div>
     );

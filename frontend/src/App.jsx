@@ -32,6 +32,7 @@ import StudentFees from "./pages/StudentFees";
 import DonorFees from "./pages/DonorFees";
 import BillingHistory from "./pages/BillingHistory";
 import DonorHistory from "./pages/DonorHistory";
+import SmsSettings from "./pages/SmsSettings";
 
 import { GraduationCap, ShieldAlert } from "lucide-react";
 import BackButton from "./components/BackButton";
@@ -123,14 +124,34 @@ const Layout = () => {
             background: white !important;
           }
           main { 
-            padding: 0 !important; 
-            margin: 0 !important; 
-            display: block !important;
-            width: 100% !important;
-            max-width: none !important;
-          }
-          .flex-1 { 
-            flex: none !important; 
+            getRecent: async (limit = 10) => {
+        return await supabase
+            .from('notification_logs')
+            .select('*')
+            .eq('school_id', sessionStorage.getItem('institutionId'))
+            .order('created_at', { ascending: false })
+            .limit(limit)
+            .then(mapToCamelCase);
+    }
+};
+
+export const institutionService = {
+    get: async () => {
+        return await supabase
+            .from('institutions')
+            .select('*')
+            .eq('id', sessionStorage.getItem('institutionId'))
+            .single()
+            .then(mapToCamelCase);
+    },
+    updateSmsConfig: async (config) => {
+        return await supabase
+            .from('institutions')
+            .update(mapToSnakeCase(config))
+            .eq('id', sessionStorage.getItem('institutionId'));
+    }
+};
+        flex: none !important; 
             display: block !important;
           }
         }
@@ -164,6 +185,7 @@ const Layout = () => {
             <Route path="/billing/donor-receipts/:id?" element={<DonorFees />} />
             <Route path="/billing/history" element={<BillingHistory />} />
             <Route path="/billing/donor-history" element={<DonorHistory />} />
+            <Route path="/settings/sms" element={<SmsSettings />} />
           </Routes>
         </main>
       </div>

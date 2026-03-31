@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { LayoutDashboard, Users, GraduationCap, CalendarCheck, FileBarChart, Settings, BookOpen, ClipboardList, Trophy, CreditCard, HeartHandshake } from 'lucide-react';
+import { LayoutDashboard, Users, GraduationCap, CalendarCheck, FileBarChart, Settings, BookOpen, ClipboardList, Trophy, CreditCard, HeartHandshake, Smartphone } from 'lucide-react';
 
 
 const Sidebar = () => {
@@ -108,11 +108,11 @@ const Sidebar = () => {
 
       <div className="mt-auto">
         <NavLink 
-          to="/settings" 
+          to="/settings/sms" 
           className={({ isActive }) => `flex items-center gap-3 px-3 py-2 rounded-lg transition-colors ${isActive ? 'bg-indigo-50 text-indigo-700' : 'text-slate-600 hover:bg-slate-50'}`}
         >
-          <Settings size={20} />
-          <span className="font-medium">Settings</span>
+          <Smartphone size={20} />
+          <span className="font-medium">SMS Gateway</span>
         </NavLink>
       </div>
     </div>
