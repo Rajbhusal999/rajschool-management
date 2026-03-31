@@ -115,6 +115,7 @@ const AttendanceEntry = () => {
                   if (status === 'Present') sms = `Good morning ${gName} your children ${sName} is present on today`;
                   else if (status === 'Absent') sms = `Good morning ${gName} your children ${sName} is Absent on today`;
                   else if (status === 'Leave') sms = `Good morning ${gName} your children ${sName} is Leave on today`;
+                  else if (status === 'Extra Class') sms = `Good morning ${gName} your children ${sName} is attend the extra class on today`;
               } else if (setup.session === 'Evening') {
                   if (status === 'Present') sms = `Good Evening ${gName} your children ${sName} is left from the school`;
                   else if (status === 'Extra Class') sms = `Good Evening ${gName} your children ${sName} is attend the extra class on today`;
@@ -247,24 +248,31 @@ const AttendanceEntry = () => {
                   <div className="flex justify-center gap-3">
                     {setup.session === 'Morning' ? (
                       [
-                        { id: 'Present', label: 'P', color: 'emerald', icon: CheckCircle2 },
-                        { id: 'Absent', label: 'A', color: 'rose', icon: XCircle },
-                        { id: 'Leave', label: 'L', color: 'amber', icon: AlertCircle },
-                        { id: 'Extra Class', label: 'Ex', color: 'indigo', icon: Clock }
-                      ].map(st => (
-                        <button
-                          key={st.id}
-                          onClick={() => handleStatusChange(s.id, st.id)}
-                          className={`w-12 h-12 rounded-xl flex items-center justify-center font-black transition relative overflow-hidden group/btn ${
-                            attendance[s.id] === st.id 
-                              ? `bg-${st.color}-600 text-white shadow-lg shadow-${st.color}-100 scale-105 ring-2 ring-${st.color}-500 ring-offset-2` 
-                              : `bg-slate-50 text-slate-400 hover:bg-${st.color}-50 hover:text-${st.color}-600`
-                          }`}
-                          title={st.id}
-                        >
-                           <span className="text-xs">{st.label}</span>
-                        </button>
-                      ))
+                        { id: 'Present', label: 'Present', color: 'emerald', icon: CheckCircle2 },
+                        { id: 'Absent', label: 'Absent', color: 'rose', icon: XCircle },
+                        { id: 'Leave', label: 'Leave', color: 'amber', icon: AlertCircle },
+                        { id: 'Extra Class', label: 'Extra Class', color: 'indigo', icon: Clock }
+                      ].map(st => {
+                        const isActive = attendance[s.id] === st.id;
+                        return (
+                          <button
+                            key={st.id}
+                            onClick={() => handleStatusChange(s.id, st.id)}
+                            className={`flex items-center gap-2 px-4 py-3 rounded-2xl border-2 transition-all font-bold text-xs ${
+                              isActive 
+                                ? `bg-${st.color}-50 border-${st.color}-500 text-${st.color}-700 shadow-sm` 
+                                : `bg-white border-slate-100 text-slate-400 hover:border-slate-300`
+                            }`}
+                          >
+                            <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center ${
+                              isActive ? `border-${st.color}-600 bg-white` : 'border-slate-200'
+                            }`}>
+                              {isActive && <div className={`w-2 h-2 rounded-full bg-${st.color}-600 animate-in zoom-in-50`} />}
+                            </div>
+                            {st.label}
+                          </button>
+                        );
+                      })
                     ) : (
                       // Evening Layout
                       [
