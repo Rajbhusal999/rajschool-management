@@ -33,6 +33,7 @@ import DonorFees from "./pages/DonorFees";
 import BillingHistory from "./pages/BillingHistory";
 import DonorHistory from "./pages/DonorHistory";
 import SmsSettings from "./pages/SmsSettings";
+import SecureLedger from "./pages/SecureLedger";
 
 import { AlertTriangle } from "lucide-react";
 import BackButton from "./components/BackButton";
@@ -159,6 +160,7 @@ const Layout = () => {
             <Route path="/billing/history" element={<BillingHistory />} />
             <Route path="/billing/donor-history" element={<DonorHistory />} />
             <Route path="/settings/sms" element={<SmsSettings />} />
+            <Route path="/secure-ledger" element={<SecureLedger />} />
           </Routes>
         </main>
       </div>

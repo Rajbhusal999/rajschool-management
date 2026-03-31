@@ -292,7 +292,7 @@ const SchoolDashboard = () => {
                         Verify institutional performance and monthly attendance ledgers.
                     </p>
                     <button 
-                        onClick={() => navigate('/attendance/reports')}
+                        onClick={() => navigate('/secure-ledger')}
                         className="w-full py-5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-[24px] font-black text-sm uppercase tracking-widest shadow-xl shadow-black/20 transition-all flex items-center justify-center gap-3"
                     >
                         <Shield size={18} />

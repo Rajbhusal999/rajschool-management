@@ -2,86 +2,42 @@ import React, { useState, useEffect } from 'react';
 import { attendanceService, studentService, institutionService } from '../services/api';
 import { Calendar, BarChart, Download, ChevronLeft, ChevronRight, User, Shield, Lock } from 'lucide-react';
 
+import SecureGateway from '../components/SecureGateway';
+
 const AttendanceReports = () => {
-  const [isLocked, setIsLocked] = useState(true);
-  const [password, setPassword] = useState('');
   const [params, setParams] = useState({
     year: '2081',
     month: '1',
     studentClass: ''
   });
   const [reportData, setReportData] = useState(null);
-  const [view, setView] = useState('LOADING'); // LOADING, SETUP, LOGIN, REPORT
-  const [passwords, setPasswords] = useState({ new: '', confirm: '' });
-  const [inst, setInst] = useState(null);
+  const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    checkGateway();
-  }, []);
+  const months = [
+    { id: 1, name: 'Baisakh' }, { id: 2, name: 'Jestha' }, { id: 3, name: 'Ashadh' },
+    { id: 4, name: 'Shrawan' }, { id: 5, name: 'Bhadra' }, { id: 6, name: 'Ashwin' },
+    { id: 7, name: 'Kartik' }, { id: 8, name: 'Mangsir' }, { id: 9, name: 'Poush' },
+    { id: 10, name: 'Magh' }, { id: 11, name: 'Falgun' }, { id: 12, name: 'Chaitra' }
+  ];
 
-  const checkGateway = async () => {
-    try {
-      const { data } = await institutionService.get();
-      setInst(data || {});
-      const hasPassword = data?.principalPassword && data.principalPassword.trim() !== '';
-      if (!hasPassword) {
-        setView('SETUP');
-      } else {
-        setView('LOGIN');
-      }
-    } catch (err) {
-      console.error('Security Fetch Error:', err);
-      // Default to login for safety if API fails
-      setView('LOGIN');
-    }
-  };
-
-  const handleEstablish = async (e) => {
-    e.preventDefault();
-    if (passwords.new !== passwords.confirm) return alert('Passwords do not match!');
-    if (passwords.new.length < 6) return alert('Security perimeter requires at least 6 characters.');
-
-    try {
-      await institutionService.update({ principalPassword: passwords.new });
-      alert('Security established successfully! Please enter your key to unlock the ledger.');
-      
-      // Refresh inst data to have the password for local comparison
-      const { data: updated } = await institutionService.get();
-      setInst(updated);
-      setView('LOGIN');
-      setPassword('');
-    } catch (err) {
-      console.error('Setup Failure:', err);
-      alert('Failed to establish perimeter. Check network.');
-    }
-  };
-
-  const handleLogin = (e) => {
-    e.preventDefault();
-    if (password === inst.principalPassword) {
-      setView('REPORT');
-    } else {
-      alert('Invalid Principal Security Key!');
-    }
-  };
+  const classes = ['PG', 'NURSERY', 'LKG', 'UKG', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'];
 
   const fetchReport = async () => {
     if (!params.studentClass) return;
     setLoading(true);
     try {
       const datePrefix = `${params.year}-${params.month.padStart(2, '0')}`;
+      const sId = sessionStorage.getItem('institutionId');
       
-      // 1. Fetch Students
-      const studentsResp = await studentService.getAll({ schoolId: 1, studentClass: params.studentClass });
-      
-      // 2. Fetch Attendance for month
-      const attResp = await attendanceService.get({ 
-        schoolId: 1, 
-        studentClass: params.studentClass, 
-        datePrefix: datePrefix 
-      });
+      const [studentsResp, attResp] = await Promise.all([
+        studentService.getAll({ schoolId: sId, studentClass: params.studentClass }),
+        attendanceService.get({ 
+          schoolId: sId, 
+          studentClass: params.studentClass, 
+          datePrefix: datePrefix 
+        })
+      ]);
 
-      // Organize: { studentId: { day: { Morning: status, Evening: status } } }
       const attMap = {};
       attResp.data.forEach(a => {
         const day = parseInt(a.attendanceDate.split('-')[2]);
@@ -93,7 +49,7 @@ const AttendanceReports = () => {
       setReportData({
         students: studentsResp.data,
         attendance: attMap,
-        days: 32 // Simplified Nepali month
+        days: 32
       });
     } catch (err) {
       console.error(err);
@@ -125,101 +81,9 @@ const AttendanceReports = () => {
     link.click();
   };
 
-  if (view === 'LOADING') return <div className="flex items-center justify-center h-screen font-black text-slate-300 uppercase tracking-widest text-xs">Initializing Secure Perimeter...</div>;
-
-  if (view === 'SETUP') {
-    return (
-      <div className="max-w-md mx-auto mt-20 animate-in fade-in zoom-in-95 duration-500">
-        <div className="bg-white p-12 rounded-[48px] shadow-2xl border border-slate-100 flex flex-col items-center text-center">
-            <div className="w-20 h-20 bg-indigo-600 rounded-[32px] flex items-center justify-center text-white mb-10 shadow-2xl shadow-indigo-200 rotate-12 transition-transform hover:rotate-0">
-                <Shield size={42} />
-            </div>
-            
-            <h2 className="text-4xl font-[1000] text-slate-900 tracking-tighter mb-4">Principal Verification</h2>
-            <p className="text-sm font-bold text-slate-400 leading-relaxed mb-10 px-4">
-                Establish a secure analytical perimeter. Set your principal access credentials.
-            </p>
-
-            <form onSubmit={handleEstablish} className="w-full space-y-8">
-                <div className="space-y-3 text-left">
-                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-2">New Password</label>
-                    <input 
-                        type="password" 
-                        className="w-full px-8 py-5 bg-slate-50 border-2 border-transparent rounded-[24px] outline-none focus:border-indigo-500 focus:bg-white font-black transition-all"
-                        placeholder="••••••••"
-                        value={passwords.new}
-                        onChange={(e) => setPasswords({...passwords, new: e.target.value})}
-                        required 
-                    />
-                </div>
-                <div className="space-y-3 text-left">
-                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-2">Confirm Password</label>
-                    <input 
-                        type="password" 
-                        className="w-full px-8 py-5 bg-slate-50 border-2 border-transparent rounded-[24px] outline-none focus:border-indigo-500 focus:bg-white font-black transition-all"
-                        placeholder="••••••••"
-                        value={passwords.confirm}
-                        onChange={(e) => setPasswords({...passwords, confirm: e.target.value})}
-                        required 
-                    />
-                </div>
-
-                <button type="submit" className="w-full py-6 bg-indigo-600 text-white rounded-[28px] font-black text-lg shadow-2xl shadow-indigo-100 transform active:scale-95 transition-all hover:bg-indigo-700">
-                    Establish Security
-                </button>
-
-                <div className="pt-4">
-                    <button type="button" onClick={() => window.history.back()} className="text-[10px] font-black text-slate-400 uppercase tracking-widest hover:text-indigo-600 transition flex items-center justify-center gap-2 mx-auto">
-                        <ChevronLeft size={14} /> Return to Command Center
-                    </button>
-                </div>
-            </form>
-        </div>
-      </div>
-    );
-  }
-
-  if (view === 'LOGIN') {
-    return (
-      <div className="max-w-md mx-auto mt-20 animate-in fade-in zoom-in-95 duration-500">
-        <div className="bg-white p-12 rounded-[48px] shadow-2xl border border-slate-100 flex flex-col items-center text-center">
-            <div className="w-20 h-20 bg-rose-600 rounded-[32px] flex items-center justify-center text-white mb-10 shadow-2xl shadow-rose-200">
-                <Lock size={42} />
-            </div>
-            
-            <h2 className="text-4xl font-[1000] text-slate-900 tracking-tighter mb-4">Secure Ledger</h2>
-            <p className="text-[11px] font-black text-slate-400 leading-relaxed mb-10 px-4 uppercase tracking-[0.2em]">identity verification required for institutional analytics.</p>
-
-            <form onSubmit={handleLogin} className="w-full space-y-8">
-                <div className="space-y-3 text-left">
-                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-2">PRINCIPAL CREDENTIALS</label>
-                    <input 
-                        type="password" 
-                        className="w-full px-8 py-5 bg-slate-50 border-2 border-transparent rounded-[24px] outline-none focus:border-rose-500 focus:bg-white font-black transition-all"
-                        placeholder="••••••••"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        required 
-                    />
-                </div>
-
-                <button type="submit" className="w-full py-6 bg-[#0f172a] text-white rounded-[28px] font-black text-lg shadow-2xl shadow-slate-100 transform active:scale-95 transition-all hover:bg-black">
-                    Unlock Terminal
-                </button>
-
-                <div className="pt-4">
-                    <button type="button" onClick={() => window.history.back()} className="text-[10px] font-black text-slate-400 uppercase tracking-widest hover:text-indigo-600 transition flex items-center justify-center gap-2 mx-auto">
-                        <ChevronLeft size={14} /> Back to Dashboard
-                    </button>
-                </div>
-            </form>
-        </div>
-      </div>
-    );
-  }
-
   return (
-    <div className="max-w-7xl mx-auto space-y-8">
+    <SecureGateway>
+      <div className="max-w-7xl mx-auto space-y-8">
       {/* Search Controls */}
       <div className="bg-white p-8 rounded-[32px] shadow-sm border border-slate-100 flex flex-col md:flex-row gap-6 items-end">
         <div className="flex-1 space-y-2">
@@ -319,6 +183,7 @@ const AttendanceReports = () => {
         </div>
       )}
     </div>
+    </SecureGateway>
   );
 };
 
