@@ -242,7 +242,39 @@ export const studentService = {
     }
 };
 
-// ... existing teacherService, attendanceService, examService ...
+export const notificationService = {
+    logBulk: async (logs) => {
+        const schoolId = sessionStorage.getItem('institutionId');
+        const mappedData = logs.map(log => ({
+            ...mapToSnakeCase(log),
+            school_id: Number(schoolId)
+        }));
+        const { error } = await supabase.from('notification_logs').insert(mappedData);
+        if (error) handleError(error, 'notificationService.logBulk');
+        return { error };
+    },
+    getRecent: async (limit = 10) => {
+        const schoolId = sessionStorage.getItem('institutionId');
+        const { data, error } = await supabase
+            .from('notification_logs')
+            .select('*')
+            .eq('school_id', Number(schoolId))
+            .order('created_at', { ascending: false })
+            .limit(limit);
+        if (error) handleError(error, 'notificationService.getRecent');
+        return { data, error };
+    }
+};
+
+const feeService = {
+    // Placeholder for feeService if it was missing
+    getHistory: async () => ({ data: [] })
+};
+
+const donorService = {
+    // Placeholder for donorService if it was missing
+    getHistory: async () => ({ data: [] })
+};
 export const teacherService = {
     getAll: async (params = {}) => {
         let query = supabase.from('teachers').select('*');
@@ -433,14 +465,40 @@ export const examService = {
     }
 };
 
-export const institutionService = {
-    get: async () => {
-        const id = getInstitutionId();
-        if (!id) return { data: null };
-        const { data, error } = await supabase.from('institutions').select('*').eq('id', Number(id)).single();
-        if (error) handleError(error, 'institutionService.get');
-        return { data: mapToCamelCase(data) };
+const notificationService = {
+    logBulk: async (logs) => {
+        const schoolId = sessionStorage.getItem('institutionId');
+        const mappedData = logs.map(log => ({
+            ...mapToSnakeCase(log),
+            school_id: Number(schoolId)
+        }));
+        const { error } = await supabase.from('notification_logs').insert(mappedData);
+        if (error) handleError(error, 'notificationService.logBulk');
+        return { error };
+    },
+    getRecent: async (limit = 20) => {
+        const schoolId = sessionStorage.getItem('institutionId');
+        const { data, error } = await supabase
+            .from('notification_logs')
+            .select('*')
+            .eq('school_id', Number(schoolId))
+            .order('created_at', { ascending: false })
+            .limit(limit);
+        if (error) handleError(error, 'notificationService.getRecent');
+        return { data: mapToCamelCase(data), error };
     }
+};
+
+export { 
+    studentService, 
+    teacherService, 
+    subjectService, 
+    examService, 
+    attendanceService, 
+    feeService, 
+    donorService,
+    institutionService,
+    notificationService 
 };
 
 export default supabase;

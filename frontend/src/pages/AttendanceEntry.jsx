@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { studentService, attendanceService, teacherService } from '../services/api';
-import { Calendar, Users, ShieldCheck, CheckCircle2, XCircle, Clock, AlertCircle, Save, Send } from 'lucide-react';
+import { studentService, attendanceService, teacherService, notificationService } from '../services/api';
+import { 
+  Calendar, Users, ShieldCheck, CheckCircle2, 
+  XCircle, Clock, AlertCircle, Save, Send, 
+  History, RefreshCw, Phone 
+} from 'lucide-react';
 
 const AttendanceEntry = () => {
   const [step, setStep] = useState(1); // 1: Login/Setup, 2: Marking
@@ -15,6 +19,9 @@ const AttendanceEntry = () => {
   const [students, setStudents] = useState([]);
   const [attendance, setAttendance] = useState({}); // { studentId: status }
   const [msg, setMsg] = useState('');
+  const [saving, setSaving] = useState(false);
+  const [notificationHistory, setNotificationHistory] = useState([]);
+  const [showHistory, setShowHistory] = useState(false);
 
   // Use static class list or fetch from students
   const classes = ['Nursery', 'LKG', 'UKG', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'];
@@ -32,6 +39,15 @@ const AttendanceEntry = () => {
     }
   };
 
+  const fetchNotificationHistory = async () => {
+    try {
+      const { data } = await notificationService.getRecent(10);
+      if (data) setNotificationHistory(data);
+    } catch (err) {
+      console.error("Failed to fetch history", err);
+    }
+  };
+
   const handleDateChange = (e) => {
     let val = e.target.value.replace(/[^0-9/]/g, '');
     const parts = val.split('/').join('');
@@ -43,11 +59,11 @@ const AttendanceEntry = () => {
 
   const handleSetupSubmit = async (e) => {
     e.preventDefault();
-    // Simulate Gate Login (In a real app, this would be a secure backend check)
     const teacher = teachers.find(t => t.id === parseInt(setup.teacherId));
     if (teacher && teacher.teacherPassword === setup.password) {
       setStep(2);
       fetchStudentsAndAttendance();
+      fetchNotificationHistory();
     } else {
       alert('Invalid credentials!');
     }
@@ -55,11 +71,9 @@ const AttendanceEntry = () => {
 
   const fetchStudentsAndAttendance = async () => {
     try {
-      // 1. Fetch Students in Class
       const studentsResp = await studentService.getAll({ schoolId: sessionStorage.getItem('institutionId'), studentClass: setup.studentClass });
       setStudents(studentsResp.data);
 
-      // 2. Fetch Existing Attendance
       const dbDate = setup.date.split('/').join('-');
       const attResp = await attendanceService.get({ 
         schoolId: sessionStorage.getItem('institutionId'), 
@@ -73,7 +87,6 @@ const AttendanceEntry = () => {
         attMap[a.studentId] = a.status;
       });
       
-      // Default to Present if no record
       const initialAtt = { ...attMap };
       studentsResp.data.forEach(s => {
         if (!initialAtt[s.id]) initialAtt[s.id] = 'Present';
@@ -90,6 +103,7 @@ const AttendanceEntry = () => {
   };
 
   const handleSave = async (sendSms = false) => {
+    setSaving(true);
     try {
       const dbDate = setup.date.split('/').join('-');
       const payload = Object.entries(attendance).map(([studentId, status]) => ({
@@ -103,8 +117,8 @@ const AttendanceEntry = () => {
 
       await attendanceService.saveBulk(payload);
       
+      const logs = [];
       if (sendSms) {
-          console.group('Attendance Notifications');
           students.forEach(s => {
               const status = attendance[s.id];
               let sms = '';
@@ -122,13 +136,24 @@ const AttendanceEntry = () => {
               }
               
               if (sms) {
-                  console.log(`To: ${s.guardianContact || s.parentContact || 'N/A'} | Msg: ${sms}`);
+                  logs.push({
+                      studentId: s.id,
+                      guardianName: gName,
+                      phoneNumber: s.guardianContact || s.parentContact || 'N/A',
+                      message: sms,
+                      session: setup.session,
+                      status: 'LOGGED'
+                  });
               }
           });
-          console.groupEnd();
+
+          if (logs.length > 0) {
+              await notificationService.logBulk(logs);
+              fetchNotificationHistory();
+          }
       }
 
-      setMsg(`Attendance saved successfully! ${sendSms ? 'Guardian notifications generated.' : ''}`);
+      setMsg(sendSms ? "Attendance saved & notifications logged!" : "Attendance saved successfully!");
       setTimeout(() => setMsg(''), 5000);
     } catch (err) {
       console.error(err);
@@ -323,7 +348,76 @@ const AttendanceEntry = () => {
           <Send size={20} className="group-hover:-translate-y-0.5 group-hover:translate-x-0.5 transition" />
           Save & Notify Guardians
         </button>
+        <button 
+          onClick={() => setShowHistory(!showHistory)}
+          className={`flex items-center gap-3 px-8 py-4 rounded-2xl font-black transition-all ${
+            showHistory ? 'bg-indigo-600 text-white shadow-xl' : 'bg-white border border-slate-200 text-slate-500 hover:bg-slate-50'
+          }`}
+        >
+          <History size={20} /> {showHistory ? 'Hide History' : 'View History'}
+        </button>
       </div>
+
+      {/* Notification History Panel */}
+      {showHistory && (
+        <div className="mt-12 bg-white rounded-[40px] border border-slate-100 p-10 shadow-2xl animate-in slide-in-from-bottom-5 duration-500">
+          <div className="flex items-center justify-between mb-10">
+            <div>
+              <h3 className="text-3xl font-[1000] text-slate-900 tracking-tighter">Notification Ledger</h3>
+              <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mt-2 italic">A detailed record of all automated parent messages</p>
+            </div>
+            <div className="flex items-center gap-3 px-5 py-2.5 bg-emerald-50 text-emerald-600 rounded-2xl text-[10px] font-black uppercase tracking-widest border border-emerald-100">
+              <CheckCircle2 size={16} /> Logic Verified
+            </div>
+          </div>
+
+          <div className="space-y-4">
+            {notificationHistory.length > 0 ? (
+              notificationHistory.map((log, idx) => (
+                <div key={log.id || idx} className="group flex items-start gap-8 p-8 rounded-[32px] hover:bg-slate-50 transition-all border border-transparent hover:border-slate-100 relative overflow-hidden">
+                  <div className={`mt-1 shrink-0 w-12 h-12 rounded-2xl flex items-center justify-center shadow-sm ${
+                    log.session === 'Morning' ? 'bg-amber-50 text-amber-600' : 'bg-indigo-50 text-indigo-600'
+                  }`}>
+                    {log.session === 'Morning' ? <Clock size={24} /> : <History size={24} />}
+                  </div>
+                  <div className="flex-1">
+                    <div className="flex items-center justify-between mb-2">
+                      <div className="flex items-center gap-3">
+                        <span className="text-lg font-[1000] text-slate-900 tracking-tight">{log.guardianName}</span>
+                        <span className="px-2 py-0.5 bg-slate-100 text-slate-400 rounded text-[9px] font-black uppercase tracking-tighter">{log.session}</span>
+                      </div>
+                      <span className="text-[10px] font-black text-slate-400 font-mono tracking-tighter flex items-center gap-2">
+                        <Clock size={12} /> {new Date(log.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                      </span>
+                    </div>
+                    <p className="text-sm font-bold text-slate-600 leading-relaxed italic pr-10 hover:text-slate-900 transition-colors">"{log.message}"</p>
+                    <div className="flex items-center gap-4 mt-4">
+                      <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-slate-400">
+                        <Phone size={12} className="text-slate-300" /> {log.phoneNumber}
+                      </div>
+                      <div className="w-1.5 h-1.5 bg-slate-200 rounded-full"></div>
+                      <span className="text-[10px] font-[1000] uppercase tracking-[0.2em] text-emerald-500 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-100">LOGGED</span>
+                    </div>
+                  </div>
+                </div>
+              ))
+            ) : (
+              <div className="py-24 text-center">
+                  <div className="w-20 h-20 bg-slate-50 rounded-[28px] flex items-center justify-center mx-auto mb-6">
+                      <History size={32} className="text-slate-200" />
+                  </div>
+                  <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em]">No notification history available</p>
+              </div>
+            )}
+          </div>
+
+          <div className="mt-12 pt-10 border-t border-slate-50 text-center">
+              <p className="text-[10px] font-black text-slate-300 uppercase tracking-[0.4em] leading-relaxed">
+                  System Note: Actual SMS delivery depends on your gateway integration plan.
+              </p>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
