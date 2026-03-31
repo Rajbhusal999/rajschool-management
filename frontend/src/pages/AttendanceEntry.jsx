@@ -102,7 +102,32 @@ const AttendanceEntry = () => {
       }));
 
       await attendanceService.saveBulk(payload);
-      setMsg(`Attendance saved successfully! ${sendSms ? 'Simulating SMS to guardians...' : ''}`);
+      
+      if (sendSms) {
+          console.group('Attendance Notifications');
+          students.forEach(s => {
+              const status = attendance[s.id];
+              let sms = '';
+              const gName = s.guardianName || 'Guardian';
+              const sName = s.fullName;
+              
+              if (setup.session === 'Morning') {
+                  if (status === 'Present') sms = `Good morning ${gName} your children ${sName} is present on today`;
+                  else if (status === 'Absent') sms = `Good morning ${gName} your children ${sName} is Absent on today`;
+                  else if (status === 'Leave') sms = `Good morning ${gName} your children ${sName} is Leave on today`;
+              } else if (setup.session === 'Evening') {
+                  if (status === 'Present') sms = `Good Evening ${gName} your children ${sName} is left from the school`;
+                  else if (status === 'Extra Class') sms = `Good Evening ${gName} your children ${sName} is attend the extra class on today`;
+              }
+              
+              if (sms) {
+                  console.log(`To: ${s.guardianContact || s.parentContact || 'N/A'} | Msg: ${sms}`);
+              }
+          });
+          console.groupEnd();
+      }
+
+      setMsg(`Attendance saved successfully! ${sendSms ? 'Guardian notifications generated.' : ''}`);
       setTimeout(() => setMsg(''), 5000);
     } catch (err) {
       console.error(err);
