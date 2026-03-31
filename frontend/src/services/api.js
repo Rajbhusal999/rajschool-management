@@ -323,7 +323,7 @@ export const attendanceService = {
         const schoolId = params.schoolId || sessionStorage.getItem('institutionId');
         if (schoolId) query = query.eq('school_id', Number(schoolId));
         if (params.date) query = query.eq('attendance_date', params.date);
-        if (params.studentClass || params.class) query = query.eq('student_class', params.studentClass || params.class);
+        if (params.studentClass || params.class) query = query.eq('class', params.studentClass || params.class);
         const { data, error } = await query;
         if (error) handleError(error, 'attendanceService.get');
         return { data: mapToCamelCase(data) };
