@@ -17,7 +17,7 @@ const ReceiptBody = ({
   language, setFormData, handleFeeChange, 
   handleCustomLabelChange, handleKeyDown, 
   calculateTotal, numberToWords,
-  schoolLogo
+  schoolLogo, handleDateChange
 }) => {
   return (
     <div className="relative border-2 border-slate-900 bg-white p-3 md:p-6 rounded-[2px] shadow-sm mb-4 md:mb-0 receipt-container min-h-[170mm]">
