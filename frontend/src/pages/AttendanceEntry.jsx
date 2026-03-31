@@ -5,7 +5,7 @@ import { Calendar, Users, ShieldCheck, CheckCircle2, XCircle, Clock, AlertCircle
 const AttendanceEntry = () => {
   const [step, setStep] = useState(1); // 1: Login/Setup, 2: Marking
   const [setup, setSetup] = useState({
-    date: new Date().toISOString().split('T')[0].replace(/-/g, '/'), // Simple placeholder
+    date: '2082/12/18', // Default Nepali Date (Approx)
     studentClass: '',
     session: 'Morning',
     teacherId: '',
@@ -32,6 +32,15 @@ const AttendanceEntry = () => {
     }
   };
 
+  const handleDateChange = (e) => {
+    let val = e.target.value.replace(/[^0-9/]/g, '');
+    const parts = val.split('/').join('');
+    let formatted = parts;
+    if (parts.length > 4) formatted = parts.slice(0, 4) + '/' + parts.slice(4);
+    if (parts.length > 6) formatted = formatted.slice(0, 7) + '/' + formatted.slice(7);
+    if (formatted.length <= 10) setSetup({ ...setup, date: formatted });
+  };
+
   const handleSetupSubmit = async (e) => {
     e.preventDefault();
     // Simulate Gate Login (In a real app, this would be a secure backend check)
@@ -51,10 +60,11 @@ const AttendanceEntry = () => {
       setStudents(studentsResp.data);
 
       // 2. Fetch Existing Attendance
+      const dbDate = setup.date.split('/').join('-');
       const attResp = await attendanceService.get({ 
         schoolId: sessionStorage.getItem('institutionId'), 
         studentClass: setup.studentClass, 
-        attendanceDate: setup.date, 
+        attendanceDate: dbDate, 
         session: setup.session 
       });
       
@@ -81,11 +91,12 @@ const AttendanceEntry = () => {
 
   const handleSave = async (sendSms = false) => {
     try {
+      const dbDate = setup.date.split('/').join('-');
       const payload = Object.entries(attendance).map(([studentId, status]) => ({
         schoolId: sessionStorage.getItem('institutionId'),
         studentId: parseInt(studentId),
         studentClass: setup.studentClass,
-        attendanceDate: setup.date,
+        attendanceDate: dbDate,
         session: setup.session,
         status: status
       }));
@@ -112,7 +123,13 @@ const AttendanceEntry = () => {
           <form onSubmit={handleSetupSubmit} className="space-y-4">
             <div>
               <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5 ml-1">Verification Date</label>
-              <input type="text" className="w-full px-4 py-3 bg-slate-50 border border-slate-100 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 font-bold" value={setup.date} onChange={(e) => setSetup({...setup, date: e.target.value})} />
+              <input 
+                type="text" 
+                placeholder="YYYY/MM/DD (Nepali Date)"
+                className="w-full px-4 py-3 bg-slate-50 border border-slate-100 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 font-bold" 
+                value={setup.date} 
+                onChange={handleDateChange} 
+              />
             </div>
             
             <div className="grid grid-cols-2 gap-4">
