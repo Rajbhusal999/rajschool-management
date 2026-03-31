@@ -23,7 +23,7 @@ const ReceiptBody = ({
     <div className="relative border-2 border-slate-900 bg-white p-3 md:p-4 rounded-[2px] shadow-sm mb-4 md:mb-0 receipt-container min-h-[160mm] flex flex-col justify-between">
       {/* Watermark */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-[0.03] overflow-hidden">
-        <span className="text-[60px] font-black uppercase -rotate-45 tracking-[10px] select-none whitespace-nowrap">
+        <span className="text-[50px] font-black uppercase -rotate-45 tracking-[10px] select-none whitespace-nowrap">
           {type === 'school' ? 'SCHOOL COPY' : 'DONOR COPY'}
         </span>
       </div>
