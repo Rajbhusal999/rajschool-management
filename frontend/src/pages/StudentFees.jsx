@@ -499,6 +499,8 @@ const StudentFees = () => {
                         schoolLogo={schoolLogo}
                         handleDateChange={handleDateChange}
                     />
+                    {/* Vertical Cutting Line */}
+                    <div className="hidden print:block border-l-2 border-dotted border-slate-400 h-[195mm] mx-0 opacity-30 self-center"></div>
                     <ReceiptBody 
                         type="student" schoolName={schoolName} schoolAddress={schoolAddress} estdYear={estdYear} 
                         translations={translations} receiptNo={receiptNo} formData={formData} fees={fees} 
