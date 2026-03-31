@@ -124,34 +124,7 @@ const Layout = () => {
             background: white !important;
           }
           main { 
-            getRecent: async (limit = 10) => {
-        return await supabase
-            .from('notification_logs')
-            .select('*')
-            .eq('school_id', sessionStorage.getItem('institutionId'))
-            .order('created_at', { ascending: false })
-            .limit(limit)
-            .then(mapToCamelCase);
-    }
-};
-
-export const institutionService = {
-    get: async () => {
-        return await supabase
-            .from('institutions')
-            .select('*')
-            .eq('id', sessionStorage.getItem('institutionId'))
-            .single()
-            .then(mapToCamelCase);
-    },
-    updateSmsConfig: async (config) => {
-        return await supabase
-            .from('institutions')
-            .update(mapToSnakeCase(config))
-            .eq('id', sessionStorage.getItem('institutionId'));
-    }
-};
-        flex: none !important; 
+            flex: 1 !important; 
             display: block !important;
           }
         }

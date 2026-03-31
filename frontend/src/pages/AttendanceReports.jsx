@@ -22,11 +22,17 @@ const AttendanceReports = () => {
   const checkGateway = async () => {
     try {
       const { data } = await institutionService.get();
-      setInst(data);
-      if (!data.principalPassword) setView('SETUP');
-      else setView('LOGIN');
+      setInst(data || {});
+      const hasPassword = data?.principalPassword && data.principalPassword.trim() !== '';
+      if (!hasPassword) {
+        setView('SETUP');
+      } else {
+        setView('LOGIN');
+      }
     } catch (err) {
-      console.error(err);
+      console.error('Security Fetch Error:', err);
+      // Default to login for safety if API fails
+      setView('LOGIN');
     }
   };
 
@@ -36,12 +42,17 @@ const AttendanceReports = () => {
     if (passwords.new.length < 6) return alert('Security perimeter requires at least 6 characters.');
 
     try {
-      await institutionService.updateSmsConfig({ principalPassword: passwords.new });
-      alert('Security established. Please login to continue.');
+      await institutionService.update({ principalPassword: passwords.new });
+      alert('Security established successfully! Please enter your key to unlock the ledger.');
+      
+      // Refresh inst data to have the password for local comparison
+      const { data: updated } = await institutionService.get();
+      setInst(updated);
       setView('LOGIN');
       setPassword('');
     } catch (err) {
-      console.error(err);
+      console.error('Setup Failure:', err);
+      alert('Failed to establish perimeter. Check network.');
     }
   };
 
@@ -177,11 +188,11 @@ const AttendanceReports = () => {
             </div>
             
             <h2 className="text-4xl font-[1000] text-slate-900 tracking-tighter mb-4">Secure Ledger</h2>
-            <p className="text-sm font-bold text-slate-400 leading-relaxed mb-10 px-4 uppercase tracking-[0.2em]">Identity verification required</p>
+            <p className="text-[11px] font-black text-slate-400 leading-relaxed mb-10 px-4 uppercase tracking-[0.2em]">identity verification required for institutional analytics.</p>
 
             <form onSubmit={handleLogin} className="w-full space-y-8">
                 <div className="space-y-3 text-left">
-                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-2">Principal Security Key</label>
+                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-2">PRINCIPAL CREDENTIALS</label>
                     <input 
                         type="password" 
                         className="w-full px-8 py-5 bg-slate-50 border-2 border-transparent rounded-[24px] outline-none focus:border-rose-500 focus:bg-white font-black transition-all"
@@ -192,8 +203,8 @@ const AttendanceReports = () => {
                     />
                 </div>
 
-                <button type="submit" className="w-full py-6 bg-slate-900 text-white rounded-[28px] font-black text-lg shadow-2xl shadow-slate-100 transform active:scale-95 transition-all hover:bg-slate-800">
-                    Unlock Analytical Matrix
+                <button type="submit" className="w-full py-6 bg-[#0f172a] text-white rounded-[28px] font-black text-lg shadow-2xl shadow-slate-100 transform active:scale-95 transition-all hover:bg-black">
+                    Unlock Terminal
                 </button>
 
                 <div className="pt-4">
