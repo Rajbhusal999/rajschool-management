@@ -55,8 +55,8 @@ const ReceiptBody = ({
           <span className="font-black text-slate-500 uppercase tracking-wider">{language === 'ne' ? 'मिति:' : 'Date:'}</span>
           <input 
             type="text" value={formData.date}
-            placeholder="YYYY-MM-DD"
-            onChange={(e) => setFormData({...formData, date: e.target.value})}
+            placeholder="YYYY/MM/DD"
+            onChange={handleDateChange}
             className="w-24 md:w-32 bg-slate-50 border-b-2 border-dotted border-slate-950 px-2 py-0.5 font-black text-slate-950 rounded-none focus:ring-0 text-xs text-right"
           />
         </div>
@@ -355,6 +355,24 @@ const StudentFees = () => {
             return convert(Math.floor(n / 10000000)) + ' Crore' + (n % 10000000 !== 0 ? ' ' + convert(n % 10000000) : '');
         };
         return convert(Math.floor(num));
+    };
+
+    const handleDateChange = (e) => {
+        let val = e.target.value.replace(/[^0-9/]/g, ''); // Allow only numbers and already typed slashes
+        const parts = val.split('/').join('');
+        
+        let formatted = parts;
+        if (parts.length > 4) {
+            formatted = parts.slice(0, 4) + '/' + parts.slice(4);
+        }
+        if (parts.length > 6) {
+            formatted = formatted.slice(0, 7) + '/' + formatted.slice(7);
+        }
+        
+        // Limit to YYYY/MM/DD length (10 chars)
+        if (formatted.length <= 10) {
+            setFormData({ ...formData, date: formatted });
+        }
     };
 
     const handleSaveAndPrint = async () => {
