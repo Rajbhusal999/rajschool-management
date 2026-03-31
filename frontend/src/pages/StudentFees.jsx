@@ -20,7 +20,7 @@ const ReceiptBody = ({
   schoolLogo
 }) => {
   return (
-    <div className="relative border-2 border-slate-900 bg-white p-3 md:p-6 rounded-[2px] shadow-sm mb-4 md:mb-0 receipt-container min-h-[190mm]">
+    <div className="relative border-2 border-slate-900 bg-white p-3 md:p-6 rounded-[2px] shadow-sm mb-4 md:mb-0 receipt-container min-h-[170mm]">
       {/* Watermark */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-[0.03] overflow-hidden">
         <span className="text-[120px] font-black uppercase -rotate-45 tracking-[20px] select-none whitespace-nowrap">
@@ -166,8 +166,8 @@ const ReceiptBody = ({
           <div className="text-[9px] font-bold text-slate-400 italic">
             {language === 'ne' ? '* यो रसिद कम्प्युटर प्रणालीबाट तयार पारिएको हो ।' : '* System generated electronic receipt.'}
           </div>
-          <div className="text-center min-w-32 md:min-w-40 mr-12">
-            <div className="border-t border-slate-400 pt-1 font-black text-[10px] md:text-xs text-slate-900 uppercase tracking-widest">
+          <div className="text-center min-w-32 md:min-w-40 mr-4">
+            <div className="border-t-2 border-slate-900 pt-1 font-black text-[10px] md:text-xs text-slate-900 uppercase tracking-widest">
               {translations.receiverSign}
             </div>
           </div>
@@ -512,11 +512,13 @@ const StudentFees = () => {
                         zoom: 0.9; 
                         width: 138mm !important; 
                         min-width: 138mm !important;
-                        max-height: 190mm !important;
+                        height: 180mm !important;
+                        max-height: 180mm !important;
                         border-color: #000 !important;
                         border-width: 1.5pt !important;
                         box-shadow: none !important;
                         page-break-inside: avoid !important;
+                        overflow: visible !important;
                     }
                     table, th, td { border-color: #000 !important; border-width: 1pt !important; }
                 }
