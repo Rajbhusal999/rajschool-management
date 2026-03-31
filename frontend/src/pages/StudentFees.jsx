@@ -65,7 +65,7 @@ const ReceiptBody = ({
           <input 
             type="text" value={formData.studentName}
             onChange={(e) => setFormData({...formData, studentName: e.target.value})}
-            className="flex-1 bg-transparent border-none border-b-2 border-dotted border-slate-950 p-0 font-black text-slate-950 uppercase tracking-tighter focus:ring-0 focus:border-slate-900"
+            className="flex-1 bg-transparent border-0 border-b-2 border-dotted border-slate-950 p-0 font-black text-slate-950 uppercase tracking-tighter focus:ring-0 focus:border-slate-900"
           />
         </div>
         <div className="flex items-center gap-4 col-span-2">
@@ -74,7 +74,7 @@ const ReceiptBody = ({
             <input 
               type="text" value={formData.rollNo}
               onChange={(e) => setFormData({...formData, rollNo: e.target.value})}
-              className="w-12 bg-transparent border-none border-b-2 border-dotted border-slate-950 p-0 font-black text-slate-950 font-mono focus:ring-0 focus:border-slate-900"
+              className="w-12 bg-transparent border-0 border-b-2 border-dotted border-slate-950 p-0 font-black text-slate-950 font-mono focus:ring-0 focus:border-slate-900"
             />
           </div>
           <div className="flex items-center gap-2">
@@ -82,7 +82,7 @@ const ReceiptBody = ({
             <input 
               type="text" value={formData.section}
               onChange={(e) => setFormData({...formData, section: e.target.value})}
-              className="w-12 bg-transparent border-none border-b-2 border-dotted border-slate-950 p-0 font-black text-slate-950 uppercase focus:ring-0 focus:border-slate-900"
+              className="w-12 bg-transparent border-0 border-b-2 border-dotted border-slate-950 p-0 font-black text-slate-950 uppercase focus:ring-0 focus:border-slate-900"
             />
           </div>
           <div className="flex items-center gap-2">
@@ -90,7 +90,7 @@ const ReceiptBody = ({
             <input 
               type="text" value={formData.class}
               onChange={(e) => setFormData({...formData, class: e.target.value})}
-              className="w-12 bg-transparent border-none border-b-2 border-dotted border-slate-950 p-0 font-black text-slate-950 uppercase focus:ring-0 focus:border-slate-900"
+              className="w-12 bg-transparent border-0 border-b-2 border-dotted border-slate-950 p-0 font-black text-slate-950 uppercase focus:ring-0 focus:border-slate-900"
             />
           </div>
         </div>
@@ -99,13 +99,13 @@ const ReceiptBody = ({
           <input 
             type="text" value={formData.month}
             onChange={(e) => setFormData({...formData, month: e.target.value})}
-            className="flex-1 bg-transparent border-none border-b-2 border-dotted border-slate-950 p-0 font-black text-slate-950 uppercase tracking-tighter focus:ring-0 focus:border-slate-900"
+            className="flex-1 bg-transparent border-0 border-b-2 border-dotted border-slate-950 p-0 font-black text-slate-950 uppercase tracking-tighter focus:ring-0 focus:border-slate-900"
           />
           <span className="font-black text-slate-500 uppercase tracking-wider whitespace-nowrap ml-4">{language === 'ne' ? 'अभिभावक:' : 'Guardian:'}</span>
           <input 
             type="text" value={formData.guardian}
             onChange={(e) => setFormData({...formData, guardian: e.target.value})}
-            className="flex-1 bg-transparent border-none border-b-2 border-dotted border-slate-950 p-0 font-black text-slate-950 uppercase tracking-tighter focus:ring-0 focus:border-slate-900"
+            className="flex-1 bg-transparent border-0 border-b-2 border-dotted border-slate-950 p-0 font-black text-slate-950 uppercase tracking-tighter focus:ring-0 focus:border-slate-900"
           />
         </div>
       </div>
