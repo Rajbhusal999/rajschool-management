@@ -199,17 +199,18 @@ const AttendanceEntry = () => {
   return (
     <div className="max-w-5xl mx-auto space-y-6 pb-20">
       {/* Header Info */}
-      <div className="bg-indigo-600 p-8 rounded-[32px] text-white flex flex-col md:flex-row justify-between items-center gap-6 shadow-xl shadow-indigo-100">
+      <div className="bg-indigo-50 border border-indigo-100 p-8 rounded-[32px] flex flex-col md:flex-row justify-between items-center gap-6 shadow-sm">
         <div className="flex items-center gap-4">
-          <div className="p-3 bg-white/10 rounded-2xl backdrop-blur-md">
-            <Users size={32} />
-          </div>
           <div>
-            <h1 className="text-3xl font-black tracking-tight">Daily Attendance</h1>
-            <p className="font-bold opacity-80 uppercase text-[10px] tracking-widest mt-1">Class {setup.studentClass} • {setup.session} • {setup.date}</p>
+            <h1 className="text-2xl font-black text-indigo-900">{teachers.find(t => t.id === parseInt(setup.teacherId))?.fullName || 'Academic Staff'}</h1>
+            <p className="font-bold text-indigo-400 uppercase text-[10px] tracking-widest mt-1">
+              Class: {setup.studentClass} | Date: {setup.date} | Session: {setup.session}
+            </p>
           </div>
         </div>
-        <button onClick={() => setStep(1)} className="px-6 py-2 bg-white/10 hover:bg-white/20 rounded-xl font-bold transition text-sm">Change Session</button>
+        <button onClick={() => setStep(1)} className="px-6 py-2 bg-indigo-600/10 hover:bg-indigo-600/20 text-indigo-600 rounded-xl font-bold transition text-xs flex items-center gap-2">
+           <Send size={14} className="rotate-180" /> Change Session
+        </button>
       </div>
 
       {msg && (
@@ -219,14 +220,22 @@ const AttendanceEntry = () => {
         </div>
       )}
 
+      {/* Main Form Title */}
+      <div className="flex justify-between items-center px-4">
+        <h2 className="text-3xl font-black text-slate-900">Daily Attendance</h2>
+        <button onClick={() => setStep(1)} className="flex items-center gap-2 px-4 py-2 bg-slate-100 hover:bg-slate-200 rounded-full text-slate-500 font-bold transition text-xs">
+          <XCircle size={16} /> Close
+        </button>
+      </div>
+
       {/* Students List */}
       <div className="bg-white rounded-[32px] shadow-sm border border-slate-100 overflow-hidden">
         <table className="w-full text-left">
           <thead>
             <tr className="bg-slate-50 text-[10px] font-black uppercase tracking-widest text-slate-400 border-b border-slate-100">
-              <th className="px-8 py-5">Roll / ID</th>
-              <th className="px-6 py-5">Student Identity</th>
-              <th className="px-10 py-5 text-right">Status Assignment</th>
+              <th className="px-8 py-5">Symbol No</th>
+              <th className="px-6 py-5">Student Name</th>
+              <th className="px-10 py-5 text-center">Status Recording</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-50">
@@ -235,26 +244,54 @@ const AttendanceEntry = () => {
                 <td className="px-8 py-6 font-black text-slate-400">{s.symbolNo}</td>
                 <td className="px-6 py-6 ring-slate-900 group-hover:text-indigo-600 transition font-extrabold text-slate-800">{s.fullName}</td>
                 <td className="px-8 py-6">
-                  <div className="flex justify-end gap-2">
-                    {[
-                      { id: 'Present', label: 'P', color: 'emerald', icon: CheckCircle2 },
-                      { id: 'Absent', label: 'A', color: 'rose', icon: XCircle },
-                      { id: 'Leave', label: 'L', color: 'amber', icon: AlertCircle },
-                      { id: 'Extra Class', label: 'Ex', color: 'indigo', icon: Clock }
-                    ].map(st => (
-                      <button
-                        key={st.id}
-                        onClick={() => handleStatusChange(s.id, st.id)}
-                        className={`w-12 h-12 rounded-xl flex items-center justify-center font-black transition relative overflow-hidden group/btn ${
-                          attendance[s.id] === st.id 
-                            ? `bg-${st.color}-600 text-white shadow-lg shadow-${st.color}-100 scale-105 ring-2 ring-${st.color}-500 ring-offset-2` 
-                            : `bg-slate-50 text-slate-400 hover:bg-${st.color}-50 hover:text-${st.color}-600`
-                        }`}
-                        title={st.id}
-                      >
-                         <span className="text-xs">{st.label}</span>
-                      </button>
-                    ))}
+                  <div className="flex justify-center gap-3">
+                    {setup.session === 'Morning' ? (
+                      [
+                        { id: 'Present', label: 'P', color: 'emerald', icon: CheckCircle2 },
+                        { id: 'Absent', label: 'A', color: 'rose', icon: XCircle },
+                        { id: 'Leave', label: 'L', color: 'amber', icon: AlertCircle },
+                        { id: 'Extra Class', label: 'Ex', color: 'indigo', icon: Clock }
+                      ].map(st => (
+                        <button
+                          key={st.id}
+                          onClick={() => handleStatusChange(s.id, st.id)}
+                          className={`w-12 h-12 rounded-xl flex items-center justify-center font-black transition relative overflow-hidden group/btn ${
+                            attendance[s.id] === st.id 
+                              ? `bg-${st.color}-600 text-white shadow-lg shadow-${st.color}-100 scale-105 ring-2 ring-${st.color}-500 ring-offset-2` 
+                              : `bg-slate-50 text-slate-400 hover:bg-${st.color}-50 hover:text-${st.color}-600`
+                          }`}
+                          title={st.id}
+                        >
+                           <span className="text-xs">{st.label}</span>
+                        </button>
+                      ))
+                    ) : (
+                      // Evening Layout
+                      [
+                        { id: 'Present', label: 'Left School', color: 'emerald' },
+                        { id: 'Extra Class', label: 'Extra Class', color: 'indigo' }
+                      ].map(st => {
+                        const isActive = attendance[s.id] === st.id;
+                        return (
+                          <button
+                            key={st.id}
+                            onClick={() => handleStatusChange(s.id, st.id)}
+                            className={`flex items-center gap-3 px-6 py-3 rounded-2xl border-2 transition-all font-bold ${
+                              isActive 
+                                ? `bg-${st.color}-50 border-${st.color}-500 text-${st.color}-700 shadow-sm` 
+                                : `bg-white border-slate-100 text-slate-400 hover:border-slate-300`
+                            }`}
+                          >
+                            <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
+                              isActive ? `border-${st.color}-600 bg-white` : 'border-slate-200'
+                            }`}>
+                              {isActive && <div className={`w-2.5 h-2.5 rounded-full bg-${st.color}-600 animate-in zoom-in-50`} />}
+                            </div>
+                            {st.label}
+                          </button>
+                        );
+                      })
+                    )}
                   </div>
                 </td>
               </tr>
