@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { studentService, examService } from '../services/api';
-import { CalendarCheck, Save, Search, AlertCircle, CheckCircle2, Users } from 'lucide-react';
+import { CalendarCheck, Save, Search, AlertCircle, CheckCircle, Users } from 'lucide-react';
 
 const ExamAttendance = () => {
     const [loading, setLoading] = useState(false);
@@ -161,7 +161,7 @@ const ExamAttendance = () => {
 
             {message && (
                 <div className={`p-5 rounded-[24px] flex items-center gap-4 animate-in slide-in-from-top-4 duration-300 ${message.type === 'success' ? 'bg-emerald-50 text-emerald-700' : 'bg-rose-50 text-rose-700'}`}>
-                    {message.type === 'success' ? <CheckCircle2 size={24} /> : <AlertCircle size={24} />}
+                    {message.type === 'success' ? <CheckCircle size={24} /> : <AlertCircle size={24} />}
                     <span className="font-extrabold">{message.text}</span>
                 </div>
             )}

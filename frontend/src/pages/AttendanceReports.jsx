@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { attendanceService, studentService, institutionService } from '../services/api';
-import { Calendar, FileBarChart, Download, ChevronLeft, ChevronRight, User, Fingerprint, Lock } from 'lucide-react';
+import { Calendar, BarChart, Download, ChevronLeft, ChevronRight, User, Shield, Lock } from 'lucide-react';
 
 const AttendanceReports = () => {
   const [isLocked, setIsLocked] = useState(true);
@@ -132,7 +132,7 @@ const AttendanceReports = () => {
       <div className="max-w-md mx-auto mt-20 animate-in fade-in zoom-in-95 duration-500">
         <div className="bg-white p-12 rounded-[48px] shadow-2xl border border-slate-100 flex flex-col items-center text-center">
             <div className="w-20 h-20 bg-indigo-600 rounded-[32px] flex items-center justify-center text-white mb-10 shadow-2xl shadow-indigo-200 rotate-12 transition-transform hover:rotate-0">
-                <Fingerprint size={42} />
+                <Shield size={42} />
             </div>
             
             <h2 className="text-4xl font-[1000] text-slate-900 tracking-tighter mb-4">Principal Verification</h2>
@@ -314,7 +314,7 @@ const AttendanceReports = () => {
         </div>
       ) : (
         <div className="h-[400px] bg-white rounded-[40px] border-2 border-dashed border-slate-100 flex flex-col items-center justify-center text-slate-300 space-y-4">
-           <FileBarChart size={64} className="opacity-20" />
+           <BarChart size={64} className="opacity-20" />
            <p className="font-bold uppercase text-xs tracking-widest opacity-40">Ready to synchronize data matrix</p>
         </div>
       )}

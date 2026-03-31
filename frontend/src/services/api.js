@@ -197,4 +197,94 @@ export const notificationService = {
     }
 };
 
-export default supabase;
+export const examService = {
+    getSubjects: async (params) => {
+        let query = supabase.from('subjects').select('*').eq('school_id', getInstitutionId());
+        if (params.classGroup) query = query.eq('class_group', params.classGroup);
+        const { data, error } = await query;
+        return { data: mapToCamelCase(data) };
+    },
+    getMarks: async (params) => {
+        let query = supabase.from('exam_marks').select('*').eq('school_id', getInstitutionId());
+        if (params.studentId) query = query.eq('student_id', params.studentId);
+        if (params.examType) query = query.eq('exam_type', params.examType);
+        if (params.year) query = query.eq('year', params.year);
+        const { data, error } = await query;
+        return { data: mapToCamelCase(data) };
+    },
+    saveMarksBulk: async (payload) => {
+        const mapped = payload.map(m => mapToSnakeCase({ ...m, schoolId: getInstitutionId() }));
+        return await supabase.from('exam_marks').upsert(mapped, { onConflict: 'school_id,student_id,subject,exam_type,year' });
+    },
+    getAttendance: async (params) => {
+        let query = supabase.from('exam_attendance').select('*').eq('school_id', getInstitutionId());
+        if (params.class) query = query.eq('class', params.class);
+        if (params.examType) query = query.eq('exam_type', params.examType);
+        if (params.year) query = query.eq('year', params.year);
+        const { data, error } = await query;
+        return { data: mapToCamelCase(data) };
+    },
+    saveAttendanceBulk: async (payload) => {
+        const mapped = payload.map(m => mapToSnakeCase({ ...m, schoolId: getInstitutionId() }));
+        return await supabase.from('exam_attendance').upsert(mapped, { onConflict: 'school_id,student_id,exam_type,year' });
+    },
+    getLedger: async (params) => {
+        const sId = params.schoolId || getInstitutionId();
+        let query = supabase.from('exam_marks').select('*').eq('school_id', Number(sId));
+        if (params.studentClass) query = query.eq('class', params.studentClass);
+        if (params.examType) query = query.eq('exam_type', params.examType);
+        if (params.year) query = query.eq('year', params.year);
+        const { data, error } = await query;
+        return { data: mapToCamelCase(data) };
+    },
+    getSchedule: async (params) => {
+        const sId = getInstitutionId();
+        const { data, error } = await supabase.from('exam_schedules')
+            .select('*')
+            .eq('school_id', Number(sId))
+            .eq('class', params.class)
+            .eq('exam_type', params.examType)
+            .eq('year', params.year)
+            .single();
+        return { data: mapToCamelCase(data) };
+    },
+    saveSchedule: async (dataSpec) => {
+        const sId = getInstitutionId();
+        const mapped = mapToSnakeCase({ ...dataSpec, schoolId: Number(sId) });
+        return await supabase.from('exam_schedules').upsert(mapped, { onConflict: 'school_id,class,exam_type,year' });
+    }
+};
+
+export const billingService = {
+    getReceipts: async (params = {}) => {
+        let query = supabase.from('fee_receipts').select('*').eq('institution_id', getInstitutionId());
+        if (params.studentName) query = query.ilike('student_name', `%${params.studentName}%`);
+        const { data, error } = await query.order('receipt_no', { ascending: false });
+        return { data: mapToCamelCase(data), error };
+    },
+    saveReceipt: async (receipt) => {
+        const mapped = mapToSnakeCase({ ...receipt, institutionId: getInstitutionId() });
+        return await supabase.from('fee_receipts').insert([mapped]);
+    },
+    getDonors: async (params = {}) => {
+        let query = supabase.from('donor_receipts').select('*').eq('institution_id', getInstitutionId());
+        const { data, error } = await query.order('receipt_no', { ascending: false });
+        return { data: mapToCamelCase(data), error };
+    },
+    saveDonorReceipt: async (receipt) => {
+        const mapped = mapToSnakeCase({ ...receipt, institutionId: getInstitutionId() });
+        return await supabase.from('donor_receipts').insert([mapped]);
+    }
+};
+
+const api = {
+    institutionService,
+    studentService,
+    teacherService,
+    attendanceService,
+    notificationService,
+    examService,
+    billingService
+};
+
+export default api;

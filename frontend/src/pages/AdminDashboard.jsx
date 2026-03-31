@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { supabase } from '../supabaseClient';
 import { 
     LayoutDashboard, Database, LogOut, Trash2, 
-    RefreshCw, Mail, Phone, MapPin, ShieldCheck,
-    AlertCircle, Download, CheckCircle2
+    RefreshCw, Mail, Phone, MapPin, Shield,
+    AlertCircle, Download, CheckCircle
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import '../styles/CyberBackground.css';
@@ -191,7 +191,7 @@ const AdminDashboard = () => {
                 <div className="flex items-center gap-6">
                     {actionStatus && (
                         <div className="px-4 py-2 bg-emerald-500/10 border border-emerald-500 rounded-lg flex items-center gap-2 animate-in fade-in slide-in-from-right-4">
-                            <CheckCircle2 size={16} className="text-emerald-500" />
+                            <CheckCircle size={16} className="text-emerald-500" />
                             <span className="text-xs font-black text-emerald-500 font-mono">{actionStatus}</span>
                         </div>
                     )}
@@ -321,12 +321,12 @@ const AdminDashboard = () => {
                                                         onClick={() => handleApproveSubscription(sub)}
                                                         className="h-10 px-6 bg-emerald-600 text-white rounded-xl font-black text-[10px] uppercase tracking-[0.2em] shadow-lg shadow-emerald-500/20 hover:bg-emerald-500 hover:scale-105 transition-all flex items-center gap-2"
                                                     >
-                                                        <ShieldCheck size={14} /> Approve
+                                                        <Shield size={14} /> Approve
                                                     </button>
                                                 )}
                                                 {sub.status === 'ACTIVE' && (
                                                     <div className="flex items-center justify-end gap-2 text-emerald-500 font-black text-[10px] uppercase tracking-widest opacity-60">
-                                                        <CheckCircle2 size={14} /> Full Access Granted
+                                                        <CheckCircle size={14} /> Full Access Granted
                                                     </div>
                                                 )}
                                             </td>
@@ -338,7 +338,7 @@ const AdminDashboard = () => {
                     </div>
                     {((activeTab === 'institutions' && institutions.length === 0) || (activeTab === 'subscriptions' && subscriptions.length === 0)) && (
                         <div className="py-24 text-center space-y-4">
-                            <ShieldCheck size={64} className="text-slate-800 mx-auto opacity-20" strokeWidth={1} />
+                            <Shield size={64} className="text-slate-800 mx-auto opacity-20" strokeWidth={1} />
                             <p className="text-slate-600 font-black uppercase tracking-[0.3em] text-xs">No Records Found in Current Channel</p>
                         </div>
                     )}

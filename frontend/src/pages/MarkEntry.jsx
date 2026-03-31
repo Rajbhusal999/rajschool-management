@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { studentService, examService } from '../services/api';
-import { ClipboardList, Save, Search, AlertCircle, CheckCircle2, ChevronRight, GraduationCap } from 'lucide-react';
+import { ClipboardList, Save, Search, AlertCircle, CheckCircle, ChevronRight, GraduationCap } from 'lucide-react';
 
 const MarkEntry = () => {
     const [loading, setLoading] = useState(false);
@@ -153,7 +153,7 @@ const MarkEntry = () => {
 
             {message && (
                 <div className={`p-4 rounded-2xl flex items-center gap-3 animate-in slide-in-from-top duration-300 ${message.type === 'success' ? 'bg-emerald-50 text-emerald-700' : 'bg-rose-50 text-rose-700'}`}>
-                    {message.type === 'success' ? <CheckCircle2 size={20} /> : <AlertCircle size={20} />}
+                    {message.type === 'success' ? <CheckCircle size={20} /> : <AlertCircle size={20} />}
                     <span className="font-bold">{message.text}</span>
                 </div>
             )}

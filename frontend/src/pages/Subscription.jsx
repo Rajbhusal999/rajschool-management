@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../supabaseClient';
-import { Check, Star, Zap, ShieldCheck, ArrowRight } from 'lucide-react';
+import { Check, Star, Zap, Shield, ArrowRight } from 'lucide-react';
 import '../styles/CyberBackground.css';
 
 const PricingCard = ({ plan, price, features, isPopular, onSelect }) => (
@@ -151,7 +151,7 @@ const Subscription = () => {
                 {/* Secure Badge */}
                 <div className="mt-16 flex items-center justify-center gap-6 opacity-40 hover:opacity-100 transition-opacity duration-500">
                     <div className="flex items-center gap-2 text-white font-black text-xs uppercase tracking-[0.3em]">
-                        <ShieldCheck size={20} className="text-emerald-400" /> Secure Gateway
+                        <Shield size={20} className="text-emerald-400" /> Secure Gateway
                     </div>
                     <div className="w-1.5 h-1.5 bg-slate-600 rounded-full"></div>
                     <div className="flex items-center gap-2 text-white font-black text-xs uppercase tracking-[0.3em]">

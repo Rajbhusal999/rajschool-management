@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { studentService } from '../services/api';
 import StudentForm from '../components/StudentForm';
-import { Edit2, Trash2, Eye, Search, Filter, Plus, User, Phone, MapPin, GraduationCap, Calendar, ShieldCheck, X, Download, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Edit2, Trash2, Eye, Search, Filter, Plus, User, Phone, MapPin, GraduationCap, Calendar, Shield, X, Download, ChevronLeft, ChevronRight, Users } from 'lucide-react';
 
 const ViewModal = ({ student, onClose }) => {
   if (!student) return null;
@@ -51,7 +51,7 @@ const ViewModal = ({ student, onClose }) => {
               <h4 className="flex items-center gap-2 text-xs font-black text-indigo-600 uppercase tracking-widest mb-3 border-b border-indigo-50 pb-2">Academic & Personal</h4>
               <div className="grid grid-cols-2 gap-3">
                 <DetailRow label="Class" value={student.studentClass} icon={GraduationCap} />
-                <DetailRow label="Roll No" value={student.rollNo} icon={ShieldCheck} />
+                <DetailRow label="Roll No" value={student.rollNo} icon={Shield} />
                 <DetailRow label="DOB (BS)" value={student.dobNepali} icon={Calendar} />
                 <DetailRow label="Gender" value={student.gender} icon={User} />
                 <DetailRow label="Caste" value={student.caste} icon={Info} />
@@ -97,8 +97,7 @@ const ViewModal = ({ student, onClose }) => {
 };
 
 const Info = ({ size, className }) => <span className={className}>ℹ️</span>;
-const Users = ({ size, className }) => <UsersIcon size={size} className={className} />;
-import { Users as UsersIcon } from 'lucide-react';
+// Re-using common icons
 
 const StudentList = () => {
   const [students, setStudents] = useState([]);
@@ -201,7 +200,7 @@ const StudentList = () => {
               }}
               className="bg-amber-500 hover:bg-amber-600 text-white px-8 py-4 rounded-2xl font-black text-sm uppercase tracking-widest flex items-center justify-center gap-3 transition-all shadow-xl shadow-amber-100"
             >
-              <ShieldCheck size={20} />
+              <Shield size={20} />
               Generate Symbol Nos
             </button>
             <button 

@@ -3,8 +3,8 @@ import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
 import { supabase } from '../supabaseClient';
 import { 
-  Library, Fingerprint, Phone, MapPin, Calendar, 
-  Image as ImageIcon, Upload, Mail, Lock, CheckCircle2, Eye, EyeOff, AlertCircle
+  Library, Shield, Phone, MapPin, Calendar, 
+  Image as ImageIcon, Upload, Mail, Lock, CheckCircle, Eye, EyeOff, AlertCircle
 } from 'lucide-react';
 
 const Register = () => {
@@ -197,7 +197,7 @@ const Register = () => {
                         <div className="space-y-3">
                             <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-6">EMIS Code</label>
                             <div className={`relative flex items-center transition-all ${errors.emisCode ? ' ring-2 ring-rose-500/20' : ''}`}>
-                                <Fingerprint className="absolute left-6 text-slate-400" size={20} />
+                                <Shield className="absolute left-6 text-slate-400" size={20} />
                                 <input 
                                     type="text" 
                                     placeholder="Identifier"
@@ -323,7 +323,7 @@ const Register = () => {
                         <div className="space-y-3">
                             <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-6">Verify Secret</label>
                             <div className={`relative flex items-center transition-all ${errors.verifySecret ? ' ring-2 ring-rose-500/20' : ''}`}>
-                                <CheckCircle2 className="absolute left-6 text-slate-400" size={20} />
+                                <CheckCircle className="absolute left-6 text-slate-400" size={20} />
                                 <input 
                                     type={showSecret ? "text" : "password"}
                                     placeholder="••••••••"

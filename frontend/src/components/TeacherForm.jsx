@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { teacherService } from '../services/api';
-import { X, User, Users, Phone, MapPin, BookOpen, Calendar, ShieldCheck, Briefcase, Landmark, FileText } from 'lucide-react';
+import { X, User, Users, Phone, MapPin, BookOpen, Calendar, Shield, Briefcase, Landmark, FileText } from 'lucide-react';
 
 const TeacherForm = ({ teacher, onClose, onSave }) => {
   const [formData, setFormData] = useState({

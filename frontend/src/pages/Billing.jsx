@@ -5,7 +5,7 @@ import {
   HeartHandshake, 
   Settings, 
   ArrowRight,
-  ShieldCheck,
+  Shield,
   CreditCard,
   Zap,
   History
@@ -121,7 +121,7 @@ const Billing = () => {
         {/* Bottom Feature Footer (Optional, like in payment page) */}
         <div className="flex flex-col md:flex-row items-center justify-center gap-12 pt-12">
             <div className="flex items-center gap-4 text-slate-400 font-bold uppercase text-[10px] tracking-widest">
-                <ShieldCheck size={24} className="text-indigo-500" />
+                <Shield size={24} className="text-indigo-500" />
                 <span>Encrypted Data Vault</span>
             </div>
             <div className="flex items-center gap-4 text-slate-400 font-bold uppercase text-[10px] tracking-widest">

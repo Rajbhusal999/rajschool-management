@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { teacherService } from '../services/api';
 import TeacherForm from '../components/TeacherForm';
-import { Edit2, Trash2, Eye, EyeOff, Lock, Search, Plus, User, Users, Phone, MapPin, BookOpen, Calendar, ShieldCheck, X, Download, Briefcase } from 'lucide-react';
+import { Edit2, Trash2, Eye, EyeOff, Lock, Search, Plus, User, Users, Phone, MapPin, BookOpen, Calendar, Shield, X, Download, Briefcase } from 'lucide-react';
 
 const ViewModal = ({ teacher, onClose }) => {
   const [showPassword, setShowPassword] = useState(false);
@@ -53,7 +53,7 @@ const ViewModal = ({ teacher, onClose }) => {
               <div className="grid grid-cols-2 gap-3">
                 <DetailRow label="Specialization" value={teacher.subject} icon={BookOpen} />
                 <DetailRow label="Level (Tah)" value={teacher.tah} icon={Briefcase} />
-                <DetailRow label="Employment Type" value={teacher.teacherType} icon={ShieldCheck} />
+                <DetailRow label="Employment Type" value={teacher.teacherType} icon={Shield} />
                 <DetailRow label="Joining Date" value={teacher.attendanceDateNepali} icon={Calendar} />
               </div>
             </div>
@@ -62,7 +62,7 @@ const ViewModal = ({ teacher, onClose }) => {
               <h4 className="flex items-center gap-2 text-xs font-black text-indigo-600 uppercase tracking-widest mb-3 border-b border-indigo-50 pb-2">Identity & Finance</h4>
               <div className="grid grid-cols-2 gap-3">
                 <DetailRow label="Contact" value={teacher.contact} icon={Phone} />
-                <DetailRow label="PAN No" value={teacher.panNo} icon={ShieldCheck} />
+                <DetailRow label="PAN No" value={teacher.panNo} icon={Shield} />
                 <DetailRow label="Citizenship No" value={teacher.citizenshipNo} icon={User} />
                 <DetailRow label="Bank" value={teacher.bankName} icon={Briefcase} />
                 <DetailRow label="Account No" value={teacher.accountNumber} icon={Briefcase} />

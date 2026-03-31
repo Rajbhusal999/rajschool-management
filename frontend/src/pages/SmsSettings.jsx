@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { institutionService, notificationService } from '../services/api';
 import { 
-  Settings, Key, Smartphone, 
-  CheckCircle2, AlertCircle, Save, 
-  Send, ShieldCheck, HelpCircle 
+  Settings, Key, Phone, 
+  CheckCircle, AlertCircle, Save, 
+  Send, Shield, HelpCircle 
 } from 'lucide-react';
 
 const SmsSettings = () => {
@@ -63,7 +63,7 @@ const SmsSettings = () => {
                     <div>
                         <div className="flex items-center gap-4 mb-4">
                             <div className="w-12 h-12 bg-white/20 rounded-2xl flex items-center justify-center backdrop-blur-xl">
-                                <Smartphone size={28} />
+                                <Phone size={28} />
                             </div>
                             <h1 className="text-4xl font-[1000] tracking-tighter">Communication Gateway</h1>
                         </div>
@@ -81,7 +81,7 @@ const SmsSettings = () => {
                 <div className={`p-6 rounded-[24px] border-2 flex items-center gap-4 font-black transition-all animate-in slide-in-from-top-5 ${
                     msg.type === 'success' ? 'bg-emerald-50 border-emerald-100 text-emerald-600' : 'bg-rose-50 border-rose-100 text-rose-600'
                 }`}>
-                    {msg.type === 'success' ? <CheckCircle2 size={24} /> : <AlertCircle size={24} />}
+                    {msg.type === 'success' ? <CheckCircle size={24} /> : <AlertCircle size={24} />}
                     {msg.text}
                 </div>
             )}
@@ -173,7 +173,7 @@ const SmsSettings = () => {
 
                     <div className="bg-indigo-50 rounded-[40px] p-8 border border-indigo-100/50">
                         <div className="flex items-center gap-3 mb-4 text-indigo-700">
-                           <ShieldCheck size={20} />
+                           <Shield size={20} />
                            <h4 className="font-black text-xs uppercase tracking-widest">Security Protocol</h4>
                         </div>
                         <p className="text-[11px] font-bold text-indigo-400 leading-relaxed mb-4">

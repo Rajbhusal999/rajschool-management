@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { 
   GraduationCap, Clock, Calendar, Rocket, LogIn, ChevronRight, 
-  Users, BarChart3, TrendingUp, Smartphone, FileText, CalendarCheck, CreditCard, ShieldCheck
+  Users, BarChart3, TrendingUp, Phone, FileText, CalendarCheck, CreditCard, Shield
 } from 'lucide-react';
 
 const LandingPage = () => {
@@ -159,7 +159,7 @@ const LandingPage = () => {
                             { icon: FileText, title: 'Exams & Results', color: 'blue', desc: 'Create exams, generate professional cards, and publish marksheets instantly.' },
                             { icon: CreditCard, title: 'Billing System', color: 'orange', desc: 'Track student fees, manage donations, and generate digital receipts seamlessly.' },
                             { icon: CalendarCheck, title: 'Smart Attendance', color: 'pink', desc: 'Digital daily attendance tracking with automated notifications to parents.' },
-                            { icon: Smartphone, title: 'Mobile Ready', color: 'slate', desc: 'Fully responsive design that works perfectly on all devices and platforms.' }
+                            { icon: Phone, title: 'Mobile Ready', color: 'slate', desc: 'Fully responsive design that works perfectly on all devices and platforms.' }
                         ].map((m, i) => (
                             <div key={i} className="group glass-card p-10 rounded-[40px] hover:bg-white/10 transition-all duration-500 cursor-default border-transparent hover:border-white/20 bg-white/5">
                                 <div className={`w-16 h-16 rounded-2xl flex items-center justify-center mb-8 transition-transform duration-500 group-hover:scale-110 group-hover:rotate-3

@@ -34,7 +34,7 @@ import BillingHistory from "./pages/BillingHistory";
 import DonorHistory from "./pages/DonorHistory";
 import SmsSettings from "./pages/SmsSettings";
 
-import { GraduationCap, ShieldAlert } from "lucide-react";
+import { AlertTriangle } from "lucide-react";
 import BackButton from "./components/BackButton";
 
 // Error Boundary Component
@@ -55,7 +55,7 @@ class ErrorBoundary extends React.Component {
         <div className="min-h-screen bg-rose-50 flex items-center justify-center p-6">
           <div className="max-w-md w-full bg-white p-8 rounded-[32px] shadow-xl border-2 border-rose-100 text-center space-y-4">
             <div className="w-16 h-16 bg-rose-100 text-rose-600 rounded-2xl flex items-center justify-center mx-auto">
-              <ShieldAlert size={32} />
+              <AlertTriangle size={32} />
             </div>
             <h1 className="text-2xl font-black text-slate-800 tracking-tight">System Interrupted</h1>
             <p className="text-slate-500 font-bold text-sm leading-relaxed">

@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { 
-  ShieldCheck, Lock, Mail, Eye, EyeOff, ArrowLeft, 
-  Terminal, ShieldAlert, Fingerprint, Activity
+  Shield, Lock, Mail, Eye, EyeOff, ArrowLeft, 
+  Terminal, AlertTriangle, Shield, Activity
 } from 'lucide-react';
 
 const AdminLogin = () => {
@@ -42,7 +42,7 @@ const AdminLogin = () => {
                 {/* Visual Identity Logo - Shield based for Admin */}
                 <div className="flex justify-center mb-10">
                     <div className="w-24 h-24 bg-gradient-to-tr from-slate-800 to-slate-700 rounded-[32px] flex items-center justify-center text-indigo-400 shadow-2xl border border-slate-700/50 backdrop-blur-xl group hover:scale-105 transition-transform duration-500">
-                        <ShieldCheck size={48} className="group-hover:animate-pulse" />
+                        <Shield size={48} className="group-hover:animate-pulse" />
                     </div>
                 </div>
 
@@ -61,7 +61,7 @@ const AdminLogin = () => {
 
                 {error && (
                     <div className="mb-8 p-5 bg-rose-500/10 border border-rose-500/30 rounded-[28px] flex items-center gap-4 animate-in fade-in slide-in-from-top-4 backdrop-blur-md">
-                        <ShieldAlert className="text-rose-500 shrink-0" size={24} />
+                        <AlertTriangle className="text-rose-500 shrink-0" size={24} />
                         <div>
                             <p className="text-[10px] font-black text-rose-500 uppercase tracking-widest mb-1">Security Alert</p>
                             <p className="text-xs font-bold text-slate-300 leading-relaxed uppercase tracking-tight">
@@ -99,7 +99,7 @@ const AdminLogin = () => {
                         </label>
                         <div className="relative group">
                             <div className="absolute left-6 top-1/2 -translate-y-1/2 text-slate-600 group-focus-within:text-indigo-400 transition-colors">
-                                <Fingerprint size={22} />
+                                <Shield size={22} />
                             </div>
                             <input 
                                 type={showPassword ? "text" : "password"}
@@ -140,7 +140,7 @@ const AdminLogin = () => {
                 {/* Secure Status */}
                 <div className="mt-12 flex flex-col items-center gap-4">
                     <div className="flex items-center gap-3 px-5 py-2.5 bg-slate-900 border border-slate-800 rounded-full">
-                        <ShieldAlert size={14} className="text-amber-500" />
+                        <AlertTriangle size={14} className="text-amber-500" />
                         <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">
                             Hardware isolation protocol: ACTIVE
                         </span>

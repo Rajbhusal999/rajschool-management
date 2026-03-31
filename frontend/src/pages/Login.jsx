@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { supabase } from '../supabaseClient';
 import { 
-    GraduationCap, Key, Lock, Eye, EyeOff, Check, UserPlus, ShieldAlert,
-    ChevronRight, Globe, ShieldCheck
+    GraduationCap, Key, Lock, Eye, EyeOff, Check, UserPlus, AlertTriangle,
+    ChevronRight, Globe, Shield
 } from 'lucide-react';
 
 const Login = () => {
@@ -84,7 +84,7 @@ const Login = () => {
                 {error && (
                     <div className="w-full mb-8 p-5 bg-rose-50/50 border-[2px] border-rose-100 rounded-[28px] flex items-center gap-4 animate-in slide-in-from-top-4 duration-500">
                         <div className="w-10 h-10 bg-rose-500 rounded-2xl flex items-center justify-center text-white shrink-0 shadow-lg shadow-rose-200">
-                            <ShieldAlert size={20} />
+                            <AlertTriangle size={20} />
                         </div>
                         <p className="text-sm font-black text-rose-600 leading-snug tracking-tight">{error}</p>
                     </div>
@@ -174,7 +174,7 @@ const Login = () => {
                         to="/admin-login"
                         className="w-full h-[72px] bg-transparent border-[2.5px] border-dashed border-slate-200 rounded-[28px] text-slate-500 font-black flex items-center justify-center gap-3 hover:border-indigo-400 hover:text-indigo-600 hover:bg-indigo-50/10 transition-all cursor-pointer group"
                     >
-                        <ShieldCheck size={20} className="group-hover:scale-110 transition-transform" />
+                        <Shield size={20} className="group-hover:scale-110 transition-transform" />
                         System Administrator Access
                     </Link>
                 </form>

@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { studentService, attendanceService, teacherService, notificationService } from '../services/api';
 import { 
-  Calendar, Users, ShieldCheck, CheckCircle2, 
-  XCircle, Clock, AlertCircle, Save, Send, 
-  History, RefreshCw, Phone 
+  Calendar, Users, CheckCircle, XCircle,
+  X, Clock, AlertCircle, Save, Send, 
+  RefreshCw, Phone, BarChart as History
 } from 'lucide-react';
 
 const AttendanceEntry = () => {
@@ -139,7 +139,7 @@ const AttendanceEntry = () => {
                   logs.push({
                       studentId: s.id,
                       guardianName: gName,
-                      phoneNumber: s.guardianContact || s.parentContact || 'N/A',
+                      phoneNumber: s.parentContact || s.guardianContact || 'N/A',
                       message: sms,
                       session: setup.session,
                       status: 'LOGGED'
@@ -241,7 +241,7 @@ const AttendanceEntry = () => {
 
       {msg && (
         <div className="bg-emerald-50 border border-emerald-100 p-4 rounded-2xl flex items-center gap-3 text-emerald-700 font-bold animate-in fade-in slide-in-from-top-4 duration-300">
-          <CheckCircle2 size={20} />
+          <CheckCircle size={20} />
           {msg}
         </div>
       )}
@@ -273,7 +273,7 @@ const AttendanceEntry = () => {
                   <div className="flex justify-center gap-3">
                     {setup.session === 'Morning' ? (
                       [
-                        { id: 'Present', label: 'Present', color: 'emerald', icon: CheckCircle2 },
+                        { id: 'Present', label: 'Present', color: 'emerald', icon: CheckCircle },
                         { id: 'Absent', label: 'Absent', color: 'rose', icon: XCircle },
                         { id: 'Leave', label: 'Leave', color: 'amber', icon: AlertCircle },
                         { id: 'Extra Class', label: 'Extra Class', color: 'indigo', icon: Clock }
@@ -367,7 +367,7 @@ const AttendanceEntry = () => {
               <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mt-2 italic">A detailed record of all automated parent messages</p>
             </div>
             <div className="flex items-center gap-3 px-5 py-2.5 bg-emerald-50 text-emerald-600 rounded-2xl text-[10px] font-black uppercase tracking-widest border border-emerald-100">
-              <CheckCircle2 size={16} /> Logic Verified
+              <CheckCircle size={16} /> Logic Verified
             </div>
           </div>
 

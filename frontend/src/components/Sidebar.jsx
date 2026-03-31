@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { LayoutDashboard, Users, GraduationCap, CalendarCheck, FileBarChart, Settings, BookOpen, ClipboardList, Trophy, CreditCard, HeartHandshake, Smartphone } from 'lucide-react';
+import { LayoutDashboard, Users, GraduationCap, CalendarCheck, BarChart, Settings, BookOpen, ClipboardList, Trophy, CreditCard, HeartHandshake, Phone } from 'lucide-react';
 
 
 const Sidebar = () => {
@@ -52,7 +52,7 @@ const Sidebar = () => {
           to="/attendance/reports" 
           className={({ isActive }) => `flex items-center gap-3 px-3 py-2 rounded-lg transition-colors ${isActive ? 'bg-indigo-50 text-indigo-700' : 'text-slate-600 hover:bg-slate-50'}`}
         >
-          <FileBarChart size={20} />
+          <BarChart size={20} />
           <span className="font-medium">Monthly Reports</span>
         </NavLink>
 
@@ -111,7 +111,7 @@ const Sidebar = () => {
           to="/settings/sms" 
           className={({ isActive }) => `flex items-center gap-3 px-3 py-2 rounded-lg transition-colors ${isActive ? 'bg-indigo-50 text-indigo-700' : 'text-slate-600 hover:bg-slate-50'}`}
         >
-          <Smartphone size={20} />
+          <Phone size={20} />
           <span className="font-medium">SMS Gateway</span>
         </NavLink>
       </div>

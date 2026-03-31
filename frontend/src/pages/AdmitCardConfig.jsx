@@ -5,13 +5,13 @@ import {
   examService 
 } from '../services/api';
 import { 
-  CalendarDays, 
+  Calendar, 
   Users, 
   Save, 
   Printer, 
   ChevronLeft, 
   Clock, 
-  CheckCircle2,
+  CheckCircle,
   ChevronDown
 } from 'lucide-react';
 
@@ -173,7 +173,7 @@ const AdmitCardConfig = () => {
                 {/* Left Panel: Exam Schedule */}
                 <div className="lg:col-span-7 bg-white rounded-[40px] shadow-sm border border-slate-100 overflow-hidden">
                     <div className="p-8 bg-slate-50/50 border-b border-slate-100 flex items-center gap-4">
-                        <CalendarDays className="text-rose-500" size={24} />
+                        <Calendar className="text-rose-500" size={24} />
                         <h2 className="text-xl font-black text-slate-800 tracking-tight">Exam Schedule & Subjects</h2>
                     </div>
                     
@@ -285,7 +285,7 @@ const AdmitCardConfig = () => {
                                         <div className={`w-7 h-7 rounded-xl flex items-center justify-center transition-all ${
                                             selectedStudentIds.includes(student.id) ? 'bg-rose-500 text-white' : 'bg-slate-100 text-transparent'
                                         }`}>
-                                            <CheckCircle2 size={18} strokeWidth={3} />
+                                            <CheckCircle size={18} strokeWidth={3} />
                                         </div>
                                         <div className="flex-1 min-w-0">
                                             <h4 className="font-extrabold text-slate-800 truncate leading-tight uppercase tracking-tight">{student.fullName}</h4>

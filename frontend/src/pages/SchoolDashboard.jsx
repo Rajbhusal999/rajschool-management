@@ -2,10 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { 
     Users, GraduationCap, Calendar, TrendingUp, 
-    ShieldCheck, Bell, MessageSquare, BookOpen,
+    Shield, Bell, MessageSquare, BookOpen,
     ClipboardList, Trophy, Settings, LogOut,
-    ChevronRight, CreditCard, Activity, Target,
-    Star, Zap, Rocket, Building2, CalendarCheck
+    ChevronRight, CreditCard, Activity, Crosshair,
+    Star, Zap, Home, BarChart, Target
 } from 'lucide-react';
 import { supabase } from '../supabaseClient';
 import DigitalClock from '../components/DigitalClock';
@@ -23,7 +23,8 @@ const SchoolDashboard = () => {
         attendance: '96.8%',
         daysRemaining: 0,
         status: 'ACTIVE',
-        plan: '5_years'
+        plan: '5_years',
+        link: "/attendance/reports"
     });
     const [loading, setLoading] = useState(true);
 
@@ -141,7 +142,7 @@ const SchoolDashboard = () => {
                     <div className="bg-indigo-50 border-2 border-indigo-200 rounded-[40px] p-8 flex flex-col lg:flex-row items-center justify-between gap-8 shadow-sm group hover:border-indigo-300 transition-all mb-10">
                         <div className="flex items-center gap-6">
                             <div className="w-20 h-20 bg-indigo-600 rounded-[30px] flex items-center justify-center text-white shadow-xl shadow-indigo-200 shrink-0 group-hover:scale-105 transition-transform">
-                                <Rocket size={36} className="animate-bounce" strokeWidth={2.5} />
+                                <Zap size={36} className="animate-bounce" strokeWidth={2.5} />
                             </div>
                             <div className="space-y-1">
                                 <h3 className="text-2xl font-[1000] text-indigo-900 tracking-tight uppercase">Ready to Launch?</h3>
@@ -184,7 +185,7 @@ const SchoolDashboard = () => {
                         </div>
                     ) : (
                         <div className="w-20 h-20 bg-indigo-600 rounded-[28px] flex items-center justify-center text-white shadow-lg shadow-indigo-200 shrink-0">
-                            <Building2 size={36} strokeWidth={2.5} />
+                            <Home size={36} strokeWidth={2.5} />
                         </div>
                     )}
                     <div className="space-y-1">
@@ -238,7 +239,7 @@ const SchoolDashboard = () => {
                     </div>
                 </div>
                 <button className="w-full md:w-auto px-10 py-5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-[24px] font-black text-sm uppercase tracking-widest shadow-xl shadow-indigo-200 transition-all flex items-center justify-center gap-3 group">
-                    <CalendarCheck size={20} />
+                    <Calendar size={20} />
                     Manage Salaries
                 </button>
             </div>
@@ -275,8 +276,27 @@ const SchoolDashboard = () => {
                         Generate bulk admit cards, student IDs, and custom reports in just a few clicks.
                     </p>
                     <button className="w-full py-5 bg-white border-2 border-slate-100 hover:border-slate-200 text-slate-800 rounded-[24px] font-black text-sm uppercase tracking-widest shadow-xl shadow-[#8B4513]/5 transition-all flex items-center justify-center gap-3">
-                        <Rocket size={18} />
+                        <Zap size={18} />
                         Launch Extraction Bridge
+                    </button>
+                </div>
+
+                {/* Reports & Analytics */}
+                <div className="bg-indigo-900 border border-indigo-700 rounded-[40px] p-10 flex flex-col items-center justify-center text-center shadow-sm relative overflow-hidden group">
+                    <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 blur-[40px] rounded-full translate-x-10 translate-y-[-10px]"></div>
+                    <div className="w-16 h-16 bg-white/10 rounded-2xl flex items-center justify-center text-white mb-6 group-hover:scale-110 transition-transform">
+                        <BarChart size={32} />
+                    </div>
+                    <h3 className="text-2xl font-[1000] text-white tracking-tight mb-4">Reports & Analytics</h3>
+                    <p className="text-xs font-bold text-indigo-200/60 uppercase tracking-widest leading-relaxed mb-10 max-w-[200px]">
+                        Verify institutional performance and monthly attendance ledgers.
+                    </p>
+                    <button 
+                        onClick={() => navigate('/attendance/reports')}
+                        className="w-full py-5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-[24px] font-black text-sm uppercase tracking-widest shadow-xl shadow-black/20 transition-all flex items-center justify-center gap-3"
+                    >
+                        <Shield size={18} />
+                        Enter Secure Vault
                     </button>
                 </div>
             </div>
@@ -317,7 +337,7 @@ const SchoolDashboard = () => {
             <div className="bg-white border border-slate-200 rounded-[40px] p-10 shadow-sm flex flex-col md:flex-row items-center justify-between gap-8 group hover:border-emerald-200 transition-all border-l-8 border-l-emerald-500">
                 <div className="flex flex-col md:flex-row items-center gap-8">
                     <div className="w-20 h-20 bg-emerald-100 rounded-[28px] flex items-center justify-center text-emerald-600">
-                        <Building2 size={36} strokeWidth={2.5} />
+                        <Home size={36} strokeWidth={2.5} />
                     </div>
                     <div className="space-y-1 text-center md:text-left">
                         <h3 className="text-2xl font-[1000] text-[#8B4513] tracking-tight mb-2">Income Expenditure Management</h3>

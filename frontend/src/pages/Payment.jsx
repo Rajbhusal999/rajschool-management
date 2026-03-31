@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../supabaseClient';
 import { 
-    QrCode, Smartphone, Wallet, CheckCircle2, 
-    ArrowLeft, ShieldCheck, Zap, Copy, Info
+    QrCode, Phone, Wallet, CheckCircle, 
+    ArrowLeft, Shield, Zap, Copy, Info
 } from 'lucide-react';
 import '../styles/CyberBackground.css';
 import esewa_qr from '../assets/esewa_qr.jpg';
@@ -124,7 +124,7 @@ const Payment = () => {
             <div className="min-h-screen bg-[#0B0E14] flex items-center justify-center p-8">
                 <div className="max-w-md w-full text-center space-y-8 animate-in zoom-in-95 duration-500">
                     <div className="w-24 h-24 bg-emerald-500/20 border-2 border-emerald-500 rounded-full flex items-center justify-center mx-auto shadow-[0_0_40px_rgba(16,185,129,0.3)]">
-                        <CheckCircle2 size={48} className="text-emerald-500" />
+                        <CheckCircle size={48} className="text-emerald-500" />
                     </div>
                     <div className="space-y-4">
                         <h2 className="text-4xl font-[1000] text-white tracking-tighter">Verification Initiated</h2>
@@ -223,7 +223,7 @@ const Payment = () => {
                                         ? 'bg-[#00D1FF]/10 border-[#00D1FF] text-[#00D1FF] shadow-[0_0_20px_rgba(0,209,255,0.2)]' 
                                         : 'bg-white/5 border-white/5 text-slate-500 hover:border-white/20'}`}
                             >
-                                <Smartphone size={24} />
+                                <Phone size={24} />
                                 <span className="text-[10px] font-black uppercase tracking-widest">Banking</span>
                             </button>
                         </div>
@@ -295,7 +295,7 @@ const Payment = () => {
                         </form>
 
                         <div className="flex items-center gap-4 px-6 py-4 bg-white/5 rounded-3xl border border-white/5">
-                            <ShieldCheck className="text-emerald-500" size={32} />
+                            <Shield className="text-emerald-500" size={32} />
                             <p className="text-[10px] font-bold text-slate-500 leading-relaxed uppercase tracking-tight">
                                 This session is end-to-end encrypted. Your transaction will be manually verified by the root administrator.
                             </p>

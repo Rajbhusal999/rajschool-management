@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { 
   Pencil, Contact, FileText, Award, 
-  Grid3X3, CalendarCheck, Layers, ChevronRight 
+  Grid, Calendar, Layers, ChevronRight 
 } from 'lucide-react';
 
 const ExamPortal = () => {
@@ -18,7 +18,7 @@ const ExamPortal = () => {
     {
       title: "Attendance Tracking",
       description: "Record student presence specifically during the examination period.",
-      icon: CalendarCheck,
+      icon: Calendar,
       color: "bg-teal-50 text-teal-500",
       link: "/exams/attendance",
       linkText: "Track Now"
@@ -50,7 +50,7 @@ const ExamPortal = () => {
     {
       title: "Consolidated Ledger",
       description: "Analyze class-wide results, GPA distributions, and rank calculations in one view.",
-      icon: Grid3X3,
+      icon: Grid,
       color: "bg-cyan-50 text-cyan-500",
       link: "/exams/results",
       linkText: "View Ledger"

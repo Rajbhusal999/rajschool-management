@@ -3,9 +3,9 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { 
   ArrowLeft, Printer, Save, History, 
   Search, Plus, Trash2, Calendar, 
-  User, Hash, MapPin, Phone,
-  Languages, GraduationCap, School,
-  UserCheck, CreditCard, PenLine,
+  User, List, MapPin, Phone,
+  Globe, GraduationCap, Home,
+  CheckCircle, CreditCard, Edit2,
   Image as ImageIcon
 } from 'lucide-react';
 import { supabase } from '../supabaseClient';
@@ -482,7 +482,7 @@ const StudentFees = () => {
                             onClick={() => setLanguage(language === 'en' ? 'ne' : 'en')} 
                             className="px-5 py-3 bg-white border border-slate-200 rounded-2xl flex items-center gap-2 text-[10px] font-[1000] text-slate-500 hover:bg-slate-50 transition-all uppercase tracking-widest shadow-sm"
                         >
-                            <Languages size={16} className="text-indigo-500" /> {language === 'en' ? 'Nepali' : 'English'}
+                            <Globe size={16} className="text-indigo-500" /> {language === 'en' ? 'Nepali' : 'English'}
                         </button>
                     </div>
                 </div>
