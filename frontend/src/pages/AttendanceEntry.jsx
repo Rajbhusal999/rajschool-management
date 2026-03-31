@@ -244,7 +244,7 @@ const AttendanceEntry = () => {
           className="flex items-center gap-3 px-10 py-4 bg-slate-900 text-white rounded-2xl font-black shadow-2xl hover:bg-slate-800 transition group"
         >
           <Save size={20} className="group-hover:translate-y-0.5 transition" />
-          Commit Changes
+          Save Attendance
         </button>
         <button 
           onClick={() => handleSave(true)}
