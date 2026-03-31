@@ -33,27 +33,27 @@ const Billing = () => {
       iconBg: 'bg-emerald-50 text-emerald-600',
       buttonText: 'Select Module',
       buttonClass: 'bg-emerald-500 text-white hover:bg-emerald-600 shadow-emerald-200',
-      path: '/grants' // Placeholder path
-    },
-    {
-      id: 'my-subscription',
-      title: 'My Subscription',
-      description: 'Review your service plan, Manage billing cycles, and upgrade institute features.',
-      icon: Zap,
-      iconBg: 'bg-orange-50 text-orange-600',
-      buttonText: 'Manage Plan',
-      buttonClass: 'bg-slate-100 text-slate-600 hover:bg-slate-200 shadow-none',
-      path: '/subscription'
+      path: '/billing/donor-receipts'
     },
     {
       id: 'billing-history',
-      title: 'Billing History',
-      description: 'Access complete transaction logs, search past receipts, and perform re-prints.',
+      title: 'Fee History',
+      description: 'Access complete transaction logs for all student fee receipts.',
+      icon: History,
+      iconBg: 'bg-indigo-50 text-indigo-600',
+      buttonText: 'View History',
+      buttonClass: 'bg-indigo-600 text-white hover:bg-indigo-700 shadow-indigo-200',
+      path: '/billing/history'
+    },
+    {
+      id: 'donor-history',
+      title: 'Donor History',
+      description: 'Access complete transaction logs for all donor and grant receipts.',
       icon: History,
       iconBg: 'bg-rose-50 text-rose-600',
       buttonText: 'View History',
       buttonClass: 'bg-rose-500 text-white hover:bg-rose-600 shadow-rose-200',
-      path: '/billing/history'
+      path: '/billing/donor-history'
     }
   ];
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { LayoutDashboard, Users, GraduationCap, CalendarCheck, FileBarChart, Settings, BookOpen, ClipboardList, Trophy } from 'lucide-react';
+import { LayoutDashboard, Users, GraduationCap, CalendarCheck, FileBarChart, Settings, BookOpen, ClipboardList, Trophy, CreditCard, HeartHandshake } from 'lucide-react';
 
 
 const Sidebar = () => {
@@ -82,6 +82,26 @@ const Sidebar = () => {
         >
           <Trophy size={20} />
           <span className="font-medium">Result Sheets</span>
+        </NavLink>
+
+        <div className="pt-4 pb-2 px-3">
+          <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">Finance & Billing</span>
+        </div>
+
+        <NavLink 
+          to="/billing" 
+          className={({ isActive }) => `flex items-center gap-3 px-3 py-2 rounded-lg transition-colors ${isActive ? 'bg-indigo-50 text-indigo-700' : 'text-slate-600 hover:bg-slate-50'}`}
+        >
+          <CreditCard size={20} />
+          <span className="font-medium">Billing Center</span>
+        </NavLink>
+
+        <NavLink 
+          to="/billing/donor-receipts" 
+          className={({ isActive }) => `flex items-center gap-3 px-3 py-2 rounded-lg transition-colors ${isActive ? 'bg-indigo-50 text-indigo-700' : 'text-slate-600 hover:bg-slate-50'}`}
+        >
+          <HeartHandshake size={20} />
+          <span className="font-medium">Donors & Grants</span>
         </NavLink>
       </nav>
 
