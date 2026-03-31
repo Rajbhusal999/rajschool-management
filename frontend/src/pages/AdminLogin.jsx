@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { 
   Shield, Lock, Mail, Eye, EyeOff, ArrowLeft, 
-  Terminal, AlertTriangle, Shield, Activity
+  Terminal, AlertTriangle, Activity
 } from 'lucide-react';
 
 const AdminLogin = () => {
