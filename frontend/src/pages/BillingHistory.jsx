@@ -19,6 +19,7 @@ const BillingHistory = () => {
   const [receipts, setReceipts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
+  const [language, setLanguage] = useState('en');
   const institutionId = sessionStorage.getItem('institutionId');
 
   useEffect(() => {
@@ -60,7 +61,18 @@ const BillingHistory = () => {
 
   const getTopics = (items) => {
     if (!items || !Array.isArray(items)) return '-';
-    return items.map(item => item.nameNe || item.nameEn).join(', ');
+    // Filter out items with 0 or empty amount, or just return all with labels
+    return items
+      .filter(item => item.amount && Number(item.amount) > 0)
+      .map(item => language === 'ne' ? (item.ne || item.en) : (item.en || item.ne))
+      .join(', ') || 'No specific fees';
+  };
+
+  const translations = {
+    back: language === 'ne' ? 'फिर्ता' : 'Back',
+    newReceipt: language === 'ne' ? 'नयाँ रसिद' : 'New Receipt',
+    billingHistory: language === 'ne' ? 'बिलिङ इतिहास' : 'Billing History',
+    manageTrack: language === 'ne' ? 'सबै जारी गरिएका शुल्क रसिदहरू व्यवस्थापन र ट्र्याक गर्नुहोस्' : 'Manage and track all issued fee receipts',
   };
 
   return (
@@ -69,9 +81,9 @@ const BillingHistory = () => {
       <div className="max-w-[1400px] mx-auto mt-6 mb-4 px-4">
         <div className="bg-white rounded-[32px] border border-slate-100 shadow-xl shadow-slate-200/50 p-6 flex flex-wrap items-center justify-between gap-6">
           <div className="space-y-1">
-            <h1 className="text-3xl font-[1000] text-slate-900 tracking-tighter">Billing History</h1>
+            <h1 className="text-3xl font-[1000] text-slate-900 tracking-tighter">{translations.billingHistory}</h1>
             <p className="text-slate-500 font-bold text-[10px] uppercase tracking-[0.2em] opacity-70">
-              Manage and track all issued fee receipts
+              {translations.manageTrack}
             </p>
           </div>
 
@@ -80,13 +92,13 @@ const BillingHistory = () => {
               onClick={() => navigate('/billing/student-fees')} 
               className="flex items-center gap-2 px-6 py-3 bg-rose-500 text-white rounded-2xl font-black uppercase text-xs tracking-widest hover:bg-rose-600 transition-all shadow-lg shadow-rose-100"
             >
-              <Plus size={18} /> New Receipt
+              <Plus size={18} /> {translations.newReceipt}
             </button>
             <button 
               onClick={() => navigate('/billing')} 
               className="flex items-center gap-2 px-6 py-3 bg-slate-100 text-slate-500 rounded-2xl font-black uppercase text-xs tracking-widest hover:bg-slate-200 transition-all"
             >
-              <ArrowLeft size={18} /> {translations?.back || 'Back'}
+              <ArrowLeft size={18} /> {translations.back}
             </button>
           </div>
         </div>

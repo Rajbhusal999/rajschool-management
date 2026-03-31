@@ -189,6 +189,7 @@ const StudentFees = () => {
     const [estdYear, setEstdYear] = useState('');
     const [schoolLogo, setSchoolLogo] = useState(null);
     const [receiptNo, setReceiptNo] = useState('');
+    const [institutionId, setInstitutionId] = useState(null);
     const [lastIssued, setLastIssued] = useState({ no: '---', date: '---' });
 
     const [formData, setFormData] = useState({
@@ -265,6 +266,7 @@ const StudentFees = () => {
             setSchoolAddress(address || 'Your Address');
             setEstdYear(estd || '---');
             setSchoolLogo(logo);
+            setInstitutionId(instId);
 
             const { data: lastReceipt } = await supabase
                 .from('fee_receipts')
@@ -300,10 +302,10 @@ const StudentFees = () => {
                         class: receipt.class,
                         section: receipt.section,
                         month: receipt.month,
-                        guardian: receipt.guardian
+                        guardian: receipt.guardian_name || receipt.guardian
                     });
-                    const parsedFees = typeof receipt.fees === 'string' ? JSON.parse(receipt.fees) : receipt.fees;
-                    setFees(parsedFees);
+                    const parsedFees = receipt.items || receipt.fees; // Fallback for safety
+                    setFees(typeof parsedFees === 'string' ? JSON.parse(parsedFees) : (parsedFees || []));
                 }
             }
         } catch (error) {
@@ -368,16 +370,18 @@ const StudentFees = () => {
                 const { error } = await supabase
                     .from('fee_receipts')
                     .insert([{
-                        receipt_no: receiptNo,
+                        institution_id: institutionId,
+                        receipt_no: parseInt(receiptNo),
                         date: formData.date,
                         student_name: formData.studentName,
                         roll_no: formData.rollNo,
                         class: formData.class,
                         section: formData.section,
                         month: formData.month,
-                        guardian: formData.guardian,
-                        fees: JSON.stringify(fees),
-                        total_amount: total
+                        guardian_name: formData.guardian,
+                        items: fees, // Supabase handles jsonb mapping automatically
+                        total_amount: total,
+                        language: language
                     }]);
 
                 if (error) throw error;
