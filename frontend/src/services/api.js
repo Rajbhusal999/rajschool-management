@@ -331,7 +331,7 @@ export const attendanceService = {
     saveBulk: async (dataSpec) => {
         const schoolId = sessionStorage.getItem('institutionId');
         const mappedData = dataSpec.map(item => mapToSnakeCase({ ...item, schoolId: Number(schoolId) }));
-        const { error } = await supabase.from('student_attendance').insert(mappedData);
+        const { error } = await supabase.from('student_attendance').upsert(mappedData, { onConflict: 'school_id,student_id,attendance_date,session' });
         if (error) handleError(error, 'attendanceService.saveBulk');
         return { error };
     }
