@@ -386,24 +386,30 @@ const StudentFees = () => {
             const total = calculateTotal();
             
             if (!isReprintMode) {
+                // Formatting date for Postgres DATE type (YYYY-MM-DD)
+                const dbDate = formData.date.split('/').join('-');
+                
                 const { error } = await supabase
                     .from('fee_receipts')
                     .insert([{
-                        institution_id: institutionId,
+                        institution_id: parseInt(institutionId),
                         receipt_no: parseInt(receiptNo),
-                        date: formData.date,
+                        date: dbDate || new Date().toISOString().split('T')[0],
                         student_name: formData.studentName,
                         roll_no: formData.rollNo,
                         class: formData.class,
                         section: formData.section,
                         month: formData.month,
                         guardian_name: formData.guardian,
-                        items: fees, // Supabase handles jsonb mapping automatically
+                        items: fees,
                         total_amount: total,
                         language: language
                     }]);
 
-                if (error) throw error;
+                if (error) {
+                    console.error('Supabase insert error details:', error);
+                    throw error;
+                }
             }
 
             // Delay print slightly to allow state updates and layout changes to reflect
