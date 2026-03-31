@@ -492,6 +492,7 @@ const StudentFees = () => {
                         handleCustomLabelChange={handleCustomLabelChange} handleKeyDown={handleKeyDown} 
                         calculateTotal={calculateTotal} numberToWords={numberToWords}
                         schoolLogo={schoolLogo}
+                        handleDateChange={handleDateChange}
                     />
                     <ReceiptBody 
                         type="student" schoolName={schoolName} schoolAddress={schoolAddress} estdYear={estdYear} 
@@ -500,6 +501,7 @@ const StudentFees = () => {
                         handleCustomLabelChange={handleCustomLabelChange} handleKeyDown={handleKeyDown} 
                         calculateTotal={calculateTotal} numberToWords={numberToWords}
                         schoolLogo={schoolLogo}
+                        handleDateChange={handleDateChange}
                     />
                 </div>
 
