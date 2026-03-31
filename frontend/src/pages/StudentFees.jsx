@@ -20,7 +20,7 @@ const ReceiptBody = ({
   schoolLogo, handleDateChange
 }) => {
   return (
-    <div className="relative border-2 border-slate-900 bg-white p-3 md:p-6 rounded-[2px] shadow-sm mb-4 md:mb-0 receipt-container min-h-[170mm]">
+    <div className="relative border-2 border-slate-900 bg-white p-3 md:p-6 rounded-[2px] shadow-sm mb-4 md:mb-0 receipt-container min-h-[160mm] flex flex-col justify-between">
       {/* Watermark */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-[0.03] overflow-hidden">
         <span className="text-[60px] font-black uppercase -rotate-45 tracking-[10px] select-none whitespace-nowrap">
@@ -121,7 +121,7 @@ const ReceiptBody = ({
         </thead>
         <tbody>
           {fees.map((fee, index) => (
-            <tr key={fee.id} className="leading-tight h-[4.8mm]">
+            <tr key={fee.id} className="leading-tight h-[4.2mm]">
               <td className="border-slate-900 border text-[10px] md:text-xs font-bold text-center py-0">{index + 1}</td>
               <td className="border-slate-900 border text-[10px] md:text-xs font-black uppercase text-slate-800 pl-3 py-0">
                 {index < 18 ? (
@@ -163,14 +163,13 @@ const ReceiptBody = ({
           </span>
         </div>
 
-        <div className="flex justify-between items-end pt-8">
+        <div className="flex justify-between items-end pt-4">
           <div className="text-[9px] font-bold text-slate-400 italic">
             {language === 'ne' ? '* यो रसिद कम्प्युटर प्रणालीबाट तयार पारिएको हो ।' : '* System generated electronic receipt.'}
           </div>
-          <div className="text-center min-w-32 md:min-w-40 mr-4">
-            <div className="border-t-2 border-slate-900 pt-1 font-black text-[10px] md:text-xs text-slate-900 uppercase tracking-widest">
-              {translations.receiverSign}
-            </div>
+          <div className="flex justify-center flex-col items-center ml-auto">
+            <div className="border-t-[1.5pt] border-slate-950 w-48 mb-1"></div>
+            <span className="text-[10px] font-black text-slate-900 uppercase tracking-widest">{translations.receiverSign}</span>
           </div>
         </div>
       </div>
@@ -524,28 +523,35 @@ const StudentFees = () => {
             <style dangerouslySetInnerHTML={{ __html: `
                 @media print {
                     @page { size: landscape; margin: 0; }
+                    html, body {
+                        width: 297mm;
+                        height: 210mm;
+                        overflow: hidden !important;
+                    }
                     .receipt-print-wrapper { 
                         display: flex !important; 
                         flex-direction: row !important;
                         justify-content: center !important;
-                        gap: 12mm !important;
+                        align-items: flex-start !important;
+                        gap: 8mm !important;
                         width: 297mm !important; 
+                        height: 210mm !important;
                         margin: 0 !important;
                         padding: 0 !important;
-                        padding-top: 10mm !important;
+                        padding-top: 5mm !important;
                     }
                     .receipt-container { margin: 0 !important; padding: 0 !important; }
                     .relative.border-2 { 
-                        zoom: 0.9; 
-                        width: 138mm !important; 
-                        min-width: 138mm !important;
-                        height: 180mm !important;
-                        max-height: 180mm !important;
+                        zoom: 0.85; 
+                        width: 140mm !important; 
+                        min-width: 140mm !important;
+                        height: 195mm !important;
+                        max-height: 195mm !important;
                         border-color: #000 !important;
                         border-width: 1.5pt !important;
                         box-shadow: none !important;
                         page-break-inside: avoid !important;
-                        overflow: visible !important;
+                        overflow: hidden !important;
                     }
                     table, th, td { border-color: #000 !important; border-width: 1pt !important; }
                 }
