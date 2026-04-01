@@ -6,7 +6,7 @@ import { Calendar, BarChart, Download, ChevronLeft, ChevronRight, User, Shield, 
 
 const AttendanceReports = () => {
   const [params, setParams] = useState({
-    year: '2081',
+    year: '2083',
     month: '1',
     studentClass: ''
   });
@@ -19,6 +19,8 @@ const AttendanceReports = () => {
     { id: 7, name: 'Kartik' }, { id: 8, name: 'Mangsir' }, { id: 9, name: 'Poush' },
     { id: 10, name: 'Magh' }, { id: 11, name: 'Falgun' }, { id: 12, name: 'Chaitra' }
   ];
+
+  const years = Array.from({ length: 11 }, (_, i) => (2080 + i).toString());
 
   const classes = ['PG', 'NURSERY', 'LKG', 'UKG', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'];
 
@@ -89,9 +91,7 @@ const AttendanceReports = () => {
           <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Academic Cycle</label>
           <div className="grid grid-cols-2 gap-3">
              <select className="px-4 py-3 bg-slate-50 border border-slate-100 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 font-bold" value={params.year} onChange={(e) => setParams({...params, year: e.target.value})}>
-                <option value="2080">2080 BS</option>
-                <option value="2081">2081 BS</option>
-                <option value="2082">2082 BS</option>
+                {years.map(y => <option key={y} value={y}>{y} BS</option>)}
              </select>
              <select className="px-4 py-3 bg-slate-50 border border-slate-100 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 font-bold" value={params.month} onChange={(e) => setParams({...params, month: e.target.value})}>
                 {months.map(m => <option key={m.id} value={m.id}>{m.name}</option>)}

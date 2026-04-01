@@ -6,7 +6,7 @@ import SecureGateway from '../components/SecureGateway';
 
 const ResultSheets = () => {
     const [loading, setLoading] = useState(false);
-    const [year, setYear] = useState('2081');
+    const [year, setYear] = useState('2083');
     const [selectedClass, setSelectedClass] = useState('');
     const [examType, setExamType] = useState('first_terminal');
     
@@ -18,6 +18,7 @@ const ResultSheets = () => {
     const schoolId = sessionStorage.getItem('institutionId');
 
     const classes = ['PG', 'NURSERY', 'LKG', 'UKG', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'];
+    const years = Array.from({ length: 11 }, (_, i) => (2080 + i).toString());
 
     const getGradePoint = (obtained, max) => {
         if (!max || max === 0) return 0;
@@ -125,7 +126,9 @@ const ResultSheets = () => {
                     <div className="flex-1 grid grid-cols-1 md:grid-cols-3 gap-4 w-full">
                         <div className="space-y-2">
                             <label className="text-xs font-black uppercase text-slate-400 tracking-wider">Year</label>
-                            <input type="number" value={year} onChange={(e) => setYear(e.target.value)} className="w-full px-5 py-3 bg-slate-50 border-none rounded-2xl font-bold" />
+                            <select value={year} onChange={(e) => setYear(e.target.value)} className="w-full px-5 py-3 bg-slate-50 border-none rounded-2xl font-bold appearance-none cursor-pointer">
+                                {years.map(y => <option key={y} value={y}>{y} BS</option>)}
+                            </select>
                         </div>
                         <div className="space-y-2">
                             <label className="text-xs font-black uppercase text-slate-400 tracking-wider">Class</label>

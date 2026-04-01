@@ -76,7 +76,7 @@ const StudentReport = () => {
          {[
            { label: "Total Students", value: students.length, icon: User, color: "text-indigo-600 bg-indigo-50" },
            { label: "Class Filtered", value: classFilter || "ALL", icon: GraduationCap, color: "text-emerald-600 bg-emerald-50" },
-           { label: "Academic Year", value: "2081 BS", icon: Calendar, color: "text-amber-600 bg-amber-50" },
+           { label: "Academic Year", value: "2083 BS", icon: Calendar, color: "text-amber-600 bg-amber-50" },
            { label: "Verified Records", value: students.filter(s => s.symbolNo).length, icon: FileText, color: "text-rose-600 bg-rose-50" }
          ].map((stat, i) => (
            <div key={i} className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm flex items-center gap-4 group hover:border-slate-200 transition-colors">

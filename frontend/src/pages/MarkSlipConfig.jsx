@@ -17,13 +17,14 @@ const MarkSlipConfig = () => {
     
     // Form State
     const [formData, setFormData] = useState({
-        year: '2082',
+        year: '2083',
         examType: 'First Terminal',
         selectedClass: '',
         selectedSubject: ''
     });
 
     const classes = ['PG', 'Nursery', 'LKG', 'UKG', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'];
+    const years = Array.from({ length: 11 }, (_, i) => (2080 + i).toString());
     const examTypes = ['First Terminal', 'Second Terminal', 'Third Terminal', 'Final Examination', 'Monthly Test'];
 
     const getClassGroup = (cls) => {
@@ -111,13 +112,13 @@ const MarkSlipConfig = () => {
                                 <CalendarDays size={12} className="text-slate-300" />
                                 Academic Year
                             </label>
-                            <input 
-                                type="text"
+                            <select 
                                 value={formData.year}
                                 onChange={(e) => setFormData(prev => ({ ...prev, year: e.target.value }))}
-                                className="w-full px-6 py-4 bg-slate-50 border-2 border-slate-50 rounded-2xl font-black text-slate-700 transition-all focus:bg-white focus:border-indigo-400 focus:shadow-lg focus:shadow-indigo-500/5 outline-none"
-                                placeholder="e.g. 2082"
-                            />
+                                className="w-full px-6 py-4 bg-slate-50 border-2 border-slate-50 rounded-2xl font-black text-slate-700 transition-all focus:bg-white focus:border-indigo-400 focus:shadow-lg focus:shadow-indigo-500/5 outline-none appearance-none cursor-pointer"
+                            >
+                                {years.map(y => <option key={y} value={y}>{y} BS</option>)}
+                            </select>
                         </div>
 
                         {/* Exam Type */}

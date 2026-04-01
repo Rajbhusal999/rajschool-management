@@ -5,11 +5,12 @@ import BackButton from '../components/BackButton';
 
 const AdmitCard = () => {
     const navigate = useNavigate();
-    const [year, setYear] = useState('2082');
+    const [year, setYear] = useState('2083');
     const [selectedClass, setSelectedClass] = useState('');
     const [examType, setExamType] = useState('first_terminal');
 
     const classes = ['PG', 'NURSERY', 'LKG', 'UKG', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'];
+    const years = Array.from({ length: 11 }, (_, i) => (2080 + i).toString());
     const examTypes = [
         { id: 'first_terminal', name: 'First Terminal Examination' },
         { id: 'second_terminal', name: 'Second Terminal Examination' },
@@ -72,16 +73,19 @@ const AdmitCard = () => {
                                 Academic Year
                             </label>
                             <div className="relative group">
-                                <div className="absolute left-6 top-1/2 -translate-y-1/2 text-slate-300">
+                                <div className="absolute left-6 top-1/2 -translate-y-1/2 text-slate-300 pointer-events-none">
                                     <CalendarDays size={20} />
                                 </div>
-                                <input 
-                                    type="text" 
+                                <select 
                                     value={year}
                                     onChange={(e) => setYear(e.target.value)}
-                                    className="w-full pl-14 pr-6 py-5 bg-slate-50 border-none rounded-3xl font-black text-slate-700 focus:ring-4 focus:ring-rose-500/10 transition-all text-lg"
-                                    placeholder="e.g. 2082"
-                                />
+                                    className="w-full pl-14 pr-6 py-5 bg-slate-50 border-none rounded-3xl font-black text-slate-700 focus:ring-4 focus:ring-rose-500/10 transition-all text-lg appearance-none cursor-pointer"
+                                >
+                                    {years.map(y => <option key={y} value={y}>{y} BS</option>)}
+                                </select>
+                                <div className="absolute right-6 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none">
+                                    <ChevronRight size={18} className="rotate-90" />
+                                </div>
                             </div>
                         </div>
 

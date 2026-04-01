@@ -8,7 +8,7 @@ const MarkEntry = () => {
     const [message, setMessage] = useState(null);
     
     // Filters
-    const [year, setYear] = useState('2081');
+    const [year, setYear] = useState('2083');
     const [selectedClass, setSelectedClass] = useState('');
     const [examType, setExamType] = useState('first_terminal');
     
@@ -18,6 +18,7 @@ const MarkEntry = () => {
     const [marks, setMarks] = useState({}); // { studentId: { subjectName: { ...markData } } }
     
     const classes = ['PG', 'Nursery', 'LKG', 'UKG', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'];
+    const years = Array.from({ length: 11 }, (_, i) => (2080 + i).toString());
     const examTypes = [
         { id: 'first_terminal', name: 'First Terminal' },
         { id: 'second_terminal', name: 'Second Terminal' },
@@ -128,7 +129,9 @@ const MarkEntry = () => {
                     <div className="flex-1 grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div className="space-y-2">
                             <label className="text-xs font-black uppercase text-slate-400 tracking-wider">Academic Year (B.S.)</label>
-                            <input type="number" value={year} onChange={(e) => setYear(e.target.value)} className="w-full px-5 py-3 bg-slate-50 border-none rounded-2xl font-bold" />
+                            <select value={year} onChange={(e) => setYear(e.target.value)} className="w-full px-5 py-3 bg-slate-50 border-none rounded-2xl font-bold appearance-none cursor-pointer">
+                                {years.map(y => <option key={y} value={y}>{y} BS</option>)}
+                            </select>
                         </div>
                         <div className="space-y-2">
                             <label className="text-xs font-black uppercase text-slate-400 tracking-wider">Class</label>
