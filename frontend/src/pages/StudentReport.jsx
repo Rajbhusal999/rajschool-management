@@ -10,14 +10,10 @@ const StudentReport = () => {
 
   const classes = ['Nursery', 'LKG', 'UKG', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'];
 
-  useEffect(() => {
-    fetchStudents();
-  }, [search, classFilter]);
-
-  const fetchStudents = async () => {
+  const fetchStudents = async (searchTerm = search, filter = classFilter) => {
     setLoading(true);
     try {
-      const response = await studentService.getAll({ search, studentClass: classFilter });
+      const response = await studentService.getAll({ search: searchTerm, studentClass: filter });
       setStudents(response.data);
     } catch (err) {
       console.error(err);
@@ -25,6 +21,14 @@ const StudentReport = () => {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      fetchStudents(search, classFilter);
+    }, 300);
+
+    return () => clearTimeout(timer);
+  }, [search, classFilter]);
 
   const exportCSV = () => {
     const headers = ['Symbol No', 'Full Name', 'Class', 'Roll No', 'Gender', 'DOB', 'Guardian', 'Contact', 'Address'];
