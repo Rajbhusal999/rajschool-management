@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { attendanceService, studentService, institutionService } from '../services/api';
 import { Calendar, BarChart, Download, ChevronLeft, ChevronRight, User, Shield, Lock } from 'lucide-react';
 
-import SecureGateway from '../components/SecureGateway';
+
 
 const AttendanceReports = () => {
   const [params, setParams] = useState({
@@ -82,8 +82,7 @@ const AttendanceReports = () => {
   };
 
   return (
-    <SecureGateway>
-      <div className="max-w-7xl mx-auto space-y-8">
+    <div className="max-w-7xl mx-auto space-y-8 pb-20 animate-in fade-in duration-700">
       {/* Search Controls */}
       <div className="bg-white p-8 rounded-[32px] shadow-sm border border-slate-100 flex flex-col md:flex-row gap-6 items-end">
         <div className="flex-1 space-y-2">
@@ -183,7 +182,6 @@ const AttendanceReports = () => {
         </div>
       )}
     </div>
-    </SecureGateway>
   );
 };
 

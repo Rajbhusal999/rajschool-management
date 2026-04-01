@@ -34,6 +34,9 @@ import BillingHistory from "./pages/BillingHistory";
 import DonorHistory from "./pages/DonorHistory";
 import SmsSettings from "./pages/SmsSettings";
 import SecureLedger from "./pages/SecureLedger";
+import Reports from "./pages/Reports";
+import StudentReport from "./pages/StudentReport";
+import TeacherReport from "./pages/TeacherReport";
 
 import { AlertTriangle } from "lucide-react";
 import BackButton from "./components/BackButton";
@@ -146,7 +149,6 @@ const Layout = () => {
             <Route path="/exams/admit-cards" element={<AdmitCard />} />
             <Route path="/exams/admit-cards/configure" element={<AdmitCardConfig />} />
             <Route path="/exams/admit-cards/print" element={<AdmitCardPrint />} />
-            <Route path="/attendance/reports" element={<AttendanceReports />} />
             <Route path="/curriculum" element={<SubjectList />} />
             <Route path="/exams" element={<ExamPortal />} />
             <Route path="/exams/entry" element={<MarkEntry />} />
@@ -161,6 +163,10 @@ const Layout = () => {
             <Route path="/billing/donor-history" element={<DonorHistory />} />
             <Route path="/settings/sms" element={<SmsSettings />} />
             <Route path="/secure-ledger" element={<SecureLedger />} />
+            <Route path="/reports" element={<Reports />} />
+            <Route path="/reports/attendance" element={<AttendanceReports />} />
+            <Route path="/reports/students" element={<StudentReport />} />
+            <Route path="/reports/teachers" element={<TeacherReport />} />
           </Routes>
         </main>
       </div>

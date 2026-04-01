@@ -21,7 +21,7 @@ const TopNav = () => {
     { name: 'Exams', path: '/exams', icon: ClipboardList },
     { name: 'Billing', path: '/billing', icon: CreditCard },
     { name: 'Attendance', path: '/attendance/entry', icon: CalendarCheck },
-    { name: 'Reports', path: '/attendance/reports', icon: FileBarChart },
+    { name: 'Reports', path: '/reports', icon: FileBarChart },
     { name: 'ID Cards', path: '/id-cards', icon: IDCard },
   ];
 
