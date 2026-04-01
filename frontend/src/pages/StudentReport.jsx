@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { studentService } from '../services/api';
-import { Search, Filter, Download, User, Phone, GraduationCap, Calendar, ChevronRight, FileText, Printer } from 'lucide-react';
+import { Search, Filter, Download, User, Phone, GraduationCap, Calendar, ChevronRight, FileText, Printer, TrendingUp } from 'lucide-react';
 
 const StudentReport = () => {
   const [students, setStudents] = useState([]);
