@@ -57,13 +57,13 @@ const TeacherReport = () => {
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 px-2">
         <div className="space-y-2">
-          <div className="flex items-center gap-3 text-rose-600 font-black text-[10px] uppercase tracking-widest bg-rose-50 w-fit px-3 py-1 rounded-full border border-rose-100">
+          <div className="flex items-center gap-3 text-rose-600 font-black text-[10px] uppercase tracking-widest bg-rose-50 w-fit px-3 py-1 rounded-full border border-rose-100 no-print">
              <Briefcase size={12} /> Human Capital Analytics
           </div>
           <h1 className="text-4xl font-[1000] text-slate-900 tracking-tight leading-none uppercase">Faculty Directory Report</h1>
-          <p className="text-slate-500 font-bold text-sm tracking-wide">Institutional summary of academic staff, specialized faculty and administrative roles.</p>
+          <p className="text-slate-500 font-bold text-sm tracking-wide no-print">Institutional summary of academic staff, specialized faculty and administrative roles.</p>
         </div>
-        <div className="flex gap-3">
+        <div className="flex gap-3 no-print">
           <button onClick={() => window.print()} className="p-4 bg-white border border-slate-200 text-slate-600 rounded-2xl hover:bg-slate-50 transition shadow-sm font-bold flex items-center gap-2">
             <Printer size={18} /> <span className="hidden sm:inline">Print Report</span>
           </button>
@@ -74,7 +74,7 @@ const TeacherReport = () => {
       </div>
 
       {/* Analytics */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 px-2">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 px-2 no-print">
          {[
            { label: "Total Faculty", value: teachers.length, icon: User, color: "text-rose-600 bg-rose-50" },
            { label: "Teaching Staff", value: teachers.filter(t => t.staffRole === 'Teacher').length, icon: BookOpen, color: "text-indigo-600 bg-indigo-50" },
@@ -94,7 +94,7 @@ const TeacherReport = () => {
       </div>
 
       {/* Control Panel */}
-      <div className="bg-white p-4 rounded-[32px] border border-slate-100 shadow-xl shadow-slate-100/5 flex flex-col md:flex-row gap-4">
+      <div className="bg-white p-4 rounded-[32px] border border-slate-100 shadow-xl shadow-slate-100/5 flex flex-col md:flex-row gap-4 no-print">
         <div className="relative flex-1 group">
           <Search className="absolute left-6 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-rose-600 transition" size={20} />
           <input 
@@ -128,13 +128,13 @@ const TeacherReport = () => {
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="bg-slate-900 text-white text-[10px] font-black uppercase tracking-[0.2em]">
+              <tr className="bg-slate-900 text-white text-[10px] font-black uppercase tracking-[0.2em] print:bg-white print:text-slate-900 print:border-b-2 print:border-slate-200">
                 <th className="px-10 py-7 border-r border-slate-800">Photo ID</th>
                 <th className="px-8 py-7">Faculty Identity</th>
                 <th className="px-8 py-7">Specialization / Role</th>
                 <th className="px-8 py-7">Employment Metrics</th>
                 <th className="px-8 py-7">Communication</th>
-                <th className="px-8 py-7 text-right">Audit</th>
+                <th className="px-8 py-7 text-right no-print">Audit</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100 text-sm">
@@ -186,7 +186,7 @@ const TeacherReport = () => {
                           {teacher.contact}
                        </div>
                     </td>
-                    <td className="px-8 py-7 text-right">
+                    <td className="px-8 py-7 text-right no-print">
                        <div className="text-[10px] font-black text-slate-400 uppercase tracking-widest flex flex-col items-end gap-1">
                           PAN: {teacher.panNo || 'N/A'}
                           <span className="text-[9px] font-bold text-slate-300">Verified institutional Profile</span>

@@ -99,6 +99,34 @@ body {
   
   /* Reset layout shells */
   .flex-col, .flex-row {
-    display: block !important;
+    display: flex !important;
+    flex-direction: column !important;
+  }
+  
+  .max-w-7xl, .max-w-6xl, .max-w-5xl, .max-w-4xl, .max-w-3xl, .mx-auto {
+    max-width: none !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  .overflow-x-auto, .overflow-hidden {
+    overflow: visible !important;
+  }
+
+  /* Table borders for clarity */
+  table {
+    border-collapse: collapse !important;
+    width: 100% !important;
+  }
+  
+  th, td {
+    border: 1px solid #e2e8f0 !important;
+  }
+
+  .animate-in, .fade-in, .slide-in-from-bottom-4 {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
   }
 }

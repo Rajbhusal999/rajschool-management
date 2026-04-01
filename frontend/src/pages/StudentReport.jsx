@@ -59,24 +59,24 @@ const StudentReport = () => {
       {/* Header & Meta */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 px-2">
         <div className="space-y-2">
-          <div className="flex items-center gap-3 text-emerald-600 font-black text-[10px] uppercase tracking-widest bg-emerald-50 w-fit px-3 py-1 rounded-full border border-emerald-100">
+          <div className="flex items-center gap-3 text-emerald-600 font-black text-[10px] uppercase tracking-widest bg-emerald-50 w-fit px-3 py-1 rounded-full border border-emerald-100 no-print">
              <FileText size={12} /> Institutional Archives
           </div>
           <h1 className="text-4xl font-[1000] text-slate-900 tracking-tight leading-none uppercase">Student Repository Report</h1>
-          <p className="text-slate-500 font-bold text-sm tracking-wide">Consolidated database of active academic profiles and administrative records.</p>
+          <p className="text-slate-500 font-bold text-sm tracking-wide no-print">Consolidated database of active academic profiles and administrative records.</p>
         </div>
-        <div className="flex gap-3">
-          <button onClick={() => window.print()} className="p-4 bg-white border border-slate-200 text-slate-600 rounded-2xl hover:bg-slate-50 transition shadow-sm font-bold flex items-center gap-2">
+        <div className="flex gap-3 no-print">
+            <button onClick={() => window.print()} className="p-4 bg-white border border-slate-200 text-slate-600 rounded-2xl hover:bg-slate-50 transition shadow-sm font-bold flex items-center gap-2">
             <Printer size={18} /> <span className="hidden sm:inline">Print Report</span>
-          </button>
-          <button onClick={exportCSV} className="p-4 bg-emerald-600 text-white rounded-2xl hover:bg-emerald-700 transition shadow-xl shadow-emerald-100 font-black text-xs uppercase tracking-widest flex items-center gap-2">
+            </button>
+            <button onClick={exportCSV} className="p-4 bg-emerald-600 text-white rounded-2xl hover:bg-emerald-700 transition shadow-xl shadow-emerald-100 font-black text-xs uppercase tracking-widest flex items-center gap-2">
             <Download size={18} /> Export CSV
-          </button>
+            </button>
         </div>
       </div>
 
       {/* Analytics Summary */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 px-2">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 px-2 no-print">
          {[
            { label: "Total Students", value: students.length, icon: User, color: "text-indigo-600 bg-indigo-50" },
            { label: "Class Filtered", value: classFilter || "ALL", icon: GraduationCap, color: "text-emerald-600 bg-emerald-50" },
@@ -96,7 +96,7 @@ const StudentReport = () => {
       </div>
 
       {/* Filters */}
-      <div className="bg-white p-4 rounded-[32px] border border-slate-100 shadow-xl shadow-slate-100/50 flex flex-col md:flex-row gap-4">
+      <div className="bg-white p-4 rounded-[32px] border border-slate-100 shadow-xl shadow-slate-100/50 flex flex-col md:flex-row gap-4 no-print">
         <div className="relative flex-1 group">
           <Search className="absolute left-6 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-indigo-600 transition" size={20} />
           <input 
@@ -128,7 +128,7 @@ const StudentReport = () => {
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="bg-slate-900 text-white text-[10px] font-black uppercase tracking-[0.2em]">
+              <tr className="bg-slate-900 text-white text-[10px] font-black uppercase tracking-[0.2em] print:bg-white print:text-slate-900 print:border-b-2 print:border-slate-200">
                 <th className="px-10 py-7 border-r border-slate-800">Symbol No</th>
                 <th className="px-8 py-7">Student Name</th>
                 <th className="px-8 py-7">Class / Roll</th>
