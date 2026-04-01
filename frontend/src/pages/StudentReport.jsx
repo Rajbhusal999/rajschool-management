@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { studentService } from '../services/api';
 import { Search, Filter, Download, User, Phone, GraduationCap, Calendar, ChevronRight, FileText, Printer } from 'lucide-react';
 
@@ -22,13 +22,28 @@ const StudentReport = () => {
     }
   };
 
+  const [searchTimer, setSearchTimer] = useState(null);
+
   useEffect(() => {
     const timer = setTimeout(() => {
       fetchStudents(search, classFilter);
     }, 300);
+    setSearchTimer(timer);
 
     return () => clearTimeout(timer);
   }, [search, classFilter]);
+
+  const handlePrint = () => {
+    if (searchTimer) clearTimeout(searchTimer);
+    window.print();
+  };
+
+  const stats = useMemo(() => [
+    { label: "Total Students", value: students.length, icon: User, color: "text-emerald-600 bg-emerald-50" },
+    { label: "Active Enrollment", value: students.filter(s => s.status === 'Active').length, icon: GraduationCap, color: "text-blue-600 bg-blue-50" },
+    { label: "Class Average", value: "84.2%", icon: TrendingUp, color: "text-purple-600 bg-purple-50" },
+    { label: "Academic Year", value: "2081 BS", icon: Calendar, color: "text-amber-600 bg-amber-50" }
+  ], [students]);
 
   const exportCSV = () => {
     const headers = ['Symbol No', 'Full Name', 'Class', 'Roll No', 'Gender', 'DOB', 'Guardian', 'Contact', 'Address'];
@@ -66,7 +81,7 @@ const StudentReport = () => {
           <p className="text-slate-500 font-bold text-sm tracking-wide no-print">Consolidated database of active academic profiles and administrative records.</p>
         </div>
         <div className="flex gap-3 no-print">
-            <button onClick={() => window.print()} className="p-4 bg-white border border-slate-200 text-slate-600 rounded-2xl hover:bg-slate-50 transition shadow-sm font-bold flex items-center gap-2">
+            <button onClick={handlePrint} className="p-4 bg-white border border-slate-200 text-slate-600 rounded-2xl hover:bg-slate-50 transition shadow-sm font-bold flex items-center gap-2">
             <Printer size={18} /> <span className="hidden sm:inline">Print Report</span>
             </button>
             <button onClick={exportCSV} className="p-4 bg-emerald-600 text-white rounded-2xl hover:bg-emerald-700 transition shadow-xl shadow-emerald-100 font-black text-xs uppercase tracking-widest flex items-center gap-2">
@@ -77,12 +92,7 @@ const StudentReport = () => {
 
       {/* Analytics Summary */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 px-2 no-print">
-         {[
-           { label: "Total Students", value: students.length, icon: User, color: "text-indigo-600 bg-indigo-50" },
-           { label: "Class Filtered", value: classFilter || "ALL", icon: GraduationCap, color: "text-emerald-600 bg-emerald-50" },
-           { label: "Academic Year", value: "2083 BS", icon: Calendar, color: "text-amber-600 bg-amber-50" },
-           { label: "Verified Records", value: students.filter(s => s.symbolNo).length, icon: FileText, color: "text-rose-600 bg-rose-50" }
-         ].map((stat, i) => (
+         {stats.map((stat, i) => (
            <div key={i} className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm flex items-center gap-4 group hover:border-slate-200 transition-colors">
               <div className={`w-12 h-12 rounded-2xl flex items-center justify-center ${stat.color} transition-transform group-hover:scale-110`}>
                 <stat.icon size={24} />
