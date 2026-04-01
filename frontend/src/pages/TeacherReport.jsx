@@ -7,6 +7,9 @@ const TeacherReport = () => {
   const [loading, setLoading] = useState(false);
   const [search, setSearch] = useState('');
   const [roleFilter, setRoleFilter] = useState('');
+  const [year, setYear] = useState('2083');
+
+  const years = Array.from({length: 11}, (_, i) => (2080 + i).toString());
 
   const fetchTeachers = async (searchTerm = search, filter = roleFilter) => {
     setLoading(true);
@@ -51,8 +54,8 @@ const TeacherReport = () => {
     { label: "Total Faculty", value: teachers.length, icon: User, color: "text-rose-600 bg-rose-50" },
     { label: "Teaching Staff", value: teachers.filter(t => t.staffRole === 'Teacher').length, icon: BookOpen, color: "text-indigo-600 bg-indigo-50" },
     { label: "Administrative", value: teachers.filter(t => t.staffRole !== 'Teacher').length, icon: Briefcase, color: "text-amber-600 bg-amber-50" },
-    { label: "Employment Cycles", value: "2081/82", icon: Calendar, color: "text-emerald-600 bg-emerald-50" }
-  ], [teachers]);
+    { label: "Employment Cycles", value: `${year}/${(parseInt(year) + 1).toString().slice(-2)}`, icon: Calendar, color: "text-emerald-600 bg-emerald-50" }
+  ], [teachers, year]);
 
   const exportCSV = () => {
     const headers = ['Full Name', 'Role', 'Subject', 'Level (Tah)', 'Type', 'Contact', 'Joining Date', 'PAN No'];
@@ -136,6 +139,19 @@ const TeacherReport = () => {
             <option value="Teacher">Academic Faculty</option>
             <option value="Admin">Administrative</option>
             <option value="Support">Support Staff</option>
+          </select>
+          <div className="absolute right-6 top-1/2 -translate-y-1/2 pointer-events-none text-slate-300">
+              <ChevronRight size={18} className="rotate-90" />
+          </div>
+        </div>
+        <div className="relative w-full md:w-[180px]">
+          <Calendar className="absolute left-6 top-1/2 -translate-y-1/2 text-slate-300" size={20} />
+          <select 
+            className="w-full h-[64px] pl-16 pr-10 bg-slate-50 border-none rounded-[24px] outline-none focus:ring-4 focus:ring-rose-100 appearance-none font-black text-slate-800 uppercase tracking-widest text-[11px] cursor-pointer"
+            value={year}
+            onChange={(e) => setYear(e.target.value)}
+          >
+            {years.map(y => <option key={y} value={y}>{y} BS</option>)}
           </select>
           <div className="absolute right-6 top-1/2 -translate-y-1/2 pointer-events-none text-slate-300">
               <ChevronRight size={18} className="rotate-90" />

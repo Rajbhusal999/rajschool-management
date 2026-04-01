@@ -7,6 +7,9 @@ const StudentReport = () => {
   const [loading, setLoading] = useState(false);
   const [search, setSearch] = useState('');
   const [classFilter, setClassFilter] = useState('');
+  const [year, setYear] = useState('2083');
+
+  const years = Array.from({length: 11}, (_, i) => (2080 + i).toString());
 
   const classes = ['Nursery', 'LKG', 'UKG', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'];
 
@@ -48,8 +51,8 @@ const StudentReport = () => {
     { label: "Total Students", value: students.length, icon: User, color: "text-emerald-600 bg-emerald-50" },
     { label: "Active Enrollment", value: students.filter(s => s.status === 'Active').length, icon: GraduationCap, color: "text-blue-600 bg-blue-50" },
     { label: "Class Average", value: "84.2%", icon: TrendingUp, color: "text-purple-600 bg-purple-50" },
-    { label: "Academic Year", value: "2081 BS", icon: Calendar, color: "text-amber-600 bg-amber-50" }
-  ], [students]);
+    { label: "Academic Year", value: `${year} BS`, icon: Calendar, color: "text-amber-600 bg-amber-50" }
+  ], [students, year]);
 
   const exportCSV = () => {
     const headers = ['Symbol No', 'Full Name', 'Class', 'Roll No', 'Gender', 'DOB', 'Guardian', 'Contact', 'Address'];
@@ -132,6 +135,19 @@ const StudentReport = () => {
           >
             <option value="">Full Institutional View</option>
             {classes.map(c => <option key={c} value={c}>Grade: {c}</option>)}
+          </select>
+          <div className="absolute right-6 top-1/2 -translate-y-1/2 pointer-events-none text-slate-300">
+              <ChevronRight size={18} className="rotate-90" />
+          </div>
+        </div>
+        <div className="relative w-full md:w-[150px]">
+          <Calendar className="absolute left-6 top-1/2 -translate-y-1/2 text-slate-300" size={20} />
+          <select 
+            className="w-full h-[64px] pl-16 pr-10 bg-slate-50 border-none rounded-[24px] outline-none focus:ring-4 focus:ring-emerald-100 appearance-none font-black text-slate-800 uppercase tracking-widest text-[11px] cursor-pointer"
+            value={year}
+            onChange={(e) => setYear(e.target.value)}
+          >
+            {years.map(y => <option key={y} value={y}>{y} BS</option>)}
           </select>
           <div className="absolute right-6 top-1/2 -translate-y-1/2 pointer-events-none text-slate-300">
               <ChevronRight size={18} className="rotate-90" />
