@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { studentService } from '../services/api';
 import { Search, Filter, Download, User, Phone, GraduationCap, Calendar, ChevronRight, FileText, Printer } from 'lucide-react';
 
@@ -22,20 +22,26 @@ const StudentReport = () => {
     }
   };
 
-  const [searchTimer, setSearchTimer] = useState(null);
+  const searchTimer = useRef(null);
 
   useEffect(() => {
-    const timer = setTimeout(() => {
+    if (searchTimer.current) clearTimeout(searchTimer.current);
+    searchTimer.current = setTimeout(() => {
       fetchStudents(search, classFilter);
-    }, 300);
-    setSearchTimer(timer);
+    }, 500); // Increased grace period
 
-    return () => clearTimeout(timer);
+    return () => clearTimeout(searchTimer.current);
   }, [search, classFilter]);
 
   const handlePrint = () => {
-    if (searchTimer) clearTimeout(searchTimer);
-    window.print();
+    // Clear any pending search to avoid UI contention during print
+    if (searchTimer.current) clearTimeout(searchTimer.current);
+    
+    // Asynchronous call allows the browser to wrap up the click interaction
+    // before starting the heavy blocking print preview task.
+    setTimeout(() => {
+      window.print();
+    }, 50);
   };
 
   const stats = useMemo(() => [
