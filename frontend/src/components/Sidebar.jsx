@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { LayoutDashboard, Users, GraduationCap, CalendarCheck, BarChart, Settings, BookOpen, ClipboardList, Trophy, CreditCard, HeartHandshake, Phone } from 'lucide-react';
+import { LayoutDashboard, Users, GraduationCap, CalendarCheck, BarChart, Settings, BookOpen, ClipboardList, Trophy, CreditCard, HeartHandshake, Phone, CreditCard as IDCard } from 'lucide-react';
 
 
 const Sidebar = () => {
@@ -54,6 +54,14 @@ const Sidebar = () => {
         >
           <BarChart size={20} />
           <span className="font-medium">Monthly Reports</span>
+        </NavLink>
+
+        <NavLink 
+          to="/id-cards" 
+          className={({ isActive }) => `flex items-center gap-3 px-3 py-2 rounded-lg transition-colors ${isActive ? 'bg-indigo-50 text-indigo-700' : 'text-slate-600 hover:bg-slate-50'}`}
+        >
+          <IDCard size={20} />
+          <span className="font-medium">ID Card Center</span>
         </NavLink>
 
         <div className="pt-4 pb-2 px-3">

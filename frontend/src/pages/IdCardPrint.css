@@ -1,0 +1,191 @@
+/* ID Card Print Layout */
+@media screen {
+    .id-card-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+        justify-content: center;
+        padding: 20px;
+        background: #f8fafc;
+    }
+}
+
+@media print {
+    @page {
+        size: A4;
+        margin: 10mm;
+    }
+
+    body {
+        background: white !important;
+        margin: 0;
+        padding: 0;
+    }
+
+    .no-print {
+        display: none !important;
+    }
+
+    .id-card-container {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 5mm;
+        padding: 0;
+    }
+
+    .id-card {
+        break-inside: avoid;
+        page-break-inside: avoid;
+    }
+}
+
+.id-card {
+    width: 86mm;
+    height: 54mm;
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+    display: flex;
+    flex-direction: column;
+    font-family: 'Outfit', sans-serif;
+}
+
+.id-card-header {
+    background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+    color: white;
+    padding: 6px 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    height: 18mm;
+}
+
+.id-card-logo {
+    width: 10mm;
+    height: 10mm;
+    background: white;
+    border-radius: 4px;
+    padding: 1px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.id-card-school-info h2 {
+    font-size: 10pt;
+    font-weight: 900;
+    margin: 0;
+    line-height: 1;
+    text-transform: uppercase;
+}
+
+.id-card-school-info p {
+    font-size: 6pt;
+    margin: 2px 0 0;
+    opacity: 0.9;
+    font-weight: 600;
+}
+
+.id-card-body {
+    flex: 1;
+    display: flex;
+    padding: 6px 10px;
+    gap: 10px;
+    position: relative;
+}
+
+.id-card-photo-box {
+    width: 18mm;
+    height: 22mm;
+    background: #f1f5f9;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.id-card-photo-box img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.id-card-details {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 4px;
+}
+
+.id-card-name {
+    font-size: 11pt;
+    font-weight: 900;
+    color: #1e293b;
+    margin-bottom: 2px;
+    line-height: 1.1;
+}
+
+.id-card-row {
+    display: flex;
+    gap: 4px;
+    font-size: 7pt;
+    line-height: 1;
+}
+
+.id-card-label {
+    font-weight: 900;
+    color: #64748b;
+    text-transform: uppercase;
+    min-width: 14mm;
+}
+
+.id-card-value {
+    font-weight: 700;
+    color: #334155;
+}
+
+.id-card-footer {
+    height: 8mm;
+    border-top: 1px solid #f1f5f9;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 10px;
+    background: #f8fafc;
+}
+
+.id-card-role-tag {
+    font-size: 6pt;
+    font-weight: 900;
+    text-transform: uppercase;
+    padding: 2px 6px;
+    border-radius: 999px;
+}
+
+.tag-student { background: #ecfdf5; color: #059669; }
+.tag-teacher { background: #eef2ff; color: #4f46e5; }
+
+.id-card-signature {
+    font-family: 'Dancing Script', cursive;
+    font-size: 8pt;
+    color: #475569;
+}
+
+/* Decorative Element */
+.id-card::after {
+    content: '';
+    position: absolute;
+    bottom: -10mm;
+    right: -10mm;
+    width: 40mm;
+    height: 40mm;
+    background: linear-gradient(135deg, transparent 0%, rgba(79, 70, 229, 0.05) 100%);
+    border-radius: 50%;
+    z-index: 0;
+}

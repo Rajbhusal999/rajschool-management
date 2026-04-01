@@ -37,6 +37,7 @@ import SecureLedger from "./pages/SecureLedger";
 import Reports from "./pages/Reports";
 import StudentReport from "./pages/StudentReport";
 import TeacherReport from "./pages/TeacherReport";
+import IdCardPrint from "./pages/IdCardPrint";
 
 import { AlertTriangle } from "lucide-react";
 import BackButton from "./components/BackButton";
@@ -167,6 +168,7 @@ const Layout = () => {
             <Route path="/reports/attendance" element={<AttendanceReports />} />
             <Route path="/reports/students" element={<StudentReport />} />
             <Route path="/reports/teachers" element={<TeacherReport />} />
+            <Route path="/id-cards" element={<IdCardPrint />} />
           </Routes>
         </main>
       </div>
