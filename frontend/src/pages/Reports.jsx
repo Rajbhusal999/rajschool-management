@@ -117,23 +117,6 @@ const Reports = () => {
         ))}
       </div>
 
-      {/* Footer Info */}
-      <div className="max-w-4xl mx-auto p-1 bg-slate-50 rounded-[32px] border border-slate-100">
-        <div className="bg-white p-8 rounded-[28px] shadow-inner flex flex-col md:flex-row items-center justify-between gap-8">
-           <div className="flex items-center gap-6">
-              <div className="w-14 h-14 bg-indigo-50 text-indigo-600 rounded-2xl flex items-center justify-center shadow-lg shadow-indigo-100">
-                <Download size={28} />
-              </div>
-              <div>
-                <h4 className="text-lg font-black text-slate-900">Standardized Export Engine</h4>
-                <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mt-1">All reports support PDF, XLSX & CSV generation.</p>
-              </div>
-           </div>
-           <button className="px-8 py-4 bg-slate-900 text-white rounded-2xl font-black text-xs uppercase tracking-[0.2em] hover:bg-indigo-600 transition-all shadow-xl shadow-slate-200">
-             Institutional Settings
-           </button>
-        </div>
-      </div>
 
     </div>
   );
