@@ -8,18 +8,14 @@ const TeacherReport = () => {
   const [search, setSearch] = useState('');
   const [roleFilter, setRoleFilter] = useState('');
 
-  useEffect(() => {
-    fetchTeachers();
-  }, [search, roleFilter]);
-
-  const fetchTeachers = async () => {
+  const fetchTeachers = async (searchTerm = search, filter = roleFilter) => {
     setLoading(true);
     try {
-      const response = await teacherService.getAll({ search });
+      const response = await teacherService.getAll({ search: searchTerm });
       // Manual filter since backend might not support it yet
       let data = response.data;
-      if (roleFilter) {
-        data = data.filter(t => t.staffRole?.toLowerCase() === roleFilter.toLowerCase());
+      if (filter) {
+        data = data.filter(t => t.staffRole?.toLowerCase() === filter.toLowerCase());
       }
       setTeachers(data);
     } catch (err) {
@@ -28,6 +24,14 @@ const TeacherReport = () => {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      fetchTeachers(search, roleFilter);
+    }, 300);
+
+    return () => clearTimeout(timer);
+  }, [search, roleFilter]);
 
   const exportCSV = () => {
     const headers = ['Full Name', 'Role', 'Subject', 'Level (Tah)', 'Type', 'Contact', 'Joining Date', 'PAN No'];
