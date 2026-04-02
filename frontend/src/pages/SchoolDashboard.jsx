@@ -270,35 +270,41 @@ const SchoolDashboard = () => {
                     </div>
                 </div>
 
-                {/* Data Extraction Tools Tool */}
-                <div className="bg-[#FDF6E3] dark:bg-slate-900 border border-[#DEB887]/20 dark:border-slate-800 rounded-[40px] p-10 flex flex-col items-center justify-center text-center shadow-sm relative overflow-hidden group">
-                    <div className="absolute top-0 right-0 w-32 h-32 bg-[#8B4513]/5 dark:bg-indigo-500/5 blur-[40px] rounded-full translate-x-10 translate-y-[-10px]"></div>
-                    <h3 className="text-2xl font-[1000] text-[#8B4513] dark:text-indigo-400 tracking-tight mb-4 group-hover:scale-105 transition-transform">{t('dataExtraction')}</h3>
-                    <p className="text-xs font-bold text-[#8B4513]/60 dark:text-slate-500 uppercase tracking-widest leading-relaxed mb-10 max-w-[200px]">
-                        {t('dataExtractionDesc')}
+                {/* Today's Attendance */}
+                <div className="bg-emerald-500/5 dark:bg-emerald-500/10 border border-emerald-500/20 dark:border-emerald-500/30 rounded-[40px] p-10 flex flex-col items-center justify-center text-center shadow-sm relative overflow-hidden group">
+                    <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/5 blur-[40px] rounded-full translate-x-10 translate-y-[-10px]"></div>
+                    <div className="w-16 h-16 bg-emerald-500/10 rounded-2xl flex items-center justify-center text-emerald-600 dark:text-emerald-400 mb-6 group-hover:scale-110 transition-transform">
+                        <ClipboardList size={32} />
+                    </div>
+                    <h3 className="text-2xl font-[1000] text-emerald-700 dark:text-emerald-400 tracking-tight mb-4">{t('attendanceSummary')}</h3>
+                    <p className="text-xs font-bold text-emerald-600/60 dark:text-slate-500 uppercase tracking-widest leading-relaxed mb-10 max-w-[200px]">
+                        {t('attendanceDesc')}
                     </p>
-                    <button className="w-full py-5 bg-white dark:bg-slate-800 border-2 border-slate-100 dark:border-slate-700 hover:border-slate-200 dark:hover:border-slate-600 text-slate-800 dark:text-slate-100 rounded-[24px] font-black text-sm uppercase tracking-widest shadow-xl shadow-[#8B4513]/5 transition-all flex items-center justify-center gap-3">
+                    <button 
+                        onClick={() => navigate('/attendance')}
+                        className="w-full py-5 bg-white dark:bg-slate-800 border-2 border-emerald-100 dark:border-slate-700 hover:border-emerald-200 dark:hover:border-slate-600 text-emerald-700 dark:text-emerald-400 rounded-[24px] font-black text-sm uppercase tracking-widest shadow-xl shadow-emerald-500/5 transition-all flex items-center justify-center gap-3"
+                    >
                         <Zap size={18} />
-                        {t('launchBridge')}
+                        {t('markAttendance')}
                     </button>
                 </div>
 
-                {/* Reports & Analytics */}
-                <div className="bg-indigo-900 border border-indigo-700 dark:border-slate-800 rounded-[40px] p-10 flex flex-col items-center justify-center text-center shadow-sm relative overflow-hidden group">
+                {/* Fee Collection */}
+                <div className="bg-indigo-900 dark:bg-slate-900 border border-indigo-700 dark:border-indigo-500/20 rounded-[40px] p-10 flex flex-col items-center justify-center text-center shadow-sm relative overflow-hidden group">
                     <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 blur-[40px] rounded-full translate-x-10 translate-y-[-10px]"></div>
                     <div className="w-16 h-16 bg-white/10 rounded-2xl flex items-center justify-center text-white mb-6 group-hover:scale-110 transition-transform">
-                        <BarChart size={32} />
+                        <CreditCard size={32} />
                     </div>
-                    <h3 className="text-2xl font-[1000] text-white tracking-tight mb-4">{t('reportsAnalytics')}</h3>
+                    <h3 className="text-2xl font-[1000] text-white tracking-tight mb-4">{t('feeCollection')}</h3>
                     <p className="text-xs font-bold text-indigo-200/60 uppercase tracking-widest leading-relaxed mb-10 max-w-[200px]">
-                        {t('reportsAnalyticsDesc')}
+                        {t('feeDesc')}
                     </p>
                     <button 
-                        onClick={() => navigate('/secure-ledger')}
+                        onClick={() => navigate('/billing')}
                         className="w-full py-5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-[24px] font-black text-sm uppercase tracking-widest shadow-xl shadow-black/20 transition-all flex items-center justify-center gap-3"
                     >
                         <Shield size={18} />
-                        {t('enterVault')}
+                        {t('enterLedger')}
                     </button>
                 </div>
             </div>

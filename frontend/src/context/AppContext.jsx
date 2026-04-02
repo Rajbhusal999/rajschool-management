@@ -29,6 +29,12 @@ const translations = {
     searchPlaceholder: 'Search by name, ID...',
     allClasses: 'All Classes',
     apply: 'Apply',
+    attendanceSummary: "Today's Attendance",
+    attendanceDesc: 'Real-time presence tracking for all classes.',
+    markAttendance: 'Mark Attendance',
+    feeCollection: 'Fee Collection',
+    feeDesc: 'Monthly financial pulse and pending dues.',
+    enterLedger: 'Enter Ledger',
   },
   np: {
     // Nav Items
@@ -55,6 +61,12 @@ const translations = {
     searchPlaceholder: 'नाम, आईडी द्वारा खोज्नुहोस्...',
     allClasses: 'सबै कक्षाहरू',
     apply: 'लागु गर्नुहोस्',
+    attendanceSummary: 'आजको उपस्थिति',
+    attendanceDesc: 'सबै कक्षाहरूको वास्तविक-समय उपस्थिति ट्र्याकिङ।',
+    markAttendance: 'हाजिरी गर्नुहोस्',
+    feeCollection: 'शुल्क संकलन',
+    feeDesc: 'मासिक आर्थिक अवस्था र बाँकी शुल्क।',
+    enterLedger: 'लेजर प्रविष्ट गर्नुहोस्',
   }
 };
 
