@@ -34,6 +34,10 @@ const SchoolDashboard = () => {
     useEffect(() => {
         const fetchSchoolData = async () => {
             const isTrial = sessionStorage.getItem('isTrialMode') === 'true';
+            const rawId = sessionStorage.getItem('institutionId');
+            const name = sessionStorage.getItem('schoolName');
+            const logo = sessionStorage.getItem('schoolLogo');
+            const bg = sessionStorage.getItem('schoolBackground');
             
             if (!rawId) {
                 navigate('/login');
