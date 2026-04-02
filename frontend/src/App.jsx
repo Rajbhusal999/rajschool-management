@@ -99,7 +99,7 @@ function App() {
 
 const Layout = () => {
   const location = useLocation();
-  const publicRoutes = ["/", "/register", "/login", "/admin-login", "/teacher-login", "/features", "/admin/nexus", "/subscription", "/payment"];
+  const publicRoutes = ["/", "/register", "/login", "/admin-login", "/teacher-login", "/about", "/admin/nexus", "/subscription", "/payment"];
   const isPublicPage = publicRoutes.includes(location.pathname);
 
   if (isPublicPage) {
@@ -107,7 +107,7 @@ const Layout = () => {
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/features" element={<About />} />
+        <Route path="/about" element={<About />} />
         <Route path="/login" element={<Login />} />
         <Route path="/admin-login" element={<AdminLogin />} />
         <Route path="/teacher-login" element={<TeacherLogin />} />

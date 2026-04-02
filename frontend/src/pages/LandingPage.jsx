@@ -50,8 +50,8 @@ const LandingPage = () => {
                     </div>
 
                     <div className="flex items-center gap-3">
-                        <Link to="/features" className="hidden sm:block px-6 py-2.5 text-slate-300 font-bold text-sm hover:text-white transition-colors">Features</Link>
-                        <button className="hidden sm:block px-6 py-2.5 text-slate-300 font-bold text-sm hover:text-white transition-colors">About</button>
+                        <button onClick={() => document.getElementById('features-section')?.scrollIntoView({ behavior: 'smooth' })} className="hidden sm:block px-6 py-2.5 text-slate-300 font-bold text-sm hover:text-white transition-colors cursor-pointer">Features</button>
+                        <button onClick={() => document.getElementById('features-section')?.scrollIntoView({ behavior: 'smooth' })} className="hidden sm:block px-6 py-2.5 text-slate-300 font-bold text-sm hover:text-white transition-colors cursor-pointer">About</button>
                         <Link to="/teacher-login" className="px-6 py-2.5 bg-rose-600/20 text-rose-400 rounded-xl font-bold text-sm hover:bg-rose-600/30 transition-all">Teacher Login</Link>
                         <Link to="/login" className="px-6 py-2.5 bg-indigo-600/20 text-indigo-400 rounded-xl font-bold text-sm hover:bg-indigo-600/30 transition-all">Login</Link>
                         <Link to="/register" className="px-6 py-2.5 bg-indigo-600 text-white rounded-xl font-bold text-sm shadow-xl shadow-indigo-500/20 hover:scale-105 transition-all">Get Started</Link>
@@ -139,7 +139,7 @@ const LandingPage = () => {
             </section>
 
             {/* Features Section */}
-            <section className="py-32 px-6">
+            <section id="features-section" className="py-32 px-6">
                 <div className="max-w-7xl mx-auto space-y-20">
                     <div className="text-center space-y-4 max-w-2xl mx-auto">
                         <span className="text-xs font-black uppercase tracking-widest text-orange-400">Powerful Modules</span>
@@ -200,9 +200,9 @@ const LandingPage = () => {
                         <div>
                             <h4 className="text-white font-black mb-8 uppercase tracking-widest text-xs">Quick Links</h4>
                             <ul className="space-y-4 text-sm font-bold text-slate-500">
-                                <Link to="/features" className="hover:text-indigo-400 transition-colors cursor-pointer block">Features</Link>
+                                <li onClick={() => document.getElementById('features-section')?.scrollIntoView({ behavior: 'smooth' })} className="hover:text-indigo-400 transition-colors cursor-pointer block">Features</li>
+                                <Link to="/about" className="hover:text-indigo-400 transition-colors cursor-pointer block">About Us</Link>
                                 <li className="hover:text-indigo-400 transition-colors cursor-pointer">Pricing</li>
-                                <li className="hover:text-indigo-400 transition-colors cursor-pointer">Case Studies</li>
                                 <li className="hover:text-indigo-400 transition-colors cursor-pointer">Support</li>
                             </ul>
                         </div>
