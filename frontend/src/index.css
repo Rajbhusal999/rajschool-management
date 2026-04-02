@@ -1,6 +1,7 @@
 @import "tailwindcss";
 
 @custom-variant print (@media print);
+@variant dark (&:where(.dark, [data-theme="dark"], .dark *, [data-theme="dark"] *));
 
 @theme {
   --color-brand-dark: #0f172a;
@@ -23,12 +24,12 @@
   color: #0f172a;
 }
 
-html.dark {
+html[data-theme='dark'] {
   background-color: #020617;
   color: #f8fafc;
 }
 
-html.dark body {
+html[data-theme='dark'] body {
   background-color: #020617;
   color: #f8fafc;
 }

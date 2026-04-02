@@ -65,13 +65,10 @@ export const ThemeProvider = ({ children }) => {
   });
 
   useEffect(() => {
-    if (isDarkMode) {
-      document.documentElement.classList.add('dark');
-      localStorage.setItem('theme', 'dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-      localStorage.setItem('theme', 'light');
-    }
+    const root = window.document.documentElement;
+    root.setAttribute('data-theme', isDarkMode ? 'dark' : 'light');
+    root.classList.toggle('dark', isDarkMode);
+    localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
   }, [isDarkMode]);
 
   const toggleTheme = () => setIsDarkMode(prev => !prev);
