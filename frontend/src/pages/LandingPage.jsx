@@ -260,7 +260,7 @@ const LandingPage = () => {
                                 <li onClick={() => document.getElementById('features-section')?.scrollIntoView({ behavior: 'smooth' })} className="hover:text-indigo-400 transition-colors cursor-pointer block">Features</li>
                                 <Link to="/about" className="hover:text-indigo-400 transition-colors cursor-pointer block">About Us</Link>
                                 <Link to="/pricing" className="hover:text-indigo-400 transition-colors cursor-pointer block">Pricing</Link>
-                                <li className="hover:text-indigo-400 transition-colors cursor-pointer">Support</li>
+                                <Link to="/support" className="hover:text-indigo-400 transition-colors cursor-pointer block">Support</Link>
                             </ul>
                         </div>
 

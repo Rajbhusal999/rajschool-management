@@ -41,6 +41,7 @@ import IdCardPrint from "./pages/IdCardPrint";
 import Activities from "./pages/Activities";
 import TeacherLogin from "./pages/TeacherLogin";
 import Pricing from "./pages/Pricing";
+import Support from "./pages/Support";
 
 import { AlertTriangle } from "lucide-react";
 import BackButton from "./components/BackButton";
@@ -118,7 +119,7 @@ const Layout = () => {
     }
   }, [location]);
 
-  const publicRoutes = ["/", "/register", "/login", "/admin-login", "/teacher-login", "/about", "/admin/nexus", "/subscription", "/payment", "/pricing"];
+  const publicRoutes = ["/", "/register", "/login", "/admin-login", "/teacher-login", "/about", "/admin/nexus", "/subscription", "/payment", "/pricing", "/support"];
   const isPublicPage = publicRoutes.includes(location.pathname);
 
   if (isPublicPage) {
@@ -134,6 +135,7 @@ const Layout = () => {
         <Route path="/subscription" element={<Subscription />} />
         <Route path="/payment" element={<Payment />} />
         <Route path="/pricing" element={<Pricing />} />
+        <Route path="/support" element={<Support />} />
       </Routes>
     );
   }

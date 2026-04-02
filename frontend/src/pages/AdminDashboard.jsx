@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { supabase } from '../supabaseClient';
 import { 
     LayoutDashboard, Database, LogOut, Trash2, 
     RefreshCw, Mail, Phone, MapPin, Shield,
-    AlertCircle, Download, CheckCircle
+    AlertCircle, Download, CheckCircle, MessageCircle,
+    ChevronRight, Send
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import '../styles/CyberBackground.css';
@@ -13,7 +14,12 @@ const AdminDashboard = () => {
     const [institutions, setInstitutions] = useState([]);
     const [subscriptions, setSubscriptions] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [activeTab, setActiveTab] = useState('institutions'); // 'institutions' or 'subscriptions'
+    const [activeTab, setActiveTab] = useState('institutions'); // 'institutions', 'subscriptions', 'support'
+    const [supportChats, setSupportChats] = useState([]);
+    const [selectedChat, setSelectedChat] = useState(null);
+    const [adminMessage, setAdminMessage] = useState('');
+    const [chatMessages, setChatMessages] = useState([]);
+    const chatEndRef = useRef(null);
     const [error, setError] = useState(null);
     const [actionStatus, setActionStatus] = useState(null);
     const [selectedScreenshot, setSelectedScreenshot] = useState(null);
@@ -21,7 +27,22 @@ const AdminDashboard = () => {
     useEffect(() => {
         fetchInstitutions();
         fetchSubscriptions();
+        fetchSupportChats();
     }, []);
+
+    useEffect(() => {
+        if (chatEndRef.current) {
+            chatEndRef.current.scrollIntoView({ behavior: 'smooth' });
+        }
+    }, [chatMessages]);
+
+    useEffect(() => {
+        if (selectedChat) {
+            fetchChatMessages(selectedChat.institution_id);
+            const channel = subscribeToChat(selectedChat.institution_id);
+            return () => supabase.removeChannel(channel);
+        }
+    }, [selectedChat]);
 
     const fetchInstitutions = async () => {
         setLoading(true);
@@ -57,12 +78,85 @@ const AdminDashboard = () => {
         }
     };
 
+    const fetchSupportChats = async () => {
+        const { data, error } = await supabase
+            .from('support_messages')
+            .select(`
+                institution_id,
+                sender_name,
+                created_at
+            `)
+            .order('created_at', { ascending: false });
+
+        if (!error && data) {
+            const unique = [];
+            const ids = new Set();
+            data.forEach(item => {
+                if (!ids.has(item.institution_id)) {
+                    unique.push(item);
+                    ids.add(item.institution_id);
+                }
+            });
+            setSupportChats(unique);
+        }
+    };
+
+    const fetchChatMessages = async (instId) => {
+        const { data, error } = await supabase
+            .from('support_messages')
+            .select('*')
+            .eq('institution_id', instId)
+            .order('created_at', { ascending: true });
+
+        if (!error && data) {
+            setChatMessages(data);
+        }
+    };
+
+    const subscribeToChat = (instId) => {
+        return supabase
+            .channel(`admin_chat_${instId}`)
+            .on(
+                'postgres_changes',
+                {
+                    event: 'INSERT',
+                    schema: 'public',
+                    table: 'support_messages',
+                    filter: `institution_id=eq.${instId}`
+                },
+                (payload) => {
+                    setChatMessages(prev => [...prev, payload.new]);
+                    fetchSupportChats();
+                }
+            )
+            .subscribe();
+    };
+
+    const handleSendAdminMessage = async (e) => {
+        e.preventDefault();
+        if (!adminMessage.trim() || !selectedChat) return;
+
+        const { error } = await supabase
+            .from('support_messages')
+            .insert([{
+                institution_id: selectedChat.institution_id,
+                message: adminMessage.trim(),
+                sender_name: 'System Admin',
+                is_from_admin: true
+            }]);
+
+        if (error) {
+            alert('Failed to send reply: ' + error.message);
+        } else {
+            setAdminMessage('');
+        }
+    };
+
     const handleApproveSubscription = async (sub) => {
         const durationYears = sub.plan_name.includes('2 Years') ? 2 : sub.plan_name.includes('5 Years') ? 5 : 1;
         const newExpiry = new Date();
         newExpiry.setFullYear(newExpiry.getFullYear() + durationYears);
 
-        // 1. Update subscription status
         const { error: subError } = await supabase
             .from('subscriptions')
             .update({ status: 'ACTIVE' })
@@ -70,7 +164,6 @@ const AdminDashboard = () => {
 
         if (subError) return alert(subError.message);
 
-        // 2. Update institution expiry
         const { error: instError } = await supabase
             .from('institutions')
             .update({ 
@@ -153,10 +246,8 @@ const AdminDashboard = () => {
 
     return (
         <div className="min-h-screen relative font-['Outfit',sans-serif]">
-            {/* Animated Space Background */}
             <div className="space-background"></div>
 
-            {/* Futuristic Header */}
             <header className="fixed top-0 left-0 right-0 z-50 h-24 command-center-header backdrop-blur-xl px-8 flex items-center justify-between">
                 <div className="flex items-center gap-8">
                     <div className="flex items-center gap-4">
@@ -185,6 +276,13 @@ const AdminDashboard = () => {
                         >
                             Transaction Approvals
                         </button>
+                        <button 
+                            onClick={() => setActiveTab('support')}
+                            className={`px-6 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all
+                                ${activeTab === 'support' ? 'bg-[#00D1FF] text-black shadow-lg shadow-[#00D1FF]/20' : 'text-slate-500 hover:text-white'}`}
+                        >
+                            Customer Support
+                        </button>
                     </nav>
                 </div>
 
@@ -205,7 +303,6 @@ const AdminDashboard = () => {
                 </div>
             </header>
 
-            {/* Main Content Area */}
             <main className="pt-32 pb-20 px-8">
                 {error && (
                     <div className="max-w-4xl mx-auto mb-10 p-6 bg-rose-500/10 border border-rose-500 rounded-2xl flex items-center gap-4">
@@ -266,7 +363,7 @@ const AdminDashboard = () => {
                                     })}
                                 </tbody>
                             </table>
-                        ) : (
+                        ) : activeTab === 'subscriptions' ? (
                             <table className="w-full text-left border-collapse">
                                 <thead>
                                     <tr className="bg-slate-900/50">
@@ -289,7 +386,7 @@ const AdminDashboard = () => {
                                                 <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">{sub.institutions?.email}</p>
                                             </td>
                                             <td className="px-6 py-6 font-bold text-indigo-400 text-sm tracking-tight">{sub.plan_name}</td>
-                                            <td className="px-6 py-6 font-[900] text-emerald-400 text-sm">Rs. {sub.amount.toLocaleString()}</td>
+                                            <td className="px-6 py-6 font-[900] text-emerald-400 text-sm">Rs. {sub.amount?.toLocaleString()}</td>
                                             <td className="px-6 py-6 text-center">
                                                 <span className={`px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest ${sub.payment_method === 'eSewa' ? 'bg-[#60BB46]/10 text-[#60BB46]' : 'bg-[#00D1FF]/10 text-[#00D1FF]'}`}>
                                                     {sub.payment_method}
@@ -334,8 +431,95 @@ const AdminDashboard = () => {
                                     ))}
                                 </tbody>
                             </table>
+                        ) : (
+                            <div className="flex bg-slate-950/20 h-[70vh]">
+                                <div className="w-80 border-r border-white/5 flex flex-col">
+                                    <div className="p-6 border-b border-white/5">
+                                        <h3 className="text-white font-black uppercase tracking-widest text-[10px]">Active Channels</h3>
+                                    </div>
+                                    <div className="flex-1 overflow-y-auto">
+                                        {supportChats.length === 0 ? (
+                                            <div className="p-10 text-center opacity-20">
+                                                <Mail size={32} className="mx-auto mb-4" />
+                                                <p className="text-[10px] font-black uppercase tracking-widest">No Incoming Signals</p>
+                                            </div>
+                                        ) : (
+                                            supportChats.map(chat => (
+                                                <button 
+                                                    key={chat.institution_id}
+                                                    onClick={() => setSelectedChat(chat)}
+                                                    className={`w-full p-6 text-left border-b border-white/5 transition-all
+                                                        ${selectedChat?.institution_id === chat.institution_id ? 'bg-[#00D1FF]/10 border-r-2 border-r-[#00D1FF]' : 'hover:bg-white/5'}`}
+                                                >
+                                                    <p className="text-white font-bold text-sm truncate">{chat.sender_name}</p>
+                                                    <p className="text-[9px] font-black text-slate-500 uppercase tracking-widest mt-1">
+                                                        {new Date(chat.created_at).toLocaleDateString()}
+                                                    </p>
+                                                </button>
+                                            ))
+                                        )}
+                                    </div>
+                                </div>
+
+                                <div className="flex-1 flex flex-col bg-slate-900/10 backdrop-blur-3xl">
+                                    {selectedChat ? (
+                                        <>
+                                            <div className="p-6 border-b border-white/5 flex items-center justify-between">
+                                                <div className="flex items-center gap-4">
+                                                    <div className="w-10 h-10 bg-indigo-600 rounded-lg flex items-center justify-center text-white font-black uppercase">
+                                                        {selectedChat.sender_name[0]}
+                                                    </div>
+                                                    <div>
+                                                        <h4 className="text-white font-black text-sm">{selectedChat.sender_name}</h4>
+                                                        <p className="text-[9px] font-black text-emerald-400 uppercase tracking-widest">Active Comm-Link</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div className="flex-1 overflow-y-auto p-8 space-y-6">
+                                                {chatMessages.map((m, idx) => (
+                                                    <div key={idx} className={`flex ${m.is_from_admin ? 'justify-end' : 'justify-start'}`}>
+                                                        <div className={`max-w-[70%] p-4 rounded-2xl text-xs font-bold
+                                                            ${m.is_from_admin 
+                                                                ? 'bg-[#00D1FF] text-black rounded-tr-none shadow-lg shadow-[#00D1FF]/20' 
+                                                                : 'bg-slate-800 text-white rounded-tl-none border border-white/5'}`}>
+                                                            {m.message}
+                                                        </div>
+                                                    </div>
+                                                ))}
+                                                <div ref={chatEndRef}></div>
+                                            </div>
+
+                                            <div className="p-6 bg-slate-950/40 border-t border-white/5">
+                                                <form onSubmit={handleSendAdminMessage} className="relative">
+                                                    <input 
+                                                        type="text"
+                                                        value={adminMessage}
+                                                        onChange={(e) => setAdminMessage(e.target.value)}
+                                                        placeholder="Transmit response to school..."
+                                                        className="w-full h-14 bg-white/5 border border-white/10 rounded-xl px-6 text-white text-xs font-bold focus:outline-none focus:border-[#00D1FF] transition-all"
+                                                    />
+                                                    <button 
+                                                        type="submit"
+                                                        disabled={!adminMessage.trim()}
+                                                        className="absolute right-2 top-2 h-10 px-6 bg-[#00D1FF] text-black rounded-lg font-black text-[10px] uppercase tracking-widest disabled:opacity-50 transition-all hover:scale-105"
+                                                    >
+                                                        Send Signal
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </>
+                                    ) : (
+                                        <div className="flex-1 flex flex-col items-center justify-center text-slate-700 space-y-4">
+                                            <Shield size={64} strokeWidth={1} className="opacity-10" />
+                                            <p className="text-[10px] font-black uppercase tracking-[0.4em]">Select a Channel to Start Decryption</p>
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
                         )}
                     </div>
+
                     {((activeTab === 'institutions' && institutions.length === 0) || (activeTab === 'subscriptions' && subscriptions.length === 0)) && (
                         <div className="py-24 text-center space-y-4">
                             <Shield size={64} className="text-slate-800 mx-auto opacity-20" strokeWidth={1} />
@@ -344,10 +528,8 @@ const AdminDashboard = () => {
                     )}
                 </div>
 
-                {/* Cyber Decorative Elements */}
                 <div className="fixed bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-[#00D1FF] to-transparent opacity-20"></div>
 
-                {/* Screenshot Modal */}
                 {selectedScreenshot && (
                     <div 
                         className="fixed inset-0 z-[100] bg-black/90 backdrop-blur-sm flex items-center justify-center p-8 animate-in fade-in duration-300"

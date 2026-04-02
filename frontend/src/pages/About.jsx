@@ -116,7 +116,7 @@ const About = () => {
                                 <Link to="/" className="hover:text-indigo-500 transition-colors cursor-pointer block">Features</Link>
                                 <Link to="/pricing" className="hover:text-indigo-500 transition-colors cursor-pointer block">Pricing</Link>
                                 <li className="hover:text-indigo-500 transition-colors cursor-pointer">Case Studies</li>
-                                <li className="hover:text-indigo-500 transition-colors cursor-pointer">Support</li>
+                                <Link to="/support" className="hover:text-indigo-500 transition-colors cursor-pointer block">Support</Link>
                             </ul>
                         </div>
 
