@@ -101,22 +101,21 @@ const Pricing = () => {
                     ))}
                 </div>
 
-                {/* Footer Note */}
                 <div className="mt-20 max-w-4xl mx-auto">
                     <div className="bg-white/5 backdrop-blur-3xl border border-white/10 p-10 rounded-[32px] text-center shadow-2xl">
-                        <p className="text-lg font-black text-white leading-relaxed opacity-90">
+                        <p className="text-lg font-black text-slate-100 leading-relaxed">
                             Note: For attendance tracking, the cost of SMS is to be borne by the school itself, and we will assist in its integration.
                         </p>
                     </div>
                 </div>
 
                 {/* Secure Badge */}
-                <div className="mt-16 flex items-center justify-center gap-6 opacity-40 hover:opacity-100 transition-opacity duration-500">
-                    <div className="flex items-center gap-2 text-white font-black text-xs uppercase tracking-[0.3em]">
+                <div className="mt-16 flex items-center justify-center gap-6 transition-opacity duration-500">
+                    <div className="flex items-center gap-2 text-slate-200 font-black text-xs uppercase tracking-[0.3em]">
                         <Shield size={20} className="text-emerald-400" /> Secure System
                     </div>
                     <div className="w-1.5 h-1.5 bg-slate-600 rounded-full"></div>
-                    <div className="flex items-center gap-2 text-white font-black text-xs uppercase tracking-[0.3em]">
+                    <div className="flex items-center gap-2 text-slate-200 font-black text-xs uppercase tracking-[0.3em]">
                         <Zap size={20} className="text-orange-400" /> Instant Activation
                     </div>
                 </div>
