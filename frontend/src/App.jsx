@@ -129,7 +129,8 @@ const Layout = () => {
       "/admin-login", 
       "/teacher-login", 
       "/about", 
-      "/pricing"
+      "/pricing",
+      "/support"
     ];
     
     const isWhitelisted = authWhitelist.includes(location.pathname);
@@ -148,7 +149,7 @@ const Layout = () => {
     }
   }, [location]);
 
-  const publicRoutes = ["/", "/register", "/login", "/admin-login", "/teacher-login", "/about", "/pricing"];
+  const publicRoutes = ["/", "/register", "/login", "/admin-login", "/teacher-login", "/about", "/pricing", "/support"];
   const isPublicPage = publicRoutes.includes(location.pathname);
 
   if (isPublicPage) {
@@ -161,6 +162,7 @@ const Layout = () => {
         <Route path="/admin-login" element={<AdminLogin />} />
         <Route path="/teacher-login" element={<TeacherLogin />} />
         <Route path="/pricing" element={<Pricing />} />
+        <Route path="/support" element={<Support />} />
       </Routes>
     );
   }
