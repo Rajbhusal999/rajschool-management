@@ -408,11 +408,13 @@ const SchoolDashboard = () => {
                         <h3 className="text-xl font-[1000] tracking-tight text-slate-800 dark:text-slate-100 uppercase">{t('composition')}</h3>
                     </div>
                     <div className="w-full h-[250px]">
-                        <CompositionChart />
+                        <CompositionChart students={stats.students} staff={stats.teachers} />
                     </div>
                     <div className="mt-8 text-center bg-slate-50 dark:bg-slate-800 p-6 rounded-3xl w-full border border-slate-100 dark:border-slate-700">
-                        <h4 className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1">{t('genderDistribution')}</h4>
-                        <p className="text-xl font-[1000] text-slate-700 dark:text-slate-200 tracking-tight">{t('balancedRatio')}</p>
+                        <h4 className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1">{t('studentTeacherRatio')}</h4>
+                        <p className="text-xl font-[1000] text-slate-700 dark:text-slate-200 tracking-tight">
+                            1 : {stats.teachers > 0 ? Math.round(stats.students / stats.teachers) : stats.students}
+                        </p>
                     </div>
                 </div>
             </div>

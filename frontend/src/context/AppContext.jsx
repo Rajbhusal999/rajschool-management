@@ -40,6 +40,7 @@ const translations = {
     feePayMsg: 'Payment: NPR {amount} from {name}',
     recentOperations: 'Recent Operations',
     monitoringCore: 'Monitoring Core',
+    studentTeacherRatio: 'Student-Teacher Ratio',
   },
   np: {
     // Nav Items
@@ -77,6 +78,7 @@ const translations = {
     feePayMsg: 'भुक्तानी संकलन: NPR {amount} ({name})',
     recentOperations: 'हालैका गतिविधिहरू',
     monitoringCore: 'गतिविधिहरू निगरानी गर्दै',
+    studentTeacherRatio: 'विद्यार्थी-शिक्षक अनुपात',
   }
 };
 

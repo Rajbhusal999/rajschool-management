@@ -50,10 +50,10 @@ export const ActivityTrendChart = () => {
     );
 };
 
-export const CompositionChart = () => {
+export const CompositionChart = ({ students = 0, staff = 0 }) => {
     const data = [
-        { name: 'Students', value: 850, color: '#10B981' },
-        { name: 'Staff', value: 45, color: '#6366F1' },
+        { name: 'Students', value: students, color: '#10B981' },
+        { name: 'Staff', value: staff, color: '#6366F1' },
     ];
 
     return (
