@@ -94,6 +94,11 @@ const Support = () => {
         setLoading(false);
     };
 
+    const openWhatsApp = () => {
+        const url = `https://wa.me/${WHATSAPP_NUMBER.replace('+', '')}`;
+        window.open(url, '_blank');
+    };
+
     const handlePhoneLogin = async (e) => {
         e.preventDefault();
         if (!loginPhone.trim()) return;
