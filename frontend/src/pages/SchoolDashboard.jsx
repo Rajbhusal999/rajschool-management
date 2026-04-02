@@ -5,7 +5,7 @@ import {
     Shield, Bell, MessageSquare, BookOpen,
     ClipboardList, Trophy, Settings, LogOut,
     ChevronRight, CreditCard, Activity, Crosshair,
-    Star, Zap, Home, BarChart, Target
+    Star, Zap, Home, BarChart, Target, UserPlus
 } from 'lucide-react';
 import { supabase } from '../supabaseClient';
 import DigitalClock from '../components/DigitalClock';
@@ -29,6 +29,7 @@ const SchoolDashboard = () => {
         link: "/attendance/reports"
     });
     const [loading, setLoading] = useState(true);
+    const [recentOps, setRecentOps] = useState([]);
 
     useEffect(() => {
         const fetchSchoolData = async () => {
@@ -116,7 +117,55 @@ const SchoolDashboard = () => {
             }
         };
 
+        const fetchRecentOps = async () => {
+            const rawId = sessionStorage.getItem('institutionId');
+            if (!rawId) return;
+            const id = Number(rawId);
+
+            try {
+                // Fetch recent students
+                const { data: recentStudents } = await supabase
+                    .from('students')
+                    .select('id, name, created_at')
+                    .eq('school_id', id)
+                    .order('created_at', { ascending: false })
+                    .limit(3);
+
+                // Fetch recent fee receipts
+                const { data: recentFees } = await supabase
+                    .from('fee_receipts')
+                    .select('id, student_name, total_amount, created_at')
+                    .eq('institution_id', id)
+                    .order('created_at', { ascending: false })
+                    .limit(3);
+
+                const activities = [
+                    ...(recentStudents || []).map(s => ({
+                        id: `std-${s.id}`,
+                        type: 'admission',
+                        title: t('newAdmitMsg').replace('{name}', s.name),
+                        date: new Date(s.created_at),
+                        icon: UserPlus,
+                        color: 'emerald'
+                    })),
+                    ...(recentFees || []).map(f => ({
+                        id: `fee-${f.id}`,
+                        type: 'fee',
+                        title: t('feePayMsg').replace('{amount}', f.total_amount).replace('{name}', f.student_name),
+                        date: new Date(f.created_at),
+                        icon: CreditCard,
+                        color: 'indigo'
+                    }))
+                ].sort((a, b) => b.date - a.date).slice(0, 5);
+
+                setRecentOps(activities);
+            } catch (err) {
+                console.error('Recent Ops Error:', err);
+            }
+        };
+
         fetchSchoolData();
+        fetchRecentOps();
     }, [navigate]);
 
     if (loading) return <div className="flex items-center justify-center min-h-[60vh] text-indigo-600 font-black animate-pulse">Initializing Terminal...</div>;
@@ -312,16 +361,43 @@ const SchoolDashboard = () => {
             {/* Bottom Row: Operations and Composition */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 {/* Recent Operations Card */}
-                <div className="lg:col-span-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-[40px] p-10 shadow-sm">
-                    <div className="flex items-center gap-3 mb-10 border-b border-slate-100 dark:border-slate-800 pb-6">
-                        <Calendar size={24} className="text-indigo-600 dark:text-indigo-400" />
-                        <h3 className="text-xl font-[1000] tracking-tight text-slate-800 dark:text-slate-100 uppercase">{t('recentOperations')}</h3>
+                <div className="lg:col-span-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-[40px] p-10 shadow-sm overflow-hidden flex flex-col">
+                    <div className="flex items-center justify-between mb-10 border-b border-slate-100 dark:border-slate-800 pb-6">
+                        <div className="flex items-center gap-3">
+                            <Calendar size={24} className="text-indigo-600 dark:text-indigo-400" />
+                            <h3 className="text-xl font-[1000] tracking-tight text-slate-800 dark:text-slate-100 uppercase">{t('recentOperations')}</h3>
+                        </div>
+                        <Link to="/reports" className="text-[10px] font-black text-indigo-600 dark:text-indigo-400 hover:underline uppercase tracking-widest">{t('viewAll')}</Link>
                     </div>
-                    <div className="space-y-8 min-h-[300px] flex flex-col justify-center items-center text-slate-300 dark:text-slate-700">
-                         <div className="w-20 h-20 bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-3xl flex items-center justify-center animate-pulse">
-                            <Activity size={32} />
-                         </div>
-                         <p className="text-xs font-black uppercase tracking-[0.3em]">{t('monitoringCore')}...</p>
+                    
+                    <div className="flex-1 space-y-6">
+                        {recentOps.length > 0 ? (
+                            recentOps.map((op) => (
+                                <div key={op.id} className="flex items-center justify-between group cursor-default">
+                                    <div className="flex items-center gap-6">
+                                        <div className={`w-14 h-14 bg-${op.color}-500/10 rounded-2xl flex items-center justify-center text-${op.color}-600 dark:text-${op.color}-400 group-hover:scale-110 transition-transform`}>
+                                            <op.icon size={24} />
+                                        </div>
+                                        <div>
+                                            <h4 className="text-sm font-black text-slate-800 dark:text-slate-200 uppercase tracking-tight mb-1">{op.title}</h4>
+                                            <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em]">
+                                                {op.date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} • {op.date.toLocaleDateString()}
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div className="opacity-0 group-hover:opacity-100 transition-opacity">
+                                        <ChevronRight size={18} className="text-slate-300 dark:text-slate-700" />
+                                    </div>
+                                </div>
+                            ))
+                        ) : (
+                            <div className="h-full min-h-[250px] flex flex-col justify-center items-center text-slate-300 dark:text-slate-700">
+                                <div className="w-20 h-20 bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-3xl flex items-center justify-center mb-6">
+                                    <Activity size={32} />
+                                </div>
+                                <p className="text-[10px] font-black uppercase tracking-[0.3em]">{t('noRecentOps')}</p>
+                            </div>
+                        )}
                     </div>
                 </div>
 

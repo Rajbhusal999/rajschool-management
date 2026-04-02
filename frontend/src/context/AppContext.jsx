@@ -35,6 +35,11 @@ const translations = {
     feeCollection: 'Fee Collection',
     feeDesc: 'Monthly financial pulse and pending dues.',
     enterLedger: 'Enter Ledger',
+    noRecentOps: 'No recent activity detected.',
+    newAdmitMsg: 'New Student: {name}',
+    feePayMsg: 'Payment: NPR {amount} from {name}',
+    recentOperations: 'Recent Operations',
+    monitoringCore: 'Monitoring Core',
   },
   np: {
     // Nav Items
@@ -67,6 +72,11 @@ const translations = {
     feeCollection: 'शुल्क संकलन',
     feeDesc: 'मासिक आर्थिक अवस्था र बाँकी शुल्क।',
     enterLedger: 'लेजर प्रविष्ट गर्नुहोस्',
+    noRecentOps: 'हालैका गतिविधिहरू फेला परेनन्।',
+    newAdmitMsg: 'नयाँ विद्यार्थी भर्ना: {name}',
+    feePayMsg: 'भुक्तानी संकलन: NPR {amount} ({name})',
+    recentOperations: 'हालैका गतिविधिहरू',
+    monitoringCore: 'गतिविधिहरू निगरानी गर्दै',
   }
 };
 
