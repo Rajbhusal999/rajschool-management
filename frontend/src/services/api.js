@@ -97,7 +97,25 @@ export const teacherService = {
         const sId = params.schoolId || getInstitutionId();
         if (sId) query = query.eq('school_id', Number(sId));
         const { data, error } = await query;
+        if (error) handleError(error, 'teacher.getAll');
         return { data: mapToCamelCase(data) };
+    },
+    create: async (dataSpec) => {
+        const sId = getInstitutionId();
+        const payload = mapToSnakeCase({ ...dataSpec, schoolId: Number(sId) });
+        const { data, error } = await supabase.from('teachers').insert(payload).select();
+        if (error) handleError(error, 'teacher.create');
+        return { data: mapToCamelCase(data?.[0]) };
+    },
+    update: async (id, dataSpec) => {
+        const { data, error } = await supabase.from('teachers').update(mapToSnakeCase(dataSpec)).eq('id', id).select();
+        if (error) handleError(error, 'teacher.update');
+        return { data: mapToCamelCase(data?.[0]) };
+    },
+    delete: async (id) => {
+        const { error } = await supabase.from('teachers').delete().eq('id', id);
+        if (error) handleError(error, 'teacher.delete');
+        return { success: true };
     }
 };
 
