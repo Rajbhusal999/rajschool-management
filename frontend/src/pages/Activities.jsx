@@ -26,11 +26,24 @@ const Activities = () => {
 
     const fetchActivities = async () => {
         setLoading(true);
+        const isTrial = sessionStorage.getItem('isTrialMode') === 'true';
         const rawId = sessionStorage.getItem('institutionId');
         if (!rawId) {
             navigate('/login');
             return;
         }
+
+        if (isTrial) {
+            setActivities([
+                { id: 'trial-1', type: 'admission', title: 'New Student Admitted: Arjun Thapa', date: new Date(), icon: UserPlus, color: 'emerald', metadata: 'New Admission' },
+                { id: 'trial-2', type: 'fee', title: 'Fee Collection: NPR 5,000 from Sita Rai', date: new Date(Date.now() - 3600000), icon: CreditCard, color: 'indigo', metadata: 'Fee Collection' },
+                { id: 'trial-3', type: 'admission', title: 'New Student Admitted: Biraj Kumar', date: new Date(Date.now() - 7200000), icon: UserPlus, color: 'emerald', metadata: 'New Admission' },
+                { id: 'trial-4', type: 'fee', title: 'Fee Collection: NPR 12,500 from Grishma Joshi', date: new Date(Date.now() - 86400000), icon: CreditCard, color: 'indigo', metadata: 'Fee Collection' }
+            ]);
+            setLoading(false);
+            return;
+        }
+
         const id = Number(rawId);
 
         try {

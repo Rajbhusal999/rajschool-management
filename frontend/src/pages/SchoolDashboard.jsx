@@ -33,15 +33,29 @@ const SchoolDashboard = () => {
 
     useEffect(() => {
         const fetchSchoolData = async () => {
-            const rawId = sessionStorage.getItem('institutionId');
-            const name = sessionStorage.getItem('schoolName');
-            const logo = sessionStorage.getItem('schoolLogo');
-            const bg = sessionStorage.getItem('schoolBackground');
+            const isTrial = sessionStorage.getItem('isTrialMode') === 'true';
             
             if (!rawId) {
                 navigate('/login');
                 return;
             }
+
+            if (isTrial) {
+                // Mock metadata for Trial Mode
+                setSchoolName(name || 'Smart Academy (Demo)');
+                setStats({
+                    students: 124, 
+                    teachers: 12,
+                    subjects: 12,
+                    attendance: '96.8%',
+                    daysRemaining: 1,
+                    status: 'ACTIVE',
+                    plan: 'Free Trial'
+                });
+                setLoading(false);
+                return; // Bypass DB validation for trial
+            }
+
             if (name) setSchoolName(name);
             if (logo) setSchoolLogo(logo);
             if (bg) setSchoolBackground(bg);
@@ -118,9 +132,19 @@ const SchoolDashboard = () => {
         };
 
         const fetchRecentOps = async () => {
+            const isTrial = sessionStorage.getItem('isTrialMode') === 'true';
             const rawId = sessionStorage.getItem('institutionId');
             if (!rawId) return;
             const id = Number(rawId);
+
+            if (isTrial) {
+                setRecentOps([
+                    { id: 'trial-1', type: 'admission', title: 'New Student Admitted: Arjun Thapa', date: new Date(), icon: UserPlus, color: 'emerald' },
+                    { id: 'trial-2', type: 'fee', title: 'Fee Collection: NPR 5,000 from Sita Rai', date: new Date(), icon: CreditCard, color: 'indigo' },
+                    { id: 'trial-3', type: 'admission', title: 'New Student Admitted: Biraj Kumar', date: new Date(Date.now() - 3600000), icon: UserPlus, color: 'emerald' }
+                ]);
+                return;
+            }
 
             try {
                 // Fetch recent students
