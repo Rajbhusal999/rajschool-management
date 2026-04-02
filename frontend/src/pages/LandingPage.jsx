@@ -259,7 +259,7 @@ const LandingPage = () => {
                             <ul className="space-y-4 text-sm font-bold text-slate-500">
                                 <li onClick={() => document.getElementById('features-section')?.scrollIntoView({ behavior: 'smooth' })} className="hover:text-indigo-400 transition-colors cursor-pointer block">Features</li>
                                 <Link to="/about" className="hover:text-indigo-400 transition-colors cursor-pointer block">About Us</Link>
-                                <li className="hover:text-indigo-400 transition-colors cursor-pointer">Pricing</li>
+                                <Link to="/pricing" className="hover:text-indigo-400 transition-colors cursor-pointer block">Pricing</Link>
                                 <li className="hover:text-indigo-400 transition-colors cursor-pointer">Support</li>
                             </ul>
                         </div>

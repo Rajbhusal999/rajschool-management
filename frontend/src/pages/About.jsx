@@ -113,8 +113,8 @@ const About = () => {
                         <div>
                             <h4 className="font-[900] mb-10 uppercase tracking-[0.2em] text-[11px] text-slate-500">Quick Links</h4>
                             <ul className="space-y-5 text-[15px] font-[900] text-slate-400">
-                                <li className="hover:text-indigo-500 transition-colors cursor-pointer">Features</li>
-                                <li className="hover:text-indigo-500 transition-colors cursor-pointer">Pricing</li>
+                                <Link to="/" className="hover:text-indigo-500 transition-colors cursor-pointer block">Features</Link>
+                                <Link to="/pricing" className="hover:text-indigo-500 transition-colors cursor-pointer block">Pricing</Link>
                                 <li className="hover:text-indigo-500 transition-colors cursor-pointer">Case Studies</li>
                                 <li className="hover:text-indigo-500 transition-colors cursor-pointer">Support</li>
                             </ul>
