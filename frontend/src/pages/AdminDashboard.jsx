@@ -476,7 +476,7 @@ const AdminDashboard = () => {
                                                         AN
                                                     </div>
                                                     <div>
-                                                        <h4 className="text-white font-black text-sm">{chat.institutions?.phone || 'N/A'}</h4>
+                                                        <h4 className="text-white font-black text-sm">{selectedChat.institutions?.phone || 'N/A'}</h4>
                                                         <p className="text-[9px] font-black text-emerald-400 uppercase tracking-widest">Anonymous User • Active Comm-Link</p>
                                                     </div>
                                                 </div>
