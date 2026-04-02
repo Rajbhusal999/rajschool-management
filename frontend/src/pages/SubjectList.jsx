@@ -25,9 +25,35 @@ const SubjectList = () => {
 
   const fetchSubjects = async () => {
     setLoading(true);
+    const isTrial = sessionStorage.getItem('isTrialMode') === 'true';
+
+    if (isTrial) {
+      const mockSubjects = {
+        'PG': [
+          { id: 's1', subjectName: 'English (Basic)', subjectCode: 'EB-01', creditHour: 50, classGroup: 'PG', subjectType: 'Compulsory', hasCreditHour: true },
+          { id: 's2', subjectName: 'Math (Basic)', subjectCode: 'MB-01', creditHour: 50, classGroup: 'PG', subjectType: 'Compulsory', hasCreditHour: true }
+        ],
+        '1-3': [
+          { id: 's3', subjectName: 'Nepali', subjectCode: 'NEP-1', creditHour: 4, classGroup: '1-3', subjectType: 'Compulsory', hasCreditHour: true },
+          { id: 's4', subjectName: 'English', subjectCode: 'ENG-1', creditHour: 4, classGroup: '1-3', subjectType: 'Compulsory', hasCreditHour: true },
+          { id: 's5', subjectName: 'Mathematics', subjectCode: 'MAT-1', creditHour: 4, classGroup: '1-3', subjectType: 'Compulsory', hasCreditHour: true },
+          { id: 's6', subjectName: 'Science & Tech', subjectCode: 'SCI-1', creditHour: 3, classGroup: '1-3', subjectType: 'Compulsory', hasCreditHour: true }
+        ],
+        '9-10': [
+          { id: 's7', subjectName: 'Compulsory English', subjectCode: 'CENG-9', creditHour: 4, classGroup: '9-10', subjectType: 'Compulsory', hasCreditHour: true },
+          { id: 's8', subjectName: 'Compulsory Nepali', subjectCode: 'CNEP-9', creditHour: 4, classGroup: '9-10', subjectType: 'Compulsory', hasCreditHour: true },
+          { id: 's9', subjectName: 'Opt. I (Maths)', subjectCode: 'OMAT-9', creditHour: 4, classGroup: '9-10', subjectType: 'Optional', hasCreditHour: true }
+        ]
+      };
+      
+      setSubjects(mockSubjects[selectedGroup] || mockSubjects['1-3']);
+      setLoading(false);
+      return;
+    }
+
     try {
       const response = await examService.getSubjects({ schoolId: sessionStorage.getItem('institutionId'), classGroup: selectedGroup });
-      setSubjects(response.data);
+      setSubjects(response.data || []);
     } catch (error) {
       console.error('Error fetching subjects:', error);
     } finally {
