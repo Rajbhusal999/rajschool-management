@@ -44,38 +44,31 @@ const PricingCard = ({ plan, price, features, isPopular, onSelect }) => (
 );
 
 const Pricing = () => {
+    const commonFeatures = [
+        "Student & Teacher Management",
+        "Exams & Marksheets",
+        "Billing & Accounts",
+        "Smart Attendance",
+        "ID Card Generation",
+        "Customizable Reports"
+    ];
+
     const plans = [
         {
             plan: "1 Year Access",
-            price: "5,000",
-            features: [
-                "Student Management",
-                "Teacher Management",
-                "Exams & Results"
-            ]
+            price: "7,000",
+            features: commonFeatures
         },
         {
             plan: "2 Years Access",
-            price: "8,000",
+            price: "12,000",
             isPopular: true,
-            features: [
-                "Student & Teacher Management",
-                "Exams & Marksheets",
-                "Billing & Accounts",
-                "ID Card Generation"
-            ]
+            features: commonFeatures
         },
         {
             plan: "5 Years Access",
-            price: "20,000",
-            features: [
-                "Student Management",
-                "Teacher Management",
-                "Exams & Results",
-                "Billing System",
-                "Smart Attendance",
-                "ID Card Generation"
-            ]
+            price: "30,000",
+            features: commonFeatures
         }
     ];
 
