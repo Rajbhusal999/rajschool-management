@@ -24,6 +24,27 @@ const IdCardPrint = () => {
 
   const fetchData = async () => {
     setLoading(true);
+    const isTrial = sessionStorage.getItem('isTrialMode') === 'true';
+
+    if (isTrial) {
+      if (userType === 'student') {
+        setData([
+          { id: 1, fullName: 'Aarav Sharma', studentClass: selectedClass, rollNo: '1', guardianName: 'Ramesh Sharma', contact: '9841234567', studentPhoto: null },
+          { id: 2, fullName: 'Ishani Patel', studentClass: selectedClass, rollNo: '2', guardianName: 'Suresh Patel', contact: '9841112233', studentPhoto: null },
+          { id: 3, fullName: 'Vivaan Gupta', studentClass: selectedClass, rollNo: '3', guardianName: 'Anil Gupta', contact: '9851099887', studentPhoto: null },
+          { id: 4, fullName: 'Ananya Iyer', studentClass: selectedClass, rollNo: '4', guardianName: 'Karthik Iyer', contact: '9865432100', studentPhoto: null }
+        ]);
+      } else {
+        setData([
+          { id: 1, fullName: 'Dr. Ramesh Sharma', staffRole: 'Principal', contact: '9841234567', teacherPhoto: null },
+          { id: 2, fullName: 'Sita Kumari', staffRole: 'Senior Teacher', contact: '9841112233', teacherPhoto: null },
+          { id: 3, fullName: 'Anil Bisht', staffRole: 'Administrator', contact: '9851099887', teacherPhoto: null }
+        ]);
+      }
+      setLoading(false);
+      return;
+    }
+
     try {
       if (userType === 'student') {
         const res = await studentService.getAll({ studentClass: selectedClass });

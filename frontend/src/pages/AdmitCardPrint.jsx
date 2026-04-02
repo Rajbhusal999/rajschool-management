@@ -40,6 +40,32 @@ const AdmitCardPrint = () => {
     }, []);
 
     const fetchData = async () => {
+        const isTrial = sessionStorage.getItem('isTrialMode') === 'true';
+
+        if (isTrial) {
+            setInstitution({
+                schoolName: 'Rajbhusal Demo School',
+                address: 'Main St, Kathmandu',
+                logoUrl: null
+            });
+            setSchedule({
+                examTime: '10:00 AM - 01:00 PM',
+                shift: 'Morning',
+                subjectData: [
+                    { date: '2083/01/01', subject: 'English' },
+                    { date: '2083/01/02', subject: 'Nepali' },
+                    { date: '2083/01/03', subject: 'Mathematics' },
+                    { date: '2083/01/04', subject: 'Science' }
+                ]
+            });
+            setStudents([
+                { id: 1, fullName: 'Aarav Sharma', symbolNo: '101', rollNo: '1', studentClass: selectedClass },
+                { id: 2, fullName: 'Ishani Patel', symbolNo: '102', rollNo: '2', studentClass: selectedClass }
+            ]);
+            setLoading(false);
+            return;
+        }
+
         try {
             const [instRes, schRes, stdRes] = await Promise.all([
                 institutionService.get(),
@@ -48,18 +74,14 @@ const AdmitCardPrint = () => {
             ]);
             
             setInstitution(instRes.data);
-            setInstitution(instRes.data);
             setSchedule(schRes.data);
             
-            // Filter only selected students from the class
-            // Robust check using both s.id and s.ID or s.Id
             const items = Array.isArray(stdRes.data) ? stdRes.data : [];
             const selectedStudents = items.filter(s => {
                 const sid = (s.id || s.ID || s.Id || "").toString();
                 return studentIds.includes(sid);
             });
             
-            // Sort by roll number if available - handling both snake and camel
             selectedStudents.sort((a, b) => {
                 const rollA = parseInt(a.rollNo || a.roll_no || 0);
                 const rollB = parseInt(b.rollNo || b.roll_no || 0);
