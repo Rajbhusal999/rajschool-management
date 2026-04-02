@@ -19,7 +19,6 @@ const LandingPage = () => {
         };
     }, []);
 
-    const nepalDate = "Saturday, 2082-12-15 B.S."; // Simplified for demo, would use helper normally
 
     return (
         <div className="dark-theme-landing font-['Outfit',sans-serif] selection:bg-indigo-500/30 overflow-x-hidden">
@@ -47,14 +46,13 @@ const LandingPage = () => {
                                 <Calendar size={14} className="text-slate-400" />
                                 <span>{new Date().toLocaleDateString('en-GB', { weekday: 'long', day: '2-digit', month: 'short', year: 'numeric' })}</span>
                             </div>
-                            <div className="w-px h-3 bg-slate-700"></div>
-                            <span className="text-emerald-400 font-black">{nepalDate}</span>
                         </div>
                     </div>
 
                     <div className="flex items-center gap-3">
                         <Link to="/features" className="hidden sm:block px-6 py-2.5 text-slate-300 font-bold text-sm hover:text-white transition-colors">Features</Link>
                         <button className="hidden sm:block px-6 py-2.5 text-slate-300 font-bold text-sm hover:text-white transition-colors">About</button>
+                        <Link to="/login" className="px-6 py-2.5 bg-rose-600/20 text-rose-400 rounded-xl font-bold text-sm hover:bg-rose-600/30 transition-all">Teacher Login</Link>
                         <Link to="/login" className="px-6 py-2.5 bg-indigo-600/20 text-indigo-400 rounded-xl font-bold text-sm hover:bg-indigo-600/30 transition-all">Login</Link>
                         <Link to="/register" className="px-6 py-2.5 bg-indigo-600 text-white rounded-xl font-bold text-sm shadow-xl shadow-indigo-500/20 hover:scale-105 transition-all">Get Started</Link>
 
