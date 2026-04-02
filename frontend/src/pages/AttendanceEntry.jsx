@@ -7,12 +7,16 @@ import {
 } from 'lucide-react';
 
 const AttendanceEntry = () => {
+  const userType = sessionStorage.getItem('userType');
+  const teacherIdFromSession = sessionStorage.getItem('teacherId');
+  const isTeacher = userType === 'teacher';
+
   const [step, setStep] = useState(1); // 1: Login/Setup, 2: Marking
   const [setup, setSetup] = useState({
     date: '2082/12/18', // Default Nepali Date (Approx)
     studentClass: '',
     session: 'Morning',
-    teacherId: '',
+    teacherId: isTeacher ? (teacherIdFromSession || '') : '',
     password: ''
   });
   const [teachers, setTeachers] = useState([]);
@@ -59,6 +63,12 @@ const AttendanceEntry = () => {
 
   const handleSetupSubmit = async (e) => {
     e.preventDefault();
+    if (isTeacher) {
+      setStep(2);
+      fetchStudentsAndAttendance();
+      fetchNotificationHistory();
+      return;
+    }
     const teacher = teachers.find(t => t.id === parseInt(setup.teacherId));
     if (teacher && teacher.teacherPassword === setup.password) {
       setStep(2);
@@ -200,18 +210,27 @@ const AttendanceEntry = () => {
               </div>
             </div>
 
-            <div>
-              <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5 ml-1">Assigned Staff</label>
-              <select className="w-full px-4 py-3 bg-slate-50 border border-slate-100 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 font-bold" value={setup.teacherId} onChange={(e) => setSetup({...setup, teacherId: e.target.value})} required>
-                <option value="">Select Official</option>
-                {teachers.map(t => <option key={t.id} value={t.id}>{t.fullName}</option>)}
-              </select>
-            </div>
+            {isTeacher ? (
+              <div className="p-4 bg-indigo-50 border border-indigo-100 rounded-xl text-indigo-700 font-bold text-xs flex items-center gap-3">
+                <CheckCircle size={16} /> Verified as {sessionStorage.getItem('teacherName') || 'Faculty'}
+                <input type="hidden" value={setup.teacherId} required />
+              </div>
+            ) : (
+              <>
+                <div>
+                  <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5 ml-1">Assigned Staff</label>
+                  <select className="w-full px-4 py-3 bg-slate-50 border border-slate-100 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 font-bold" value={setup.teacherId} onChange={(e) => setSetup({...setup, teacherId: e.target.value})} required>
+                    <option value="">Select Official</option>
+                    {teachers.map(t => <option key={t.id} value={t.id}>{t.fullName}</option>)}
+                  </select>
+                </div>
 
-            <div>
-              <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5 ml-1">Access PIN</label>
-              <input type="password" placeholder="••••••••" className="w-full px-4 py-3 bg-slate-50 border border-slate-100 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 font-bold" value={setup.password} onChange={(e) => setSetup({...setup, password: e.target.value})} required />
-            </div>
+                <div>
+                  <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5 ml-1">Access PIN</label>
+                  <input type="password" placeholder="••••••••" className="w-full px-4 py-3 bg-slate-50 border border-slate-100 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 font-bold" value={setup.password} onChange={(e) => setSetup({...setup, password: e.target.value})} required />
+                </div>
+              </>
+            )}
 
             <button type="submit" className="w-full py-4 bg-indigo-600 text-white rounded-2xl font-black mt-4 shadow-xl shadow-indigo-100 hover:bg-indigo-700 transition">
               Initialize Tracking

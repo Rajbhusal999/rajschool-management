@@ -4,6 +4,14 @@ import { LayoutDashboard, Users, GraduationCap, CalendarCheck, BarChart, Setting
 
 
 const Sidebar = () => {
+  const userType = sessionStorage.getItem('userType');
+  const isTeacher = userType === 'teacher';
+
+  const getNavItemClass = (isActive, isDisabled = false) => {
+    if (isDisabled) return `flex items-center gap-3 px-3 py-2 rounded-lg transition-colors text-slate-400 opacity-40 cursor-not-allowed grayscale pointer-events-none`;
+    return `flex items-center gap-3 px-3 py-2 rounded-lg transition-colors ${isActive ? 'bg-indigo-50 text-indigo-700' : 'text-slate-600 hover:bg-slate-50'}`;
+  };
+
   return (
     <div className="w-64 bg-white h-screen border-r border-slate-200 p-4 flex flex-col print:hidden">
       <div className="flex items-center gap-2 mb-8 px-2">
@@ -14,7 +22,7 @@ const Sidebar = () => {
       <nav className="flex-1 space-y-1">
         <NavLink 
           to="/dashboard" 
-          className={({ isActive }) => `flex items-center gap-3 px-3 py-2 rounded-lg transition-colors ${isActive ? 'bg-indigo-50 text-indigo-700' : 'text-slate-600 hover:bg-slate-50'}`}
+          className={({ isActive }) => getNavItemClass(isActive, isTeacher)}
         >
           <LayoutDashboard size={20} />
           <span className="font-medium">Dashboard</span>
@@ -22,7 +30,7 @@ const Sidebar = () => {
         
         <NavLink 
           to="/students" 
-          className={({ isActive }) => `flex items-center gap-3 px-3 py-2 rounded-lg transition-colors ${isActive ? 'bg-indigo-50 text-indigo-700' : 'text-slate-600 hover:bg-slate-50'}`}
+          className={({ isActive }) => getNavItemClass(isActive, isTeacher)}
         >
           <Users size={20} />
           <span className="font-medium">Students</span>
@@ -30,7 +38,7 @@ const Sidebar = () => {
         
         <NavLink 
           to="/teachers" 
-          className={({ isActive }) => `flex items-center gap-3 px-3 py-2 rounded-lg transition-colors ${isActive ? 'bg-indigo-50 text-indigo-700' : 'text-slate-600 hover:bg-slate-50'}`}
+          className={({ isActive }) => getNavItemClass(isActive, isTeacher)}
         >
           <GraduationCap size={20} />
           <span className="font-medium">Teachers</span>
@@ -42,7 +50,7 @@ const Sidebar = () => {
 
         <NavLink 
           to="/attendance/entry" 
-          className={({ isActive }) => `flex items-center gap-3 px-3 py-2 rounded-lg transition-colors ${isActive ? 'bg-indigo-50 text-indigo-700' : 'text-slate-600 hover:bg-slate-50'}`}
+          className={({ isActive }) => getNavItemClass(isActive)}
         >
           <CalendarCheck size={20} />
           <span className="font-medium">Daily Attendance</span>
@@ -50,7 +58,7 @@ const Sidebar = () => {
 
         <NavLink 
           to="/attendance/reports" 
-          className={({ isActive }) => `flex items-center gap-3 px-3 py-2 rounded-lg transition-colors ${isActive ? 'bg-indigo-50 text-indigo-700' : 'text-slate-600 hover:bg-slate-50'}`}
+          className={({ isActive }) => getNavItemClass(isActive, isTeacher)}
         >
           <BarChart size={20} />
           <span className="font-medium">Monthly Reports</span>
@@ -58,7 +66,7 @@ const Sidebar = () => {
 
         <NavLink 
           to="/id-cards" 
-          className={({ isActive }) => `flex items-center gap-3 px-3 py-2 rounded-lg transition-colors ${isActive ? 'bg-indigo-50 text-indigo-700' : 'text-slate-600 hover:bg-slate-50'}`}
+          className={({ isActive }) => getNavItemClass(isActive, isTeacher)}
         >
           <IDCard size={20} />
           <span className="font-medium">ID Card Center</span>
@@ -70,7 +78,7 @@ const Sidebar = () => {
 
         <NavLink 
           to="/curriculum" 
-          className={({ isActive }) => `flex items-center gap-3 px-3 py-2 rounded-lg transition-colors ${isActive ? 'bg-indigo-50 text-indigo-700' : 'text-slate-600 hover:bg-slate-50'}`}
+          className={({ isActive }) => getNavItemClass(isActive, isTeacher)}
         >
           <BookOpen size={20} />
           <span className="font-medium">Curriculum</span>
@@ -78,7 +86,7 @@ const Sidebar = () => {
 
         <NavLink 
           to="/exams/entry" 
-          className={({ isActive }) => `flex items-center gap-3 px-3 py-2 rounded-lg transition-colors ${isActive ? 'bg-indigo-50 text-indigo-700' : 'text-slate-600 hover:bg-slate-50'}`}
+          className={({ isActive }) => getNavItemClass(isActive, isTeacher)}
         >
           <ClipboardList size={20} />
           <span className="font-medium">Mark Entry</span>
@@ -86,7 +94,7 @@ const Sidebar = () => {
 
         <NavLink 
           to="/exams/results" 
-          className={({ isActive }) => `flex items-center gap-3 px-3 py-2 rounded-lg transition-colors ${isActive ? 'bg-indigo-50 text-indigo-700' : 'text-slate-600 hover:bg-slate-50'}`}
+          className={({ isActive }) => getNavItemClass(isActive, isTeacher)}
         >
           <Trophy size={20} />
           <span className="font-medium">Result Sheets</span>
@@ -98,7 +106,7 @@ const Sidebar = () => {
 
         <NavLink 
           to="/billing" 
-          className={({ isActive }) => `flex items-center gap-3 px-3 py-2 rounded-lg transition-colors ${isActive ? 'bg-indigo-50 text-indigo-700' : 'text-slate-600 hover:bg-slate-50'}`}
+          className={({ isActive }) => getNavItemClass(isActive, isTeacher)}
         >
           <CreditCard size={20} />
           <span className="font-medium">Billing Center</span>
@@ -106,7 +114,7 @@ const Sidebar = () => {
 
         <NavLink 
           to="/billing/donor-receipts" 
-          className={({ isActive }) => `flex items-center gap-3 px-3 py-2 rounded-lg transition-colors ${isActive ? 'bg-indigo-50 text-indigo-700' : 'text-slate-600 hover:bg-slate-50'}`}
+          className={({ isActive }) => getNavItemClass(isActive, isTeacher)}
         >
           <HeartHandshake size={20} />
           <span className="font-medium">Donors & Grants</span>
@@ -117,7 +125,7 @@ const Sidebar = () => {
       <div className="mt-auto">
         <NavLink 
           to="/settings/sms" 
-          className={({ isActive }) => `flex items-center gap-3 px-3 py-2 rounded-lg transition-colors ${isActive ? 'bg-indigo-50 text-indigo-700' : 'text-slate-600 hover:bg-slate-50'}`}
+          className={({ isActive }) => getNavItemClass(isActive, isTeacher)}
         >
           <Phone size={20} />
           <span className="font-medium">SMS Gateway</span>
