@@ -200,7 +200,7 @@ const SchoolDashboard = () => {
                     </div>
                 </div>
                 <div className="w-full xl:w-auto">
-                    <DigitalClock />
+                    <DigitalClock showBSDate={false} />
                 </div>
             </header>
 

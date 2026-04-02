@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-const DigitalClock = () => {
+const DigitalClock = ({ showBSDate = true }) => {
     const [time, setTime] = useState(new Date());
 
     useEffect(() => {
@@ -47,12 +47,14 @@ const DigitalClock = () => {
             <div className="w-px h-12 bg-slate-200"></div>
 
             <div className="space-y-1">
-                <div className="flex items-center gap-2">
-                    <span className="text-sm font-black text-slate-800 tracking-tight">
-                        {getNepaliDate(time)}
-                    </span>
-                    <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse"></span>
-                </div>
+                {showBSDate && (
+                    <div className="flex items-center gap-2">
+                        <span className="text-sm font-black text-slate-800 dark:text-slate-100 tracking-tight">
+                            {getNepaliDate(time)}
+                        </span>
+                        <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse"></span>
+                    </div>
+                )}
                 <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest leading-none">
                     {formatDateAD(time)}
                 </p>
