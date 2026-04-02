@@ -1,23 +1,58 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { 
   GraduationCap, Clock, Calendar, Rocket, LogIn, ChevronRight, 
   Users, BarChart3, TrendingUp, Phone, FileText, CalendarCheck, CreditCard, Shield
 } from 'lucide-react';
 
 const LandingPage = () => {
+    const navigate = useNavigate();
+    const location = useLocation();
     const [time, setTime] = useState(new Date().toLocaleTimeString());
     const [scrolled, setScrolled] = useState(false);
+    const [showExpiryAlert, setShowExpiryAlert] = useState(false);
 
     useEffect(() => {
         const timer = setInterval(() => setTime(new Date().toLocaleTimeString()), 1000);
         const handleScroll = () => setScrolled(window.scrollY > 20);
         window.addEventListener('scroll', handleScroll);
+
+        // Check if trial just expired
+        if (new URLSearchParams(location.search).get('trial') === 'expired') {
+            setShowExpiryAlert(true);
+            // Clean up URL
+            window.history.replaceState({}, document.title, "/");
+        }
+
         return () => {
             clearInterval(timer);
             window.removeEventListener('scroll', handleScroll);
         };
-    }, []);
+    }, [location]);
+
+    const handleStartTrial = () => {
+        // Initialize 24-hour trial period
+        const expiry = Date.now();
+        localStorage.setItem('trial_start_date', expiry.toString());
+
+        // Setup Demo Session (Mocking regular login data)
+        // IMPORTANT: Replace the ID below with a real institution ID from your database for actual persistence
+        const demoData = {
+            id: '77777777-7777-4777-a777-777777777777', // Placeholder Demo ID
+            school_name: 'Smart Academy (Demo)',
+            address: 'Innovation Hub, Silicon Valley',
+            establishment: '2080',
+            logo_url: null
+        };
+
+        sessionStorage.setItem('institutionId', demoData.id);
+        sessionStorage.setItem('schoolName', demoData.school_name);
+        sessionStorage.setItem('schoolAddress', demoData.address);
+        sessionStorage.setItem('estdYear', demoData.establishment);
+        sessionStorage.setItem('isTrialMode', 'true');
+
+        navigate('/dashboard');
+    };
 
 
     return (
@@ -60,6 +95,25 @@ const LandingPage = () => {
                 </div>
             </nav>
 
+            {/* Trial Expiry Alert Persistence */}
+            {showExpiryAlert && (
+                <div className="fixed top-24 left-1/2 -translate-x-1/2 z-[60] w-full max-w-sm px-6 animate-in slide-in-from-top-10 duration-700">
+                    <div className="bg-white/10 backdrop-blur-2xl border-2 border-rose-500/20 p-6 rounded-[32px] shadow-2xl shadow-rose-500/10 text-center space-y-4">
+                        <div className="w-12 h-12 bg-rose-500 rounded-2xl flex items-center justify-center text-white mx-auto shadow-lg shadow-rose-200">
+                            <Shield size={24} />
+                        </div>
+                        <div>
+                            <h3 className="text-white font-black text-lg leading-tight mb-1">Trial Period Concluded</h3>
+                            <p className="text-slate-400 text-sm font-medium">Your 24-hour institutional exploration has ended. Initialize your full digital ecosystem today.</p>
+                        </div>
+                        <Link to="/register" className="block w-full py-4 bg-indigo-600 text-white rounded-2xl font-black text-sm uppercase tracking-widest hover:bg-indigo-700 transition-all shadow-lg shadow-indigo-200">
+                            Initialize registration
+                        </Link>
+                        <button onClick={() => setShowExpiryAlert(false)} className="text-slate-500 font-bold text-xs hover:text-white transition-colors">Dismiss</button>
+                    </div>
+                </div>
+            )}
+
             {/* Hero Section */}
             <section className="relative pt-40 pb-20 px-6">
                 {/* Background Glows */}
@@ -86,10 +140,13 @@ const LandingPage = () => {
                         </p>
 
                         <div className="flex flex-wrap gap-4 pt-4">
-                            <Link to="/register" className="px-10 py-5 bg-indigo-600 text-white rounded-[26px] font-black text-lg shadow-2xl shadow-indigo-500/30 hover:scale-105 active:scale-95 transition-all flex items-center gap-3">
+                            <button 
+                                onClick={handleStartTrial}
+                                className="px-10 py-5 bg-indigo-600 text-white rounded-[26px] font-black text-lg shadow-2xl shadow-indigo-500/30 hover:scale-105 active:scale-95 transition-all flex items-center gap-3 cursor-pointer"
+                            >
                                 <Rocket size={24} />
                                 Start Free Trial
-                            </Link>
+                            </button>
 
                             <Link to="/login" className="px-10 py-5 bg-transparent text-white border-none rounded-[26px] font-black text-lg hover:bg-white/5 transition-all flex items-center gap-3">
                                 <LogIn size={24} />

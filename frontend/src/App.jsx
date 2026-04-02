@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
 import Sidebar from "./components/Sidebar";
 import TopNav from "./components/TopNav";
@@ -99,6 +99,24 @@ function App() {
 
 const Layout = () => {
   const location = useLocation();
+
+  useEffect(() => {
+    // Trial Expiration Guard
+    const trialStart = localStorage.getItem('trial_start_date');
+    if (trialStart) {
+      const startTime = parseInt(trialStart, 10);
+      const currentTime = Date.now();
+      const twentyFourHours = 24 * 60 * 60 * 1000;
+
+      if (currentTime - startTime > twentyFourHours) {
+        // Trial has expired
+        sessionStorage.clear();
+        localStorage.removeItem('trial_start_date');
+        window.location.href = '/?trial=expired';
+      }
+    }
+  }, [location]);
+
   const publicRoutes = ["/", "/register", "/login", "/admin-login", "/teacher-login", "/about", "/admin/nexus", "/subscription", "/payment"];
   const isPublicPage = publicRoutes.includes(location.pathname);
 
