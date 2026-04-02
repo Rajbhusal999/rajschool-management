@@ -14,6 +14,9 @@ const Support = () => {
     const [loading, setLoading] = useState(false);
     const [isChatOpen, setIsChatOpen] = useState(false);
     const [institution, setInstitution] = useState(null);
+    const [loginPhone, setLoginPhone] = useState('');
+    const [isLoginView, setIsLoginView] = useState(false);
+    const [loginError, setLoginError] = useState('');
     const scrollRef = useRef(null);
 
     const WHATSAPP_NUMBER = '+9779706829056';
@@ -91,9 +94,45 @@ const Support = () => {
         setLoading(false);
     };
 
-    const openWhatsApp = () => {
-        const url = `https://wa.me/${WHATSAPP_NUMBER.replace('+', '')}`;
-        window.open(url, '_blank');
+    const handlePhoneLogin = async (e) => {
+        e.preventDefault();
+        if (!loginPhone.trim()) return;
+
+        setLoading(true);
+        setLoginError('');
+        
+        const { data, error } = await supabase
+            .from('institutions')
+            .select('*')
+            .eq('phone', loginPhone.trim())
+            .single();
+
+        if (error || !data) {
+            setLoginError('Institution not found with this phone number. Please register first or use the registered number.');
+        } else {
+            setInstitution(data);
+            setIsLoginView(false);
+            fetchMessages(data.id);
+            subscribeToMessages(data.id);
+            // Optional: persistence for the session
+            sessionStorage.setItem('support_active_session', JSON.stringify(data));
+        }
+        setLoading(false);
+    };
+
+    const handleChatButtonClick = () => {
+        const savedSession = sessionStorage.getItem('support_active_session') || sessionStorage.getItem('user');
+        if (savedSession) {
+            const data = JSON.parse(savedSession);
+            setInstitution(data);
+            fetchMessages(data.id);
+            subscribeToMessages(data.id);
+            setIsChatOpen(true);
+            setIsLoginView(false);
+        } else {
+            setIsChatOpen(true);
+            setIsLoginView(true);
+        }
     };
 
     return (
@@ -142,7 +181,7 @@ const Support = () => {
 
                     {/* Admin Chat Card */}
                     <button 
-                        onClick={() => setIsChatOpen(true)}
+                        onClick={handleChatButtonClick}
                         className="group relative bg-indigo-500/10 backdrop-blur-3xl border border-indigo-500/20 p-10 rounded-[40px] text-left hover:bg-indigo-500/20 transition-all duration-500 hover:scale-[1.02] shadow-2xl"
                     >
                         <div className="w-16 h-16 bg-indigo-600 rounded-2xl flex items-center justify-center mb-8 shadow-lg shadow-indigo-600/30 group-hover:-rotate-12 transition-transform">
@@ -201,12 +240,49 @@ const Support = () => {
                             </button>
                         </div>
 
-                        {/* Messages Area */}
+                        {/* Messages Area / Login View */}
                         <div 
                             ref={scrollRef}
                             className="flex-1 overflow-y-auto p-8 space-y-6 scrollbar-hide"
                         >
-                            {!institution ? (
+                            {isLoginView ? (
+                                <div className="h-full flex flex-col items-center justify-center text-center space-y-8 px-12">
+                                    <div className="w-20 h-20 bg-indigo-500/10 rounded-[32px] flex items-center justify-center border border-indigo-500/20 shadow-2xl shadow-indigo-500/10">
+                                        <Phone className="text-indigo-500" size={32} />
+                                    </div>
+                                    <div className="space-y-3">
+                                        <h3 className="text-white font-[1000] text-xl uppercase tracking-tighter">Identity Verification</h3>
+                                        <p className="text-slate-500 text-xs font-bold leading-relaxed">
+                                            Enter your registered phone number to establish a secure link with the system administrator.
+                                        </p>
+                                    </div>
+
+                                    <form onSubmit={handlePhoneLogin} className="w-full space-y-4">
+                                        <div className="relative">
+                                            <Phone className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500" size={18} />
+                                            <input 
+                                                type="tel"
+                                                value={loginPhone}
+                                                onChange={(e) => setLoginPhone(e.target.value)}
+                                                placeholder="Enter Registered Phone Number"
+                                                className="w-full h-14 bg-white/5 border border-white/10 rounded-2xl pl-12 pr-6 text-white font-bold text-sm focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all"
+                                                required
+                                            />
+                                        </div>
+                                        {loginError && <p className="text-rose-500 text-[10px] font-black uppercase tracking-widest">{loginError}</p>}
+                                        <button 
+                                            disabled={loading}
+                                            className="w-full h-14 bg-indigo-600 text-white rounded-2xl font-black text-xs uppercase tracking-widest hover:scale-105 transition-all shadow-xl shadow-indigo-600/20 disabled:opacity-50"
+                                        >
+                                            {loading ? 'Decrypting Access...' : 'Open Secure Channel'}
+                                        </button>
+                                    </form>
+
+                                    <p className="text-[10px] font-black text-slate-700 uppercase tracking-widest">
+                                        Access is restricted to verified institutions only
+                                    </p>
+                                </div>
+                            ) : !institution ? (
                                 <div className="h-full flex flex-col items-center justify-center text-center space-y-6 px-12">
                                     <div className="w-20 h-20 bg-rose-500/10 rounded-[32px] flex items-center justify-center border border-rose-500/20">
                                         <Shield className="text-rose-500" size={40} />
@@ -214,12 +290,15 @@ const Support = () => {
                                     <div className="space-y-2">
                                         <p className="text-white font-black uppercase text-sm tracking-widest">Authentication Required</p>
                                         <p className="text-slate-500 text-xs font-bold leading-relaxed">
-                                            Please login as a school administrator to use the direct dashbord chat system.
+                                            Please verify your phone number to use the direct dashboard chat system.
                                         </p>
                                     </div>
-                                    <Link to="/login" className="px-8 py-3 bg-indigo-600 text-white rounded-xl font-black text-xs uppercase tracking-widest hover:scale-105 transition-all">
-                                        Go to Login
-                                    </Link>
+                                    <button 
+                                        onClick={() => setIsLoginView(true)}
+                                        className="px-8 py-3 bg-indigo-600 text-white rounded-xl font-black text-xs uppercase tracking-widest hover:scale-105 transition-all"
+                                    >
+                                        Back to Login
+                                    </button>
                                 </div>
                             ) : messages.length === 0 ? (
                                 <div className="h-full flex flex-col items-center justify-center text-center space-y-6 px-12 opacity-50">
@@ -259,7 +338,7 @@ const Support = () => {
                         </div>
 
                         {/* Input Area */}
-                        {institution && (
+                        {institution && !isLoginView && (
                             <div className="p-8 bg-slate-900/30 border-t border-white/5">
                                 <form onSubmit={handleSendMessage} className="relative">
                                     <input 
