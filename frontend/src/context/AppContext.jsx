@@ -41,6 +41,11 @@ const translations = {
     recentOperations: 'Recent Operations',
     monitoringCore: 'Monitoring Core',
     studentTeacherRatio: 'Student-Teacher Ratio',
+    activityLog: 'Activity Log',
+    filterByDate: 'Filter by Date',
+    startDate: 'Start Date',
+    endDate: 'End Date',
+    noDataInRange: 'No activities found for this period.',
   },
   np: {
     // Nav Items
@@ -79,6 +84,11 @@ const translations = {
     recentOperations: 'हालैका गतिविधिहरू',
     monitoringCore: 'गतिविधिहरू निगरानी गर्दै',
     studentTeacherRatio: 'विद्यार्थी-शिक्षक अनुपात',
+    activityLog: 'गतिविधि लग',
+    filterByDate: 'मिति द्वारा फिल्टर',
+    startDate: 'सुरु मिति',
+    endDate: 'अन्तिम मिति',
+    noDataInRange: 'यस अवधिमा कुनै गतिविधि भेटिएन।',
   }
 };
 

@@ -38,6 +38,7 @@ import Reports from "./pages/Reports";
 import StudentReport from "./pages/StudentReport";
 import TeacherReport from "./pages/TeacherReport";
 import IdCardPrint from "./pages/IdCardPrint";
+import Activities from "./pages/Activities";
 
 import { AlertTriangle } from "lucide-react";
 import BackButton from "./components/BackButton";
@@ -169,6 +170,7 @@ const Layout = () => {
             <Route path="/reports/students" element={<StudentReport />} />
             <Route path="/reports/teachers" element={<TeacherReport />} />
             <Route path="/id-cards" element={<IdCardPrint />} />
+            <Route path="/activities" element={<Activities />} />
           </Routes>
         </main>
       </div>

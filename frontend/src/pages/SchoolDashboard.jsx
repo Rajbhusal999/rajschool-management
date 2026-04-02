@@ -367,7 +367,7 @@ const SchoolDashboard = () => {
                             <Calendar size={24} className="text-indigo-600 dark:text-indigo-400" />
                             <h3 className="text-xl font-[1000] tracking-tight text-slate-800 dark:text-slate-100 uppercase">{t('recentOperations')}</h3>
                         </div>
-                        <Link to="/reports" className="text-[10px] font-black text-indigo-600 dark:text-indigo-400 hover:underline uppercase tracking-widest">{t('viewAll')}</Link>
+                        <Link to="/activities" className="text-[10px] font-black text-indigo-600 dark:text-indigo-400 hover:underline uppercase tracking-widest">{t('viewAll')}</Link>
                     </div>
                     
                     <div className="flex-1 space-y-6">
