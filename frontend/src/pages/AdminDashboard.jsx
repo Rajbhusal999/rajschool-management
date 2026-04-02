@@ -84,7 +84,8 @@ const AdminDashboard = () => {
             .select(`
                 institution_id,
                 sender_name,
-                created_at
+                created_at,
+                institutions(phone)
             `)
             .order('created_at', { ascending: false });
 
@@ -451,10 +452,15 @@ const AdminDashboard = () => {
                                                     className={`w-full p-6 text-left border-b border-white/5 transition-all
                                                         ${selectedChat?.institution_id === chat.institution_id ? 'bg-[#00D1FF]/10 border-r-2 border-r-[#00D1FF]' : 'hover:bg-white/5'}`}
                                                 >
-                                                    <p className="text-white font-bold text-sm truncate">{chat.sender_name}</p>
-                                                    <p className="text-[9px] font-black text-slate-500 uppercase tracking-widest mt-1">
-                                                        {new Date(chat.created_at).toLocaleDateString()}
-                                                    </p>
+                                                    <p className="text-white font-bold text-sm truncate">{chat.institutions?.phone || 'N/A'}</p>
+                                                    <div className="flex items-center justify-between mt-1">
+                                                        <p className="text-[9px] font-black text-slate-500 uppercase tracking-widest">
+                                                            Anonymous User
+                                                        </p>
+                                                        <p className="text-[9px] font-black text-slate-700 uppercase tracking-widest">
+                                                            {new Date(chat.created_at).toLocaleDateString()}
+                                                        </p>
+                                                    </div>
                                                 </button>
                                             ))
                                         )}
@@ -466,12 +472,12 @@ const AdminDashboard = () => {
                                         <>
                                             <div className="p-6 border-b border-white/5 flex items-center justify-between">
                                                 <div className="flex items-center gap-4">
-                                                    <div className="w-10 h-10 bg-indigo-600 rounded-lg flex items-center justify-center text-white font-black uppercase">
-                                                        {selectedChat.sender_name[0]}
+                                                    <div className="w-10 h-10 bg-indigo-600 rounded-lg flex items-center justify-center text-white font-black uppercase text-xs">
+                                                        AN
                                                     </div>
                                                     <div>
-                                                        <h4 className="text-white font-black text-sm">{selectedChat.sender_name}</h4>
-                                                        <p className="text-[9px] font-black text-emerald-400 uppercase tracking-widest">Active Comm-Link</p>
+                                                        <h4 className="text-white font-black text-sm">{chat.institutions?.phone || 'N/A'}</h4>
+                                                        <p className="text-[9px] font-black text-emerald-400 uppercase tracking-widest">Anonymous User • Active Comm-Link</p>
                                                     </div>
                                                 </div>
                                             </div>
