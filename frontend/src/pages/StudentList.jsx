@@ -115,9 +115,22 @@ const StudentList = () => {
   }, [search, classFilter]);
 
   const fetchStudents = async () => {
+    const isTrial = sessionStorage.getItem('isTrialMode') === 'true';
+
+    if (isTrial) {
+      setStudents([
+        { id: 's1', fullName: 'Arjun Thapa', symbolNo: 'SI001', studentClass: '6', rollNo: '1', parentContact: '9801122334', gender: 'Male', dobNepali: '2070-05-12' },
+        { id: 's2', fullName: 'Sita Rai', symbolNo: 'NU005', studentClass: 'Nursery', rollNo: '5', parentContact: '9841112233', gender: 'Female', dobNepali: '2078-10-02' },
+        { id: 's3', fullName: 'Biraj Kumar', symbolNo: 'SI002', studentClass: '6', rollNo: '2', parentContact: '9861009988', gender: 'Male', dobNepali: '2071-02-20' },
+        { id: 's4', fullName: 'Grishma Joshi', symbolNo: 'LK010', studentClass: 'LKG', rollNo: '3', parentContact: '9851022334', gender: 'Female', dobNepali: '2077-01-15' },
+        { id: 's5', fullName: 'Kushal Shrestha', symbolNo: 'ON004', studentClass: '1', rollNo: '4', parentContact: '9841000000', gender: 'Male', dobNepali: '2075-06-25' }
+      ]);
+      return;
+    }
+
     try {
       const response = await studentService.getAll({ search, studentClass: classFilter });
-      setStudents(response.data);
+      setStudents(response.data || []);
     } catch (err) {
       console.error(err);
     }

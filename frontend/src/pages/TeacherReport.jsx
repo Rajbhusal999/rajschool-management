@@ -13,10 +13,29 @@ const TeacherReport = () => {
 
   const fetchTeachers = async (searchTerm = search, filter = roleFilter) => {
     setLoading(true);
+    const isTrial = sessionStorage.getItem('isTrialMode') === 'true';
+
+    if (isTrial) {
+      const mockData = [
+        { id: 't1', fullName: 'Dr. Ramesh Sharma', staffRole: 'Teacher', subject: 'Mathematics', contact: '9841234567', tah: 'Secondary', teacherType: 'Permanent', teacherPhoto: null, attendanceDateNepali: '2075-01-15', panNo: '123456789' },
+        { id: 't2', fullName: 'Sita Kumari', staffRole: 'Teacher', subject: 'Science', contact: '9841112233', tah: 'Basic', teacherType: 'Temporary', teacherPhoto: null, attendanceDateNepali: '2078-04-10', panNo: '987654321' },
+        { id: 't3', fullName: 'Anil Bisht', staffRole: 'Admin', subject: 'Administration', contact: '9851099887', tah: 'Admin', teacherType: 'Permanent', teacherPhoto: null, attendanceDateNepali: '2070-10-20', panNo: '456789123' },
+        { id: 't4', fullName: 'Maya Tamang', staffRole: 'Teacher', subject: 'English', contact: '9865432100', tah: 'Primary', teacherType: 'Contract', teacherPhoto: null, attendanceDateNepali: '2080-02-05', panNo: '321654987' }
+      ];
+      
+      let data = mockData;
+      if (filter) {
+        data = data.filter(t => t.staffRole?.toLowerCase() === filter.toLowerCase());
+      }
+      setTeachers(data);
+      setLoading(false);
+      return;
+    }
+
     try {
       const response = await teacherService.getAll({ search: searchTerm });
       // Manual filter since backend might not support it yet
-      let data = response.data;
+      let data = response.data || [];
       if (filter) {
         data = data.filter(t => t.staffRole?.toLowerCase() === filter.toLowerCase());
       }

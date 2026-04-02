@@ -119,9 +119,21 @@ const TeacherList = () => {
   }, [search]);
 
   const fetchTeachers = async () => {
+    const isTrial = sessionStorage.getItem('isTrialMode') === 'true';
+    
+    if (isTrial) {
+      setTeachers([
+        { id: 't1', fullName: 'Dr. Ramesh Sharma', staffRole: 'Teacher', subject: 'Mathematics', contact: '9841234567', tah: 'Secondary', teacherType: 'Permanent', teacherPhoto: null, attendanceDateNepali: '2075-01-15' },
+        { id: 't2', fullName: 'Sita Kumari', staffRole: 'Teacher', subject: 'Science', contact: '9841112233', tah: 'Basic', teacherType: 'Temporary', teacherPhoto: null, attendanceDateNepali: '2078-04-10' },
+        { id: 't3', fullName: 'Anil Bisht', staffRole: 'Principal', subject: 'Administration', contact: '9851099887', tah: 'Admin', teacherType: 'Permanent', teacherPhoto: null, attendanceDateNepali: '2070-10-20' },
+        { id: 't4', fullName: 'Maya Tamang', staffRole: 'Teacher', subject: 'English', contact: '9865432100', tah: 'Primary', teacherType: 'Contract', teacherPhoto: null, attendanceDateNepali: '2080-02-05' }
+      ]);
+      return;
+    }
+
     try {
       const response = await teacherService.getAll({ search });
-      setTeachers(response.data);
+      setTeachers(response.data || []);
     } catch (err) {
       console.error(err);
     }
