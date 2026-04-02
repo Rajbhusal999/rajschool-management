@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { studentService } from '../services/api';
 import StudentForm from '../components/StudentForm';
 import { Edit2, Trash2, Eye, Search, Filter, Plus, User, Phone, MapPin, GraduationCap, Calendar, Shield, X, Download, ChevronLeft, ChevronRight, Users } from 'lucide-react';
+import { useLanguage } from '../context/AppContext';
 
 const ViewModal = ({ student, onClose }) => {
   if (!student) return null;
@@ -100,6 +101,7 @@ const Info = ({ size, className }) => <span className={className}>ℹ️</span>;
 // Re-using common icons
 
 const StudentList = () => {
+  const { t } = useLanguage();
   const [students, setStudents] = useState([]);
   const [search, setSearch] = useState('');
   const [classFilter, setClassFilter] = useState('');
@@ -181,11 +183,11 @@ const StudentList = () => {
         {/* Header & Primary Actions */}
         <div className="flex flex-col xl:flex-row xl:items-end justify-between gap-8">
           <div className="space-y-2">
-            <h1 className="text-[52px] font-[1000] text-slate-900 tracking-tight leading-none">
-              Student Repository
+            <h1 className="text-[52px] font-[1000] text-slate-900 dark:text-slate-100 tracking-tight leading-none">
+              {t('studentRepository')}
             </h1>
-            <p className="text-lg font-black text-slate-400">
-              Manage comprehensive student records and academic profiles.
+            <p className="text-lg font-black text-slate-400 dark:text-slate-500">
+              {t('manageComprehensive')}
             </p>
           </div>
           <div className="flex flex-wrap gap-4">
@@ -205,29 +207,29 @@ const StudentList = () => {
             </button>
             <button 
               onClick={exportToCSV}
-              className="bg-[#10B981] hover:bg-[#059669] text-white px-8 py-4 rounded-2xl font-black text-sm uppercase tracking-widest flex items-center justify-center gap-3 transition-all shadow-xl shadow-emerald-100"
+              className="bg-[#10B981] hover:bg-[#059669] text-white px-8 py-4 rounded-2xl font-black text-sm uppercase tracking-widest flex items-center justify-center gap-3 transition-all shadow-xl shadow-emerald-100 dark:shadow-emerald-900/10"
             >
               <Download size={20} />
-              Export
+              {t('export')}
             </button>
             <button 
               onClick={() => { setSelectedStudent(null); setIsFormOpen(true); }}
-              className="bg-indigo-600 hover:bg-indigo-700 text-white px-10 py-4 rounded-2xl font-black text-sm uppercase tracking-widest flex items-center justify-center gap-3 transition-all shadow-xl shadow-indigo-100 group"
+              className="bg-indigo-600 hover:bg-indigo-700 text-white px-10 py-4 rounded-2xl font-black text-sm uppercase tracking-widest flex items-center justify-center gap-3 transition-all shadow-xl shadow-indigo-100 dark:shadow-indigo-900/10 group"
             >
               <Plus size={22} className="group-hover:rotate-90 transition-transform" />
-              Add New
+              {t('addNew')}
             </button>
           </div>
         </div>
 
         {/* Dynamic Filter Interface */}
-        <div className="bg-white border border-slate-200 p-4 rounded-[32px] shadow-sm flex flex-col md:flex-row gap-4 items-center">
+        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-4 rounded-[32px] shadow-sm flex flex-col md:flex-row gap-4 items-center">
           <div className="relative flex-1 w-full group">
             <Search className="absolute left-6 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-indigo-600 transition" size={20} />
             <input 
               type="text" 
-              placeholder="Search by name, ID..." 
-              className="w-full pl-16 pr-6 h-[64px] bg-slate-50 border-none rounded-[24px] outline-none focus:ring-4 focus:ring-indigo-100 transition font-bold text-slate-700 placeholder:text-slate-300"
+              placeholder={t('searchPlaceholder')} 
+              className="w-full pl-16 pr-6 h-[64px] bg-slate-50 dark:bg-slate-800 border-none rounded-[24px] outline-none focus:ring-4 focus:ring-indigo-100 dark:focus:ring-indigo-900/30 transition font-bold text-slate-700 dark:text-slate-200 placeholder:text-slate-300 dark:placeholder:text-slate-600"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />
@@ -237,12 +239,12 @@ const StudentList = () => {
             <div className="relative w-full md:w-[240px]">
               <Filter className="absolute left-6 top-1/2 -translate-y-1/2 text-slate-300" size={20} />
               <select 
-                className="w-full h-[64px] pl-16 pr-10 bg-slate-50 border-none rounded-[24px] outline-none focus:ring-4 focus:ring-indigo-100 appearance-none font-black text-slate-600 uppercase tracking-tight text-xs cursor-pointer"
+                className="w-full h-[64px] pl-16 pr-10 bg-slate-50 dark:bg-slate-800 border-none rounded-[24px] outline-none focus:ring-4 focus:ring-indigo-100 dark:focus:ring-indigo-900/30 appearance-none font-black text-slate-600 dark:text-slate-300 uppercase tracking-tight text-xs cursor-pointer"
                 value={classFilter}
                 onChange={(e) => setClassFilter(e.target.value)}
               >
-                <option value="">All Classes</option>
-                {['Nursery', 'LKG', 'UKG', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'].map(c => <option key={c} value={c}>Class {c}</option>)}
+                <option value="">{t('allClasses')}</option>
+                {['Nursery', 'LKG', 'UKG', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'].map(c => <option key={c} value={c} className="bg-white dark:bg-slate-900">Class {c}</option>)}
               </select>
               <div className="absolute right-6 top-1/2 -translate-y-1/2 pointer-events-none text-slate-300">
                   <ChevronRight size={18} className="rotate-90" />
@@ -251,20 +253,20 @@ const StudentList = () => {
 
             <button 
               onClick={fetchStudents}
-              className="h-[64px] px-8 bg-indigo-600 hover:bg-indigo-700 text-white rounded-[24px] font-black text-xs uppercase tracking-widest transition-all shadow-lg shadow-indigo-100 flex items-center justify-center gap-2"
+              className="h-[64px] px-8 bg-indigo-600 hover:bg-indigo-700 text-white rounded-[24px] font-black text-xs uppercase tracking-widest transition-all shadow-lg shadow-indigo-100 dark:shadow-indigo-900/10 flex items-center justify-center gap-2"
             >
               <Filter size={18} />
-              Apply
+              {t('apply')}
             </button>
           </div>
         </div>
 
         {/* Student Repository Table */}
-        <div className="bg-white border border-slate-200 rounded-[40px] shadow-sm overflow-hidden">
+        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-[40px] shadow-sm overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-left">
               <thead>
-                <tr className="bg-slate-50 text-slate-500 text-[11px] font-black uppercase tracking-[0.2em] border-b border-slate-100">
+                <tr className="bg-slate-50 dark:bg-slate-800/50 text-slate-500 dark:text-slate-400 text-[11px] font-black uppercase tracking-[0.2em] border-b border-slate-100 dark:border-slate-800">
                   <th className="px-10 py-7">Symbol No</th>
                   <th className="px-8 py-7">Full Name</th>
                   <th className="px-8 py-7">Class</th>
@@ -274,22 +276,22 @@ const StudentList = () => {
               </thead>
               <tbody className="divide-y divide-slate-100">
                 {students.map((student) => (
-                  <tr key={student.id} className="hover:bg-slate-50/50 transition group">
+                  <tr key={student.id} className="hover:bg-slate-50/50 dark:hover:bg-slate-800/50 transition group border-b border-slate-100 dark:border-slate-800 last:border-none">
                     <td className="px-10 py-7">
-                      <span className="inline-flex items-center px-4 py-2 rounded-xl text-xs font-[1000] bg-indigo-50 text-indigo-600 shadow-sm border border-indigo-100">
+                      <span className="inline-flex items-center px-4 py-2 rounded-xl text-xs font-[1000] bg-indigo-50 dark:bg-indigo-900/20 text-indigo-600 dark:text-indigo-400 shadow-sm border border-indigo-100 dark:border-indigo-900/30">
                         {student.symbolNo}
                       </span>
                     </td>
                     <td className="px-8 py-7">
-                      <div className="font-black text-slate-800 group-hover:text-indigo-600 transition text-base">{student.fullName}</div>
-                      <div className="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-1 opacity-60">{student.gender || 'UNSPECIFIED'}</div>
+                      <div className="font-black text-slate-800 dark:text-slate-100 group-hover:text-indigo-600 transition text-base">{student.fullName}</div>
+                      <div className="text-[10px] text-slate-400 dark:text-slate-500 font-bold uppercase tracking-widest mt-1 opacity-60">{student.gender || 'UNSPECIFIED'}</div>
                     </td>
                     <td className="px-8 py-7">
-                      <span className="text-sm font-black text-slate-600 bg-slate-100 px-3 py-1 rounded-lg">Class {student.studentClass}</span>
+                      <span className="text-sm font-black text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 px-3 py-1 rounded-lg">Class {student.studentClass}</span>
                     </td>
                     <td className="px-8 py-7">
-                      <div className="flex items-center gap-3 text-sm font-black text-slate-600">
-                        <div className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-400 group-hover:bg-indigo-100 group-hover:text-indigo-500 transition-colors">
+                      <div className="flex items-center gap-3 text-sm font-black text-slate-600 dark:text-slate-400">
+                        <div className="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-400 group-hover:bg-indigo-100 group-hover:text-indigo-500 transition-colors">
                             <Phone size={14} />
                         </div>
                         {student.parentContact}

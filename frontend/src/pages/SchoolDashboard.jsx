@@ -10,8 +10,10 @@ import {
 import { supabase } from '../supabaseClient';
 import DigitalClock from '../components/DigitalClock';
 import { ActivityTrendChart, CompositionChart } from '../components/Charts';
+import { useLanguage } from '../context/AppContext';
 
 const SchoolDashboard = () => {
+    const { t } = useLanguage();
     const navigate = useNavigate();
     const [schoolName, setSchoolName] = useState('Raj School');
     const [schoolLogo, setSchoolLogo] = useState(null);
@@ -180,20 +182,20 @@ const SchoolDashboard = () => {
             <header className="flex flex-col xl:flex-row xl:items-end justify-between gap-8">
                 <div className="flex flex-col md:flex-row md:items-center gap-6">
                     {schoolLogo ? (
-                        <div className="w-24 h-24 bg-white p-2 rounded-[32px] shadow-xl border border-slate-100 shrink-0">
+                        <div className="w-24 h-24 bg-white dark:bg-slate-800 p-2 rounded-[32px] shadow-xl border border-slate-100 dark:border-slate-700 shrink-0">
                             <img src={schoolLogo} alt={schoolName} className="w-full h-full object-contain rounded-[24px]" />
                         </div>
                     ) : (
-                        <div className="w-20 h-20 bg-indigo-600 rounded-[28px] flex items-center justify-center text-white shadow-lg shadow-indigo-200 shrink-0">
+                        <div className="w-20 h-20 bg-indigo-600 rounded-[28px] flex items-center justify-center text-white shadow-lg shadow-indigo-200 dark:shadow-indigo-900/20 shrink-0">
                             <Home size={36} strokeWidth={2.5} />
                         </div>
                     )}
                     <div className="space-y-1">
-                        <h1 className="text-[52px] font-[1000] text-indigo-600 tracking-tight leading-none drop-shadow-sm">
+                        <h1 className="text-[52px] font-[1000] text-indigo-600 dark:text-indigo-400 tracking-tight leading-none drop-shadow-sm">
                             {schoolName}
                         </h1>
-                        <p className="text-lg font-black text-slate-400 max-w-md">
-                            Dashboard • Overview
+                        <p className="text-lg font-black text-slate-400 dark:text-slate-500 max-w-md">
+                            {t('dashboardOverview')}
                         </p>
                     </div>
                 </div>
@@ -205,37 +207,37 @@ const SchoolDashboard = () => {
             {/* Quick Metrics Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
                 {[
-                    { label: 'Total Students', value: stats.students, sub: 'Active Enrollment', icon: Users, color: 'indigo' },
-                    { label: 'Total Teachers', value: stats.teachers, sub: 'Academic Staff', icon: GraduationCap, color: 'emerald' },
-                    { label: 'Plan Level', value: stats.plan, sub: 'Premium Status', icon: Star, color: 'amber' }
+                    { label: t('totalStudents'), value: stats.students, sub: t('activeEnrollment'), icon: Users, color: 'indigo' },
+                    { label: t('totalTeachers'), value: stats.teachers, sub: t('academicStaff'), icon: GraduationCap, color: 'emerald' },
+                    { label: t('planLevel'), value: stats.plan, sub: t('premiumStatus'), icon: Star, color: 'amber' }
                 ].map((card, i) => (
-                    <div key={i} className="bg-white border border-slate-200 p-8 rounded-[40px] shadow-sm flex items-center gap-6 group hover:border-indigo-300 transition-all hover:shadow-xl hover:shadow-indigo-500/5">
-                        <div className={`w-20 h-20 bg-${card.color}-500/10 rounded-[28px] flex items-center justify-center text-${card.color}-600 group-hover:scale-110 transition-transform`}>
+                    <div key={i} className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-8 rounded-[40px] shadow-sm flex items-center gap-6 group hover:border-indigo-300 dark:hover:border-indigo-700 transition-all hover:shadow-xl hover:shadow-indigo-500/5">
+                        <div className={`w-20 h-20 bg-${card.color}-500/10 rounded-[28px] flex items-center justify-center text-${card.color}-600 dark:text-${card.color}-400 group-hover:scale-110 transition-transform`}>
                             <card.icon size={36} strokeWidth={2.5} />
                         </div>
                         <div className="space-y-1">
-                            <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{card.label}</h4>
-                            <p className="text-4xl font-[1000] text-slate-800 tracking-tighter tabular-nums">{card.value}</p>
-                            <p className={`text-xs font-black text-${card.color}-500 uppercase tracking-tight`}>{card.sub}</p>
+                            <h4 className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest">{card.label}</h4>
+                            <p className="text-4xl font-[1000] text-slate-800 dark:text-slate-100 tracking-tighter tabular-nums">{card.value}</p>
+                            <p className={`text-xs font-black text-${card.color}-500 dark:text-${card.color}-400 uppercase tracking-tight`}>{card.sub}</p>
                         </div>
                     </div>
                 ))}
             </div>
 
             {/* Teacher Salary - Exclusive Banner */}
-            <div className="bg-white border border-slate-200 rounded-[40px] p-8 shadow-sm flex flex-col md:flex-row items-center justify-between gap-8 group hover:border-indigo-200 transition-all">
+            <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-[40px] p-8 shadow-sm flex flex-col md:flex-row items-center justify-between gap-8 group hover:border-indigo-200 transition-all">
                 <div className="flex items-center gap-8">
-                    <div className="w-20 h-20 bg-indigo-600 rounded-[28px] flex items-center justify-center text-white shadow-lg shadow-indigo-200">
+                    <div className="w-20 h-20 bg-indigo-600 rounded-[28px] flex items-center justify-center text-white shadow-lg shadow-indigo-200 dark:shadow-indigo-900/20">
                         <CreditCard size={36} strokeWidth={2.5} />
                     </div>
                     <div className="space-y-1 text-center md:text-left">
                         <div className="flex flex-col md:flex-row md:items-center gap-3">
-                            <h3 className="text-3xl font-[1000] text-slate-800 tracking-tight">Teacher Salary</h3>
-                            <span className="px-4 py-1.5 bg-indigo-600 text-white text-[10px] font-black uppercase tracking-widest rounded-full shadow-md shadow-indigo-200">
-                                5-Year Exclusive
+                            <h3 className="text-3xl font-[1000] text-slate-800 dark:text-slate-100 tracking-tight">{t('teacherSalary')}</h3>
+                            <span className="px-4 py-1.5 bg-indigo-600 text-white text-[10px] font-black uppercase tracking-widest rounded-full shadow-md shadow-indigo-200 dark:shadow-indigo-900/20">
+                                {t('exclusive')}
                             </span>
                         </div>
-                        <p className="text-sm font-bold text-slate-400 uppercase tracking-widest">Manage, track, and process monthly teacher salary records.</p>
+                        <p className="text-sm font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest">{t('manageSalariesDesc')}</p>
                     </div>
                 </div>
                 <button className="w-full md:w-auto px-10 py-5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-[24px] font-black text-sm uppercase tracking-widest shadow-xl shadow-indigo-200 transition-all flex items-center justify-center gap-3 group">
@@ -247,13 +249,13 @@ const SchoolDashboard = () => {
             {/* Middle Section: Chart and Tools */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 {/* Activity Trend Card */}
-                <div className="lg:col-span-2 bg-white border border-slate-200 rounded-[40px] p-8 shadow-sm">
+                <div className="lg:col-span-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-[40px] p-8 shadow-sm">
                     <div className="flex items-center justify-between mb-10">
                         <div className="flex items-center gap-3">
-                            <Activity size={24} className="text-indigo-600" />
-                            <h3 className="text-xl font-[1000] tracking-tight text-slate-800 uppercase">Activity Trend</h3>
+                            <Activity size={24} className="text-indigo-600 dark:text-indigo-400" />
+                            <h3 className="text-xl font-[1000] tracking-tight text-slate-800 dark:text-slate-100 uppercase">{t('activityTrend')}</h3>
                         </div>
-                        <span className="px-5 py-2 bg-emerald-500/10 text-emerald-600 text-[10px] font-black uppercase tracking-widest rounded-full border border-emerald-100">Live Insight</span>
+                        <span className="px-5 py-2 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 text-[10px] font-black uppercase tracking-widest rounded-full border border-emerald-100 dark:border-emerald-800/50">Live Insight</span>
                     </div>
                     <div className="h-[300px] w-full">
                         <ActivityTrendChart />
@@ -269,34 +271,34 @@ const SchoolDashboard = () => {
                 </div>
 
                 {/* Data Extraction Tools Tool */}
-                <div className="bg-[#FDF6E3] border border-[#DEB887]/20 rounded-[40px] p-10 flex flex-col items-center justify-center text-center shadow-sm relative overflow-hidden group">
-                    <div className="absolute top-0 right-0 w-32 h-32 bg-[#8B4513]/5 blur-[40px] rounded-full translate-x-10 translate-y-[-10px]"></div>
-                    <h3 className="text-2xl font-[1000] text-[#8B4513] tracking-tight mb-4 group-hover:scale-105 transition-transform">Data Extraction Tools</h3>
-                    <p className="text-xs font-bold text-[#8B4513]/60 uppercase tracking-widest leading-relaxed mb-10 max-w-[200px]">
-                        Generate bulk admit cards, student IDs, and custom reports in just a few clicks.
+                <div className="bg-[#FDF6E3] dark:bg-slate-900 border border-[#DEB887]/20 dark:border-slate-800 rounded-[40px] p-10 flex flex-col items-center justify-center text-center shadow-sm relative overflow-hidden group">
+                    <div className="absolute top-0 right-0 w-32 h-32 bg-[#8B4513]/5 dark:bg-indigo-500/5 blur-[40px] rounded-full translate-x-10 translate-y-[-10px]"></div>
+                    <h3 className="text-2xl font-[1000] text-[#8B4513] dark:text-indigo-400 tracking-tight mb-4 group-hover:scale-105 transition-transform">{t('dataExtraction')}</h3>
+                    <p className="text-xs font-bold text-[#8B4513]/60 dark:text-slate-500 uppercase tracking-widest leading-relaxed mb-10 max-w-[200px]">
+                        {t('dataExtractionDesc')}
                     </p>
-                    <button className="w-full py-5 bg-white border-2 border-slate-100 hover:border-slate-200 text-slate-800 rounded-[24px] font-black text-sm uppercase tracking-widest shadow-xl shadow-[#8B4513]/5 transition-all flex items-center justify-center gap-3">
+                    <button className="w-full py-5 bg-white dark:bg-slate-800 border-2 border-slate-100 dark:border-slate-700 hover:border-slate-200 dark:hover:border-slate-600 text-slate-800 dark:text-slate-100 rounded-[24px] font-black text-sm uppercase tracking-widest shadow-xl shadow-[#8B4513]/5 transition-all flex items-center justify-center gap-3">
                         <Zap size={18} />
-                        Launch Extraction Bridge
+                        {t('launchBridge')}
                     </button>
                 </div>
 
                 {/* Reports & Analytics */}
-                <div className="bg-indigo-900 border border-indigo-700 rounded-[40px] p-10 flex flex-col items-center justify-center text-center shadow-sm relative overflow-hidden group">
+                <div className="bg-indigo-900 border border-indigo-700 dark:border-slate-800 rounded-[40px] p-10 flex flex-col items-center justify-center text-center shadow-sm relative overflow-hidden group">
                     <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 blur-[40px] rounded-full translate-x-10 translate-y-[-10px]"></div>
                     <div className="w-16 h-16 bg-white/10 rounded-2xl flex items-center justify-center text-white mb-6 group-hover:scale-110 transition-transform">
                         <BarChart size={32} />
                     </div>
-                    <h3 className="text-2xl font-[1000] text-white tracking-tight mb-4">Reports & Analytics</h3>
+                    <h3 className="text-2xl font-[1000] text-white tracking-tight mb-4">{t('reportsAnalytics')}</h3>
                     <p className="text-xs font-bold text-indigo-200/60 uppercase tracking-widest leading-relaxed mb-10 max-w-[200px]">
-                        Verify institutional performance and monthly attendance ledgers.
+                        {t('reportsAnalyticsDesc')}
                     </p>
                     <button 
                         onClick={() => navigate('/secure-ledger')}
                         className="w-full py-5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-[24px] font-black text-sm uppercase tracking-widest shadow-xl shadow-black/20 transition-all flex items-center justify-center gap-3"
                     >
                         <Shield size={18} />
-                        Enter Secure Vault
+                        {t('enterVault')}
                     </button>
                 </div>
             </div>
@@ -304,31 +306,31 @@ const SchoolDashboard = () => {
             {/* Bottom Row: Operations and Composition */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 {/* Recent Operations Card */}
-                <div className="lg:col-span-2 bg-white border border-slate-200 rounded-[40px] p-10 shadow-sm">
-                    <div className="flex items-center gap-3 mb-10 border-b border-slate-100 pb-6">
-                        <Calendar size={24} className="text-indigo-600" />
-                        <h3 className="text-xl font-[1000] tracking-tight text-slate-800 uppercase">Recent Operations</h3>
+                <div className="lg:col-span-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-[40px] p-10 shadow-sm">
+                    <div className="flex items-center gap-3 mb-10 border-b border-slate-100 dark:border-slate-800 pb-6">
+                        <Calendar size={24} className="text-indigo-600 dark:text-indigo-400" />
+                        <h3 className="text-xl font-[1000] tracking-tight text-slate-800 dark:text-slate-100 uppercase">{t('recentOperations')}</h3>
                     </div>
-                    <div className="space-y-8 min-h-[300px] flex flex-col justify-center items-center text-slate-300">
-                         <div className="w-20 h-20 bg-slate-50 border border-slate-100 rounded-3xl flex items-center justify-center animate-pulse">
+                    <div className="space-y-8 min-h-[300px] flex flex-col justify-center items-center text-slate-300 dark:text-slate-700">
+                         <div className="w-20 h-20 bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-3xl flex items-center justify-center animate-pulse">
                             <Activity size={32} />
                          </div>
-                         <p className="text-xs font-black uppercase tracking-[0.3em]">Monitoring Network Core...</p>
+                         <p className="text-xs font-black uppercase tracking-[0.3em]">{t('monitoringCore')}...</p>
                     </div>
                 </div>
 
                 {/* Composition Card */}
-                <div className="bg-white border border-slate-200 rounded-[40px] p-10 shadow-sm flex flex-col items-center">
-                    <div className="flex items-center gap-3 mb-8 w-full border-b border-slate-100 pb-6">
-                        <Target size={24} className="text-indigo-600" />
-                        <h3 className="text-xl font-[1000] tracking-tight text-slate-800 uppercase">Composition</h3>
+                <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-[40px] p-10 shadow-sm flex flex-col items-center">
+                    <div className="flex items-center gap-3 mb-8 w-full border-b border-slate-100 dark:border-slate-800 pb-6">
+                        <Target size={24} className="text-indigo-600 dark:text-indigo-400" />
+                        <h3 className="text-xl font-[1000] tracking-tight text-slate-800 dark:text-slate-100 uppercase">{t('composition')}</h3>
                     </div>
                     <div className="w-full h-[250px]">
                         <CompositionChart />
                     </div>
-                    <div className="mt-8 text-center bg-slate-50 p-6 rounded-3xl w-full border border-slate-100">
-                        <h5 className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Gender Distribution</h5>
-                        <p className="text-xl font-[1000] text-slate-700 tracking-tight">Balanced Ratio</p>
+                    <div className="mt-8 text-center bg-slate-50 dark:bg-slate-800 p-6 rounded-3xl w-full border border-slate-100 dark:border-slate-700">
+                        <h4 className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1">{t('genderDistribution')}</h4>
+                        <p className="text-xl font-[1000] text-slate-700 dark:text-slate-200 tracking-tight">{t('balancedRatio')}</p>
                     </div>
                 </div>
             </div>

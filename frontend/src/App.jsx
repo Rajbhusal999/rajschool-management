@@ -116,7 +116,7 @@ const Layout = () => {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col font-['Outfit',sans-serif] app-layout-root">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex flex-col font-['Outfit',sans-serif] app-layout-root text-slate-900 dark:text-slate-100 transition-colors duration-300">
       <style dangerouslySetInnerHTML={{ __html: `
         @media print {
           .no-print, .print\\:hidden, nav, header, .app-layout-root > nav, .app-layout-root > .BackButton { 

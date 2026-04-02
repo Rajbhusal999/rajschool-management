@@ -20,6 +20,17 @@
 
 :root {
   background-color: #f8fafc;
+  color: #0f172a;
+}
+
+html.dark {
+  background-color: #020617;
+  color: #f8fafc;
+}
+
+html.dark body {
+  background-color: #020617;
+  color: #f8fafc;
 }
 
 .dark-theme-landing {
