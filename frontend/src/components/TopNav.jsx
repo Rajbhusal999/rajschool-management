@@ -77,10 +77,10 @@ const TopNav = () => {
         <div className="flex items-center gap-2">
           <button 
             onClick={toggleTheme}
-            className="p-2.5 text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-colors border border-slate-200 dark:border-slate-700 shadow-sm hidden sm:flex"
+            className="p-2.5 text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-all active:scale-95 border border-slate-200 dark:border-slate-700 shadow-sm hidden sm:flex"
             title={isDarkMode ? t('lightMode') : t('darkMode')}
           >
-            {isDarkMode ? <Sun size={18} strokeWidth={2.5} /> : <Moon size={18} strokeWidth={2.5} />}
+            {isDarkMode ? <Sun size={20} className="text-amber-400 fill-amber-400/10" strokeWidth={2} /> : <Moon size={20} className="text-slate-400" strokeWidth={2} />}
           </button>
           
           <button 
@@ -137,9 +137,13 @@ const TopNav = () => {
              </button>
              <button 
                onClick={toggleTheme}
-               className="flex-1 flex items-center justify-center gap-2 p-4 bg-slate-50 dark:bg-slate-800 rounded-xl text-sm font-black text-slate-600 dark:text-slate-300 uppercase tracking-widest"
+               className="flex-1 flex items-center justify-center gap-2 p-4 bg-slate-50 dark:bg-slate-800 rounded-xl text-sm font-black text-slate-600 dark:text-slate-300"
              >
-               {isDarkMode ? <Sun size={18} /> : <Moon size={18} />} {isDarkMode ? t('lightMode') : t('darkMode')}
+               {isDarkMode ? (
+                 <><Sun size={18} className="text-amber-400" /> {t('lightMode')}</>
+               ) : (
+                 <><Moon size={18} className="text-slate-400" /> {t('darkMode')}</>
+               )}
              </button>
           </div>
         </div>
