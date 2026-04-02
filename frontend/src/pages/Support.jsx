@@ -22,16 +22,16 @@ const Support = () => {
     const WHATSAPP_NUMBER = '+9779706829056';
 
     useEffect(() => {
-        const fetchUserData = async () => {
-            const userStr = sessionStorage.getItem('user');
-            if (userStr) {
-                const user = JSON.parse(userStr);
-                setInstitution(user);
-                fetchMessages(user.id);
-                subscribeToMessages(user.id);
+        const fetchSavedSupportSession = async () => {
+            const supportSession = sessionStorage.getItem('support_active_session');
+            if (supportSession) {
+                const data = JSON.parse(supportSession);
+                setInstitution(data);
+                fetchMessages(data.id);
+                subscribeToMessages(data.id);
             }
         };
-        fetchUserData();
+        fetchSavedSupportSession();
     }, []);
 
     useEffect(() => {
@@ -121,7 +121,7 @@ const Support = () => {
     };
 
     const handleChatButtonClick = () => {
-        const savedSession = sessionStorage.getItem('support_active_session') || sessionStorage.getItem('user');
+        const savedSession = sessionStorage.getItem('support_active_session');
         if (savedSession) {
             const data = JSON.parse(savedSession);
             setInstitution(data);
