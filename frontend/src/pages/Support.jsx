@@ -109,7 +109,7 @@ const Support = () => {
         const { data, error } = await supabase
             .from('institutions')
             .select('*')
-            .eq('phone', loginPhone.trim())
+            .eq('phone', loginPhone.trim().replace(/\s+/g, ''))
             .single();
 
         if (error || !data) {
