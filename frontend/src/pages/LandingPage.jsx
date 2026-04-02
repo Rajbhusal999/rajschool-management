@@ -86,7 +86,7 @@ const LandingPage = () => {
 
                     <div className="flex items-center gap-3">
                         <button onClick={() => document.getElementById('features-section')?.scrollIntoView({ behavior: 'smooth' })} className="hidden sm:block px-6 py-2.5 text-slate-300 font-bold text-sm hover:text-white transition-colors cursor-pointer">Features</button>
-                        <button onClick={() => document.getElementById('features-section')?.scrollIntoView({ behavior: 'smooth' })} className="hidden sm:block px-6 py-2.5 text-slate-300 font-bold text-sm hover:text-white transition-colors cursor-pointer">About</button>
+                        <Link to="/edu-resources" className="hidden sm:block px-6 py-2.5 text-slate-300 font-bold text-sm hover:text-white transition-colors cursor-pointer whitespace-nowrap">Important Links</Link>
                         <Link to="/teacher-login" className="px-6 py-2.5 bg-rose-600/20 text-rose-400 rounded-xl font-bold text-sm hover:bg-rose-600/30 transition-all">Teacher Login</Link>
                         <Link to="/login" className="px-6 py-2.5 bg-indigo-600/20 text-indigo-400 rounded-xl font-bold text-sm hover:bg-indigo-600/30 transition-all">Login</Link>
                         <Link to="/register" className="px-6 py-2.5 bg-indigo-600 text-white rounded-xl font-bold text-sm shadow-xl shadow-indigo-500/20 hover:scale-105 transition-all">Get Started</Link>

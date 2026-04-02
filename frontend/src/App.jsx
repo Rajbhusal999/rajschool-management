@@ -42,6 +42,7 @@ import Activities from "./pages/Activities";
 import TeacherLogin from "./pages/TeacherLogin";
 import Pricing from "./pages/Pricing";
 import Support from "./pages/Support";
+import EduResources from "./pages/EduResources";
 
 import { AlertTriangle } from "lucide-react";
 import BackButton from "./components/BackButton";
@@ -130,7 +131,8 @@ const Layout = () => {
       "/teacher-login", 
       "/about", 
       "/pricing",
-      "/support"
+      "/support",
+      "/edu-resources"
     ];
     
     const isWhitelisted = authWhitelist.includes(location.pathname);
@@ -149,7 +151,7 @@ const Layout = () => {
     }
   }, [location]);
 
-  const publicRoutes = ["/", "/register", "/login", "/admin-login", "/teacher-login", "/about", "/pricing", "/support"];
+  const publicRoutes = ["/", "/register", "/login", "/admin-login", "/teacher-login", "/about", "/pricing", "/support", "/edu-resources"];
   const isPublicPage = publicRoutes.includes(location.pathname);
 
   if (isPublicPage) {
@@ -163,6 +165,7 @@ const Layout = () => {
         <Route path="/teacher-login" element={<TeacherLogin />} />
         <Route path="/pricing" element={<Pricing />} />
         <Route path="/support" element={<Support />} />
+        <Route path="/edu-resources" element={<EduResources />} />
       </Routes>
     );
   }
