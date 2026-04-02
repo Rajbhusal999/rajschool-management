@@ -23,6 +23,7 @@ const AdminLogin = () => {
         console.log('Initiating System Level Authentication:', formData.adminEmail);
         
         if (formData.adminEmail === 'smartscchool2082@gmail.com' && formData.secureKey === 'qWERTYUIOP@1234') {
+            sessionStorage.setItem('admin_authenticated', 'true');
             navigate('/admin/nexus');
         } else {
             setError('ACCESS DENIED: Invalid Administrator Credentials. Security logs recorded.');

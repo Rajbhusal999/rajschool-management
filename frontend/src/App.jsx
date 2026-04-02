@@ -119,7 +119,36 @@ const Layout = () => {
     }
   }, [location]);
 
-  const publicRoutes = ["/", "/register", "/login", "/admin-login", "/teacher-login", "/about", "/admin/nexus", "/subscription", "/payment", "/pricing", "/support"];
+  useEffect(() => {
+    // Session Guard / Deep Linking Protection
+    const isLandingPage = location.pathname === "/";
+    const authWhitelist = [
+      "/", 
+      "/login", 
+      "/register", 
+      "/admin-login", 
+      "/teacher-login", 
+      "/about", 
+      "/pricing"
+    ];
+    
+    const isWhitelisted = authWhitelist.includes(location.pathname);
+    
+    if (!isWhitelisted) {
+      const hasAdminSession = sessionStorage.getItem('admin_authenticated');
+      const hasTeacherSession = sessionStorage.getItem('teacher_authenticated');
+      const hasSchoolSession = sessionStorage.getItem('institutionId');
+      const hasSupportSession = sessionStorage.getItem('support_active_session');
+      
+      if (!hasAdminSession && !hasTeacherSession && !hasSchoolSession && !hasSupportSession) {
+        // No active session found for protected route
+        console.warn("Security Guard: Unauthorized access detected. Redirecting to nexus...");
+        window.location.href = "/?auth=required";
+      }
+    }
+  }, [location]);
+
+  const publicRoutes = ["/", "/register", "/login", "/admin-login", "/teacher-login", "/about", "/pricing"];
   const isPublicPage = publicRoutes.includes(location.pathname);
 
   if (isPublicPage) {
@@ -131,11 +160,7 @@ const Layout = () => {
         <Route path="/login" element={<Login />} />
         <Route path="/admin-login" element={<AdminLogin />} />
         <Route path="/teacher-login" element={<TeacherLogin />} />
-        <Route path="/admin/nexus" element={<AdminDashboard />} />
-        <Route path="/subscription" element={<Subscription />} />
-        <Route path="/payment" element={<Payment />} />
         <Route path="/pricing" element={<Pricing />} />
-        <Route path="/support" element={<Support />} />
       </Routes>
     );
   }
@@ -167,6 +192,11 @@ const Layout = () => {
           </div>
           <Routes>
             <Route path="/dashboard" element={<SchoolDashboard />} />
+            <Route path="/admin/nexus" element={<AdminDashboard />} />
+            <Route path="/support" element={<Support />} />
+            <Route path="/subscription" element={<Subscription />} />
+            <Route path="/payment" element={<Payment />} />
+            
             <Route path="/students" element={<StudentList />} />
 
             <Route path="/teachers" element={<TeacherList />} />

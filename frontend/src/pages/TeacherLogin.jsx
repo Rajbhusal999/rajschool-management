@@ -106,6 +106,7 @@ const TeacherLogin = () => {
             sessionStorage.setItem('userType', 'teacher');
             sessionStorage.setItem('teacherId', teacher.id);
             sessionStorage.setItem('teacherName', teacher.full_name);
+            sessionStorage.setItem('teacher_authenticated', 'true');
             
             // Redirect to Attendance Entry
             navigate('/attendance/entry');
