@@ -16,6 +16,7 @@ const TeacherLogin = () => {
     const [teachers, setTeachers] = useState([]);
     const [selectedTeacher, setSelectedTeacher] = useState(null);
     const [schoolId, setSchoolId] = useState(null);
+    const [schoolData, setSchoolData] = useState(null);
     const [searchQuery, setSearchQuery] = useState('');
 
     // Step 3 State
@@ -46,6 +47,7 @@ const TeacherLogin = () => {
             }
 
             setSchoolId(school.id);
+            setSchoolData(school);
 
             // Fetch teachers
             const { data: teacherList, error: teacherErr } = await supabase
@@ -97,10 +99,10 @@ const TeacherLogin = () => {
 
             // Success: Set Session
             sessionStorage.setItem('institutionId', schoolId); 
-            sessionStorage.setItem('schoolName', school.school_name);
-            sessionStorage.setItem('schoolAddress', school.address || '');
-            sessionStorage.setItem('estdYear', school.establishment || '');
-            sessionStorage.setItem('schoolLogo', school.logo_url || '');
+            sessionStorage.setItem('schoolName', schoolData.school_name);
+            sessionStorage.setItem('schoolAddress', schoolData.address || '');
+            sessionStorage.setItem('estdYear', schoolData.establishment || '');
+            sessionStorage.setItem('schoolLogo', schoolData.logo_url || '');
             sessionStorage.setItem('userType', 'teacher');
             sessionStorage.setItem('teacherId', teacher.id);
             sessionStorage.setItem('teacherName', teacher.full_name);
