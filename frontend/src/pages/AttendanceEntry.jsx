@@ -35,9 +35,17 @@ const AttendanceEntry = () => {
   }, []);
 
   const fetchTeachers = async () => {
+    const isTrial = sessionStorage.getItem('isTrialMode') === 'true';
+    if (isTrial) {
+      setTeachers([
+        { id: 1, fullName: 'Demo Principal', teacherPassword: 'demo' },
+        { id: 2, fullName: 'Demo Teacher', teacherPassword: 'demo' }
+      ]);
+      return;
+    }
     try {
       const resp = await teacherService.getAll({ schoolId: sessionStorage.getItem('institutionId') });
-      setTeachers(resp.data);
+      setTeachers(resp.data || []);
     } catch (err) {
       console.error(err);
     }
@@ -63,7 +71,9 @@ const AttendanceEntry = () => {
 
   const handleSetupSubmit = async (e) => {
     e.preventDefault();
-    if (isTeacher) {
+    const isTrial = sessionStorage.getItem('isTrialMode') === 'true';
+    
+    if (isTrial || isTeacher) {
       setStep(2);
       fetchStudentsAndAttendance();
       fetchNotificationHistory();
@@ -80,9 +90,25 @@ const AttendanceEntry = () => {
   };
 
   const fetchStudentsAndAttendance = async () => {
+    const isTrial = sessionStorage.getItem('isTrialMode') === 'true';
+    if (isTrial) {
+      const mockStudents = [
+        { id: 1, fullName: 'Aarav Sharma', symbolNo: '101', rollNo: '1' },
+        { id: 2, fullName: 'Ishani Patel', symbolNo: '102', rollNo: '2' },
+        { id: 3, fullName: 'Vivaan Gupta', symbolNo: '103', rollNo: '3' },
+        { id: 4, fullName: 'Ananya Iyer', symbolNo: '104', rollNo: '4' }
+      ];
+      setStudents(mockStudents);
+      const initialAtt = {};
+      mockStudents.forEach(s => initialAtt[s.id] = 'Present');
+      setAttendance(initialAtt);
+      return;
+    }
+
     try {
       const studentsResp = await studentService.getAll({ schoolId: sessionStorage.getItem('institutionId'), studentClass: setup.studentClass });
-      setStudents(studentsResp.data);
+      const studentData = studentsResp.data || [];
+      setStudents(studentData);
 
       const dbDate = setup.date.split('/').join('-');
       const attResp = await attendanceService.get({ 
@@ -93,12 +119,13 @@ const AttendanceEntry = () => {
       });
       
       const attMap = {};
-      attResp.data.forEach(a => {
+      const attendanceData = attResp.data || [];
+      attendanceData.forEach(a => {
         attMap[a.studentId] = a.status;
       });
       
       const initialAtt = { ...attMap };
-      studentsResp.data.forEach(s => {
+      studentData.forEach(s => {
         if (!initialAtt[s.id]) initialAtt[s.id] = 'Present';
       });
       setAttendance(initialAtt);

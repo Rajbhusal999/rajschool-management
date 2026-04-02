@@ -27,6 +27,36 @@ const AttendanceReports = () => {
   const fetchReport = async () => {
     if (!params.studentClass) return;
     setLoading(true);
+    const isTrial = sessionStorage.getItem('isTrialMode') === 'true';
+
+    if (isTrial) {
+      const mockStudents = [
+        { id: 1, fullName: 'Aarav Sharma', symbolNo: '101' },
+        { id: 2, fullName: 'Ishani Patel', symbolNo: '102' },
+        { id: 3, fullName: 'Vivaan Gupta', symbolNo: '103' },
+        { id: 4, fullName: 'Ananya Iyer', symbolNo: '104' }
+      ];
+      
+      const attMap = {};
+      mockStudents.forEach(s => {
+        attMap[s.id] = {};
+        for (let d = 1; d <= 32; d++) {
+          attMap[s.id][d] = {
+            Morning: Math.random() > 0.1 ? 'Present' : 'Absent',
+            Evening: Math.random() > 0.05 ? 'Present' : 'Absent'
+          };
+        }
+      });
+
+      setReportData({
+        students: mockStudents,
+        attendance: attMap,
+        days: 32
+      });
+      setLoading(false);
+      return;
+    }
+
     try {
       const datePrefix = `${params.year}-${params.month.padStart(2, '0')}`;
       const sId = sessionStorage.getItem('institutionId');
@@ -40,8 +70,11 @@ const AttendanceReports = () => {
         })
       ]);
 
+      const studentData = studentsResp.data || [];
+      const attendanceData = attResp.data || [];
+
       const attMap = {};
-      attResp.data.forEach(a => {
+      attendanceData.forEach(a => {
         const day = parseInt(a.attendanceDate.split('-')[2]);
         if (!attMap[a.studentId]) attMap[a.studentId] = {};
         if (!attMap[a.studentId][day]) attMap[a.studentId][day] = {};
@@ -49,7 +82,7 @@ const AttendanceReports = () => {
       });
 
       setReportData({
-        students: studentsResp.data,
+        students: studentData,
         attendance: attMap,
         days: 32
       });
