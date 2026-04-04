@@ -153,6 +153,7 @@ const Layout = () => {
 
   const publicRoutes = ["/", "/register", "/login", "/admin-login", "/teacher-login", "/about", "/pricing", "/support", "/edu-resources"];
   const isPublicPage = publicRoutes.includes(location.pathname);
+  const isAdminNexus = location.pathname === "/admin/nexus";
 
   if (isPublicPage) {
     return (
@@ -189,12 +190,14 @@ const Layout = () => {
           }
         }
       ` }} />
-      <TopNav className="no-print" />
+      {!isAdminNexus && <TopNav className="no-print" />}
       <div className="flex-1 flex flex-col min-w-0">
-        <main className="flex-1 p-4 md:p-8 max-w-[1600px] mx-auto w-full">
-          <div className="no-print">
-            <BackButton />
-          </div>
+        <main className={`flex-1 ${isAdminNexus ? 'w-full' : 'p-4 md:p-8 max-w-[1600px] mx-auto w-full'}`}>
+          {!isAdminNexus && (
+            <div className="no-print">
+              <BackButton />
+            </div>
+          )}
           <Routes>
             <Route path="/dashboard" element={<SchoolDashboard />} />
             <Route path="/admin/nexus" element={<AdminDashboard />} />
