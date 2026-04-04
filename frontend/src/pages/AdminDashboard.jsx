@@ -254,72 +254,81 @@ const AdminDashboard = () => {
     }
 
     return (
-        <div className="min-h-screen relative font-['Outfit',sans-serif]">
+        <div className="min-h-screen relative font-['Outfit',sans-serif] flex">
             <div className="space-background"></div>
 
-            <header className="fixed top-0 left-0 right-0 z-50 h-24 command-center-header backdrop-blur-xl px-8 flex items-center justify-between">
-                <div className="flex items-center gap-8">
-                    <div className="flex items-center gap-4">
-                        <div className="w-12 h-12 bg-[#00D1FF] rounded-xl flex items-center justify-center shadow-[0_0_20px_rgba(0,209,255,0.4)]">
-                            <LayoutDashboard className="text-black" size={24} />
-                        </div>
-                        <h1 className="text-3xl font-[900] neon-text-blue uppercase tracking-tighter">
-                            Command <span className="text-white">Center</span>
-                        </h1>
+            <aside className="w-72 fixed left-0 top-0 bottom-0 z-50 bg-slate-900/50 backdrop-blur-xl border-r border-white/5 flex flex-col pt-10">
+                <div className="flex flex-col items-center gap-4 mb-12">
+                    <div className="w-20 h-20 bg-[#00D1FF] rounded-2xl flex items-center justify-center shadow-[0_0_30px_rgba(0,209,255,0.3)]">
+                        <LayoutDashboard className="text-black" size={40} />
                     </div>
-
-                    <div className="h-10 w-px bg-slate-800 mx-2"></div>
-
-                    <nav className="flex items-center gap-2 bg-slate-900/50 p-1.5 rounded-2xl border border-white/5">
-                        <button 
-                            onClick={() => setActiveTab('institutions')}
-                            className={`px-6 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all
-                                ${activeTab === 'institutions' ? 'bg-[#00D1FF] text-black shadow-lg shadow-[#00D1FF]/20' : 'text-slate-500 hover:text-white'}`}
-                        >
-                            System Oversight
-                        </button>
-                        <button 
-                            onClick={() => setActiveTab('subscriptions')}
-                            className={`px-6 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all
-                                ${activeTab === 'subscriptions' ? 'bg-[#00D1FF] text-black shadow-lg shadow-[#00D1FF]/20' : 'text-slate-500 hover:text-white'}`}
-                        >
-                            Transaction Approvals
-                        </button>
-                        <button 
-                            onClick={() => setActiveTab('support')}
-                            className={`px-6 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all
-                                ${activeTab === 'support' ? 'bg-[#00D1FF] text-black shadow-lg shadow-[#00D1FF]/20' : 'text-slate-500 hover:text-white'}`}
-                        >
-                            Customer Support
-                        </button>
-                        <button 
-                            onClick={() => setActiveTab('recycle_bin')}
-                            className={`px-6 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all
-                                ${activeTab === 'recycle_bin' ? 'bg-rose-500 text-white shadow-lg shadow-rose-500/20' : 'text-slate-500 hover:text-rose-400'}`}
-                        >
-                            Recycle Bin
-                        </button>
-                    </nav>
+                    <div className="text-center">
+                        <h1 className="text-3xl font-[900] neon-text-blue uppercase tracking-tighter leading-none mb-1">
+                            Command
+                        </h1>
+                        <span className="text-white text-xl font-[900] uppercase tracking-tighter">Center</span>
+                    </div>
                 </div>
 
-                <div className="flex items-center gap-6">
+                <nav className="flex flex-col gap-2 px-6 flex-1">
+                    <button 
+                        onClick={() => setActiveTab('institutions')}
+                        className={`w-full px-6 py-4 rounded-xl text-[11px] font-black uppercase tracking-widest transition-all text-left flex items-center justify-between group
+                            ${activeTab === 'institutions' ? 'bg-[#00D1FF] text-black shadow-lg shadow-[#00D1FF]/20' : 'text-slate-500 hover:text-white hover:bg-white/5'}`}
+                    >
+                        <span>System Oversight</span>
+                        <ChevronRight size={16} className={`transition-transform ${activeTab === 'institutions' ? 'translate-x-1' : 'opacity-0 group-hover:opacity-100 group-hover:translate-x-1'}`} />
+                    </button>
+                    <button 
+                        onClick={() => setActiveTab('subscriptions')}
+                        className={`w-full px-6 py-4 rounded-xl text-[11px] font-black uppercase tracking-widest transition-all text-left flex items-center justify-between group
+                            ${activeTab === 'subscriptions' ? 'bg-[#00D1FF] text-black shadow-lg shadow-[#00D1FF]/20' : 'text-slate-500 hover:text-white hover:bg-white/5'}`}
+                    >
+                        <span>Transaction Approvals</span>
+                        <ChevronRight size={16} className={`transition-transform ${activeTab === 'subscriptions' ? 'translate-x-1' : 'opacity-0 group-hover:opacity-100 group-hover:translate-x-1'}`} />
+                    </button>
+                    <button 
+                        onClick={() => setActiveTab('support')}
+                        className={`w-full px-6 py-4 rounded-xl text-[11px] font-black uppercase tracking-widest transition-all text-left flex items-center justify-between group
+                            ${activeTab === 'support' ? 'bg-[#00D1FF] text-black shadow-lg shadow-[#00D1FF]/20' : 'text-slate-500 hover:text-white hover:bg-white/5'}`}
+                    >
+                        <span>Customer Support</span>
+                        <ChevronRight size={16} className={`transition-transform ${activeTab === 'support' ? 'translate-x-1' : 'opacity-0 group-hover:opacity-100 group-hover:translate-x-1'}`} />
+                    </button>
+                    
+                    <div className="mt-auto pt-8 flex flex-col gap-2 border-t border-white/5">
+                        <button 
+                            onClick={() => setActiveTab('recycle_bin')}
+                            className={`w-full px-6 py-4 rounded-xl text-[11px] font-black uppercase tracking-widest transition-all text-left flex items-center justify-between group
+                                ${activeTab === 'recycle_bin' ? 'bg-rose-500 text-white shadow-lg shadow-rose-500/20' : 'text-slate-500 hover:text-rose-400 hover:bg-rose-500/5'}`}
+                        >
+                            <span className="flex items-center gap-3">
+                                <Trash2 size={16} className={activeTab === 'recycle_bin' ? '' : 'text-rose-500/50'} />
+                                Recycle Bin
+                            </span>
+                            <ChevronRight size={16} className={`transition-transform ${activeTab === 'recycle_bin' ? 'translate-x-1' : 'opacity-0 group-hover:opacity-100 group-hover:translate-x-1'}`} />
+                        </button>
+                    </div>
+                </nav>
+
+                <div className="p-6 flex flex-col gap-3 mt-4">
                     {actionStatus && (
-                        <div className="px-4 py-2 bg-emerald-500/10 border border-emerald-500 rounded-lg flex items-center gap-2 animate-in fade-in slide-in-from-right-4">
-                            <CheckCircle size={16} className="text-emerald-500" />
-                            <span className="text-xs font-black text-emerald-500 font-mono">{actionStatus}</span>
+                        <div className="px-4 py-3 bg-emerald-500/10 border border-emerald-500 rounded-xl flex items-center gap-3 animate-in fade-in text-center justify-center">
+                            <CheckCircle size={16} className="text-emerald-500 shrink-0" />
+                            <span className="text-[10px] font-black text-emerald-500 uppercase tracking-widest">{actionStatus}</span>
                         </div>
                     )}
-                    <button className="flex items-center gap-2 px-6 py-3 bg-[#00E096] text-black rounded-xl font-black text-sm uppercase tracking-widest hover:scale-105 transition-all shadow-[0_0_20px_rgba(0,224,150,0.3)] group text-xs">
+                    <button className="w-full flex items-center justify-center gap-3 px-4 py-4 bg-[#00E096] text-black rounded-xl font-black text-[11px] uppercase tracking-widest hover:scale-[1.02] transition-all shadow-[0_0_20px_rgba(0,224,150,0.3)] group">
                         <Download size={16} className="group-hover:translate-y-0.5 transition-transform" />
-                        Backup Users Data
+                        Backup Data
                     </button>
-                    <button onClick={handleLogout} className="flex items-center gap-2 text-slate-400 hover:text-white font-black uppercase text-xs tracking-widest transition-colors">
+                    <button onClick={handleLogout} className="w-full flex items-center justify-center gap-3 px-4 py-4 bg-white/5 text-slate-400 hover:text-white rounded-xl font-black uppercase text-[11px] tracking-widest transition-colors hover:bg-white/10">
                         Logout <LogOut size={16} />
                     </button>
                 </div>
-            </header>
+            </aside>
 
-            <main className="pt-32 pb-20 px-8">
+            <main className="flex-1 ml-72 min-h-screen py-12 px-10">
                 {error && (
                     <div className="max-w-4xl mx-auto mb-10 p-6 bg-rose-500/10 border border-rose-500 rounded-2xl flex items-center gap-4">
                         <AlertCircle className="text-rose-500" size={32} />
