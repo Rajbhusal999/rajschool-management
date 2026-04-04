@@ -101,27 +101,55 @@ const Support = () => {
 
     const handlePhoneLogin = async (e) => {
         e.preventDefault();
-        if (!loginPhone.trim()) return;
+        
+        const rawPhone = loginPhone.trim();
+        if (!rawPhone) return;
 
         setLoading(true);
         setLoginError('');
         
-        const { data, error } = await supabase
+        // Strictly validate: only 10 digits starting with 98 or 97, no symbols or spaces
+        const phoneRegex = /^(98|97)\d{8}$/;
+        if (!phoneRegex.test(rawPhone)) {
+            setLoginError('Phone number must be exactly 10 digits long, starting with 98 or 97 (no symbols or spaces).');
+            setLoading(false);
+            return;
+        }
+
+        let { data, error } = await supabase
             .from('institutions')
             .select('*')
-            .eq('phone', loginPhone.trim().replace(/\s+/g, ''))
+            .eq('phone', rawPhone)
             .single();
 
         if (error || !data) {
-            setLoginError('Institution not found with this phone number. Please register first or use the registered number.');
-        } else {
-            setInstitution(data);
-            setIsLoginView(false);
-            fetchMessages(data.id);
-            subscribeToMessages(data.id);
-            // Optional: persistence for the session
-            sessionStorage.setItem('support_active_session', JSON.stringify(data));
+            // Auto-register unregistered numbers so they can chat
+            const { data: newGuest, error: guestError } = await supabase
+                .from('institutions')
+                .insert([{
+                    school_name: 'Guest Visitor',
+                    emis_code: `GUEST_${rawPhone}`,
+                    phone: rawPhone,
+                    email: `${rawPhone}@guest.com`,
+                    password: 'guest_password'
+                }])
+                .select()
+                .single();
+
+            if (guestError || !newGuest) {
+                setLoginError('Could not initialize chat session. Please try again.');
+                setLoading(false);
+                return;
+            }
+            data = newGuest;
         }
+
+        setInstitution(data);
+        setIsLoginView(false);
+        fetchMessages(data.id);
+        subscribeToMessages(data.id);
+        sessionStorage.setItem('support_active_session', JSON.stringify(data));
+        
         setLoading(false);
     };
 
