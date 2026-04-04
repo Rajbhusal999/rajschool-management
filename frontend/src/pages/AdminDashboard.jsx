@@ -14,7 +14,7 @@ const AdminDashboard = () => {
     const [institutions, setInstitutions] = useState([]);
     const [subscriptions, setSubscriptions] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [activeTab, setActiveTab] = useState('institutions'); // 'institutions', 'subscriptions', 'support'
+    const [activeTab, setActiveTab] = useState('institutions'); // 'institutions', 'subscriptions', 'support', 'recycle_bin'
     const [supportChats, setSupportChats] = useState([]);
     const [selectedChat, setSelectedChat] = useState(null);
     const [adminMessage, setAdminMessage] = useState('');
@@ -199,17 +199,25 @@ const AdminDashboard = () => {
         }
     };
 
-    const handleDelete = async (id, name) => {
-        if (window.confirm(`Are you sure you want to permanently DELETE ${name}? This action cannot be undone.`)) {
+    const handleDelete = async (inst) => {
+        if (window.confirm(`Are you sure you want to move ${inst.school_name} to the Recycle Bin? Their data will be archived and credentials freed.`)) {
+            const delPrefix = `del_${Date.now()}_`;
             const { error } = await supabase
                 .from('institutions')
-                .delete()
-                .eq('id', id);
+                .update({ 
+                    status: 'DELETED',
+                    emis_code: inst.emis_code ? `${delPrefix}${inst.emis_code}` : null,
+                    email: inst.email ? `${delPrefix}${inst.email}` : null,
+                    phone: inst.phone ? `${delPrefix}${inst.phone}` : null
+                })
+                .eq('id', inst.id);
 
             if (error) {
                 alert('Deletion failed: ' + error.message);
             } else {
-                setInstitutions(prev => prev.filter(inst => inst.id !== id));
+                fetchInstitutions();
+                setActionStatus(`${inst.school_name} moved to Recycle Bin`);
+                setTimeout(() => setActionStatus(null), 3000);
             }
         }
     };
@@ -284,6 +292,13 @@ const AdminDashboard = () => {
                         >
                             Customer Support
                         </button>
+                        <button 
+                            onClick={() => setActiveTab('recycle_bin')}
+                            className={`px-6 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all
+                                ${activeTab === 'recycle_bin' ? 'bg-rose-500 text-white shadow-lg shadow-rose-500/20' : 'text-slate-500 hover:text-rose-400'}`}
+                        >
+                            Recycle Bin
+                        </button>
                     </nav>
                 </div>
 
@@ -335,7 +350,7 @@ const AdminDashboard = () => {
                                     </tr>
                                 </thead>
                                 <tbody className="divide-y divide-slate-800/50">
-                                    {institutions.map((inst) => {
+                                    {institutions.filter(inst => inst.status !== 'DELETED').map((inst) => {
                                         const { text, color, isExpired } = getDaysLeft(inst.expiry_date);
                                         return (
                                             <tr key={inst.id} className="hover:bg-indigo-500/5 transition-colors group">
@@ -356,7 +371,7 @@ const AdminDashboard = () => {
                                                 <td className="px-6 py-6 text-right">
                                                     <div className="flex items-center justify-end gap-2">
                                                         <button onClick={() => handleGenerateCode(inst.id)} className="p-2 bg-indigo-500/10 text-indigo-400 rounded-lg hover:bg-indigo-500 hover:text-white transition-all"><RefreshCw size={16} /></button>
-                                                        <button onClick={() => handleDelete(inst.id, inst.school_name)} className="p-2 bg-rose-500/10 text-rose-500 rounded-lg hover:bg-rose-500 hover:text-white transition-all"><Trash2 size={16} /></button>
+                                                        <button onClick={() => handleDelete(inst)} className="p-2 bg-rose-500/10 text-rose-500 rounded-lg hover:bg-rose-500 hover:text-white transition-all"><Trash2 size={16} /></button>
                                                     </div>
                                                 </td>
                                             </tr>
@@ -430,6 +445,39 @@ const AdminDashboard = () => {
                                             </td>
                                         </tr>
                                     ))}
+                                </tbody>
+                            </table>
+                        ) : activeTab === 'recycle_bin' ? (
+                            <table className="w-full text-left border-collapse">
+                                <thead>
+                                    <tr className="bg-rose-900/20">
+                                        <th className="px-6 py-5 text-[11px] font-black text-slate-500 uppercase tracking-[0.2em] border-b border-rose-900/30">ID</th>
+                                        <th className="px-6 py-5 text-[11px] font-black text-slate-500 uppercase tracking-[0.2em] border-b border-rose-900/30">School Name</th>
+                                        <th className="px-6 py-5 text-[11px] font-black text-slate-500 uppercase tracking-[0.2em] border-b border-rose-900/30">New Login ID (EMIS)</th>
+                                        <th className="px-6 py-5 text-[11px] font-black text-slate-500 uppercase tracking-[0.2em] border-b border-rose-900/30">Original Phone</th>
+                                        <th className="px-6 py-5 text-[11px] font-black text-slate-500 uppercase tracking-[0.2em] border-b border-rose-900/30">Password</th>
+                                        <th className="px-6 py-5 text-[11px] font-black text-slate-500 uppercase tracking-[0.2em] border-b border-rose-900/30">Joining Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody className="divide-y divide-rose-900/30">
+                                    {institutions.filter(inst => inst.status === 'DELETED').map((inst) => (
+                                        <tr key={inst.id} className="hover:bg-rose-500/5 transition-colors group">
+                                            <td className="px-6 py-6 text-sm font-bold text-slate-400">#{inst.id.toString().slice(-4)}</td>
+                                            <td className="px-6 py-6 font-bold text-white">{inst.school_name}</td>
+                                            <td className="px-6 py-6 font-mono text-xs text-rose-400 font-bold select-all">{inst.emis_code}</td>
+                                            <td className="px-6 py-6 text-sm text-slate-400">{inst.phone?.replace(/^del_\d+_/, '')}</td>
+                                            <td className="px-6 py-6 font-mono text-sm font-black text-orange-400 tracking-widest select-all">{inst.password}</td>
+                                            <td className="px-6 py-6 text-sm text-slate-400">{formatDate(inst.created_at)}</td>
+                                        </tr>
+                                    ))}
+                                    {institutions.filter(inst => inst.status === 'DELETED').length === 0 && (
+                                        <tr>
+                                            <td colSpan="6" className="text-center py-16">
+                                                <Trash2 size={48} className="mx-auto mb-4 opacity-20 text-slate-500" />
+                                                <p className="text-slate-500 font-black uppercase tracking-widest text-xs">Recycle Bin is Empty</p>
+                                            </td>
+                                        </tr>
+                                    )}
                                 </tbody>
                             </table>
                         ) : (
