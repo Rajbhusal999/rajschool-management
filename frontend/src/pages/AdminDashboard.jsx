@@ -328,7 +328,7 @@ const AdminDashboard = () => {
                 </div>
             </aside>
 
-            <main className="flex-1 ml-72 min-h-screen py-12 px-10">
+            <main className="flex-1 ml-72 min-h-screen py-12 px-10 relative z-10">
                 {error && (
                     <div className="max-w-4xl mx-auto mb-10 p-6 bg-rose-500/10 border border-rose-500 rounded-2xl flex items-center gap-4">
                         <AlertCircle className="text-rose-500" size={32} />

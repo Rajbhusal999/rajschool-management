@@ -18,12 +18,13 @@
     linear-gradient(90deg, rgba(0, 209, 255, 0.05) 2px, transparent 2px);
   background-size: 100px 100px, 100px 100px, 20px 20px, 20px 20px;
   background-position: -1px -1px, -1px -1px, -1px -1px, -1px -1px;
+  width: 100vw;
+  height: 100vh;
   position: fixed;
   top: 0;
   left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: -3;
+  z-index: 0;
+  pointer-events: none;
   animation: pulseGlow 10s ease-in-out infinite;
 }
 
