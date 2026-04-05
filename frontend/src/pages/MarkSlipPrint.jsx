@@ -51,10 +51,14 @@ const MarkSlipPrint = () => {
                 attMap[a.studentId] = a;
             });
 
-            // Sort students by symbol number or name
-            const sortedStudents = stdRes.data.sort((a, b) => {
-                if (a.symbolNo && b.symbolNo) return a.symbolNo.localeCompare(b.symbolNo);
-                return a.fullName.localeCompare(b.fullName);
+            // Sort students by symbol number or name safely
+            const sortedStudents = (stdRes.data || []).sort((a, b) => {
+                if (a.symbolNo && b.symbolNo) {
+                    return String(a.symbolNo).localeCompare(String(b.symbolNo));
+                }
+                const nameA = a.fullName || '';
+                const nameB = b.fullName || '';
+                return nameA.localeCompare(nameB);
             });
 
             setData({
