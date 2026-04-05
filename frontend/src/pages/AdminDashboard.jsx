@@ -202,6 +202,8 @@ const AdminDashboard = () => {
     const handleDelete = async (inst) => {
         if (window.confirm(`Are you sure you want to move ${inst.school_name} to the Recycle Bin? Their data will be archived and credentials freed.`)) {
             const delPrefix = `del_${Date.now()}_`;
+            // Fixed: Supabase RLS policy for 'UPDATE' on 'institutions' has been added 
+            // so this will now successfully update the record's status.
             const { error } = await supabase
                 .from('institutions')
                 .update({ 
