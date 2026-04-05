@@ -50,7 +50,7 @@ const handleError = (error, context) => {
 const resequenceClassSymbolNumbers = async (schoolId, className) => {
     if (!className || !schoolId) return;
     try {
-        const { data: students } = await supabase.from('students').select('*').eq('school_id', Number(schoolId)).eq('class', className);
+        const { data: students } = await supabase.from('students').select('*').eq('school_id', schoolId).eq('class', className);
         if (!students || students.length === 0) return;
         students.sort((a, b) => a.full_name.localeCompare(b.full_name));
         const prefix = CLASS_PREFIXES[className] || 'REG';
@@ -78,7 +78,7 @@ export const studentService = {
     getAll: async (params = {}) => {
         let query = supabase.from('students').select('*');
         const sId = params.schoolId || getInstitutionId();
-        if (sId) query = query.eq('school_id', Number(sId));
+        if (sId) query = query.eq('school_id', sId);
         const fClass = params.studentClass || params.class;
         if (fClass) query = query.eq('class', fClass);
         const { data, error } = await query;
@@ -91,7 +91,7 @@ export const studentService = {
     },
     create: async (dataSpec) => {
         const sId = getInstitutionId();
-        const payload = mapToSnakeCase({ ...dataSpec, schoolId: Number(sId) });
+        const payload = mapToSnakeCase({ ...dataSpec, schoolId: sId });
         const { data, error } = await supabase.from('students').insert(payload).select();
         if (error) handleError(error, 'student.create');
         
@@ -125,14 +125,14 @@ export const teacherService = {
     getAll: async (params = {}) => {
         let query = supabase.from('teachers').select('*');
         const sId = params.schoolId || getInstitutionId();
-        if (sId) query = query.eq('school_id', Number(sId));
+        if (sId) query = query.eq('school_id', sId);
         const { data, error } = await query;
         if (error) handleError(error, 'teacher.getAll');
         return { data: mapToCamelCase(data) };
     },
     create: async (dataSpec) => {
         const sId = getInstitutionId();
-        const payload = mapToSnakeCase({ ...dataSpec, schoolId: Number(sId) });
+        const payload = mapToSnakeCase({ ...dataSpec, schoolId: sId });
         const { data, error } = await supabase.from('teachers').insert(payload).select();
         if (error) handleError(error, 'teacher.create');
         return { data: mapToCamelCase(data?.[0]) };
@@ -161,7 +161,7 @@ export const attendanceService = {
     },
     saveBulk: async (dataSpec) => {
         const sId = getInstitutionId();
-        const mapped = dataSpec.map(item => mapToSnakeCase({ ...item, schoolId: Number(sId) }));
+        const mapped = dataSpec.map(item => mapToSnakeCase({ ...item, schoolId: sId }));
         return await supabase.from('student_attendance').upsert(mapped, { onConflict: 'school_id,student_id,attendance_date,session' });
     }
 };
@@ -214,7 +214,7 @@ export const notificationService = {
 
             const mapped = logs.map(log => ({ 
                 ...mapToSnakeCase(log), 
-                school_id: Number(sId) 
+                school_id: sId 
             }));
 
             // Trigger real SMS calls in parallel
@@ -240,7 +240,7 @@ export const notificationService = {
     },
     getRecent: async (limit = 20) => {
         const sId = getInstitutionId();
-        const { data, error } = await supabase.from('notification_logs').select('*').eq('school_id', Number(sId)).order('created_at', { ascending: false }).limit(limit);
+        const { data, error } = await supabase.from('notification_logs').select('*').eq('school_id', sId).order('created_at', { ascending: false }).limit(limit);
         return { data: mapToCamelCase(data), error };
     }
 };
@@ -278,7 +278,7 @@ export const examService = {
     },
     getLedger: async (params) => {
         const sId = params.schoolId || getInstitutionId();
-        let query = supabase.from('exam_marks').select('*').eq('school_id', Number(sId));
+        let query = supabase.from('exam_marks').select('*').eq('school_id', sId);
         if (params.studentClass) query = query.eq('class', params.studentClass);
         if (params.examType) query = query.eq('exam_type', params.examType);
         if (params.year) query = query.eq('year', params.year);
@@ -289,7 +289,7 @@ export const examService = {
         const sId = getInstitutionId();
         const { data, error } = await supabase.from('exam_schedules')
             .select('*')
-            .eq('school_id', Number(sId))
+            .eq('school_id', sId)
             .eq('class', params.class)
             .eq('exam_type', params.examType)
             .eq('year', params.year)
@@ -298,7 +298,7 @@ export const examService = {
     },
     saveSchedule: async (dataSpec) => {
         const sId = getInstitutionId();
-        const mapped = mapToSnakeCase({ ...dataSpec, schoolId: Number(sId) });
+        const mapped = mapToSnakeCase({ ...dataSpec, schoolId: sId });
         return await supabase.from('exam_schedules').upsert(mapped, { onConflict: 'school_id,class,exam_type,year' });
     }
 };
