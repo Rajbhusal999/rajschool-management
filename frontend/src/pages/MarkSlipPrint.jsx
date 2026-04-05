@@ -20,6 +20,8 @@ const MarkSlipPrint = () => {
         schoolInfo: null 
     });
     const [loading, setLoading] = useState(true);
+    const dashboardSchoolName = sessionStorage.getItem('schoolName');
+
 
     useEffect(() => {
         if (!year || !studentClass || !examType || !subject) {
@@ -60,6 +62,12 @@ const MarkSlipPrint = () => {
                 const nameB = b.fullName || '';
                 return nameA.localeCompare(nameB);
             });
+
+            // Diagnostic Logging
+            console.log(`[MarkSlip] Fetched ${sortedStudents.length} students for class ${studentClass}`);
+            if (sortedStudents.length > 0) {
+                console.log('[MarkSlip] First Student Sample:', sortedStudents[0]);
+            }
 
             setData({
                 students: sortedStudents,
@@ -133,7 +141,7 @@ const MarkSlipPrint = () => {
                         <thead>
                             <tr>
                                 <th colSpan="10" className="text-center font-black text-xl py-3 border-black border-2 border-b-0 text-gray-900 tracking-wide">
-                                    {schoolInfo?.schoolName || 'श्री हिमालय आधारभूत विद्यालय (१-८)'}
+                                    {dashboardSchoolName || schoolInfo?.schoolName || 'RAJ SCHOOL'}
                                 </th>
                             </tr>
                             <tr>
@@ -210,8 +218,8 @@ const MarkSlipPrint = () => {
                     <>
                         {/* Header Section */}
                         <div className="ms-header text-center">
-                            <h1 className="ms-school-name uppercase bold">{schoolInfo?.schoolName || 'SCHOOL NAME'}</h1>
-                            <p className="ms-school-address">{schoolInfo?.address || 'Address'}</p>
+                            <h1 className="ms-school-name uppercase bold">{dashboardSchoolName || schoolInfo?.schoolName || 'RAJ SCHOOL'}</h1>
+                            <p className="ms-school-address">{schoolInfo?.address || ''}</p>
                             <div className="ms-title-wrapper">
                                 <h2 className="ms-title uppercase bold">Markslip</h2>
                             </div>

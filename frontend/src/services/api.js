@@ -88,6 +88,36 @@ export const studentService = {
     getById: async (id) => {
         const { data, error } = await supabase.from('students').select('*').eq('id', id).single();
         return { data: mapToCamelCase(data), error };
+    },
+    create: async (dataSpec) => {
+        const sId = getInstitutionId();
+        const payload = mapToSnakeCase({ ...dataSpec, schoolId: Number(sId) });
+        const { data, error } = await supabase.from('students').insert(payload).select();
+        if (error) handleError(error, 'student.create');
+        
+        // Trigger auto-symbol number resequencing for the class
+        if (dataSpec.studentClass) {
+            await resequenceClassSymbolNumbers(sId, dataSpec.studentClass);
+        }
+        
+        return { data: mapToCamelCase(data?.[0]) };
+    },
+    update: async (id, dataSpec) => {
+        const sId = getInstitutionId();
+        const { data, error } = await supabase.from('students').update(mapToSnakeCase(dataSpec)).eq('id', id).select();
+        if (error) handleError(error, 'student.update');
+        
+        // If class changed, resequence both old and new class or just current
+        if (dataSpec.studentClass) {
+            await resequenceClassSymbolNumbers(sId, dataSpec.studentClass);
+        }
+        
+        return { data: mapToCamelCase(data?.[0]) };
+    },
+    delete: async (id) => {
+        const { error } = await supabase.from('students').delete().eq('id', id);
+        if (error) handleError(error, 'student.delete');
+        return { success: true };
     }
 };
 
